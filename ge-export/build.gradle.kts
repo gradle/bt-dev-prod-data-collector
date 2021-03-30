@@ -1,11 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "2.4.4"
-	id("io.spring.dependency-management") version "1.0.11.RELEASE"
-	kotlin("jvm") version "1.4.31"
-	kotlin("plugin.spring") version "1.4.31"
-	kotlin("kapt") version "1.4.31"
+	id("org.springframework.boot")
+	kotlin("jvm")
+	kotlin("plugin.spring")
+	kotlin("kapt")
 }
 
 group = "org.gradle.boot-test"
@@ -13,6 +12,7 @@ version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
+	implementation(platform(project(":build-platform")))
 	implementation(project(":persistence"))
 	
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -30,10 +30,11 @@ dependencies {
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
-	implementation("org.flywaydb:flyway-core:7.7.1")
+	implementation("org.flywaydb:flyway-core")
 
 	runtimeOnly("org.postgresql:postgresql")
 
+	kapt(platform(project(":build-platform")))
 	kapt("org.springframework.boot:spring-boot-configuration-processor")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
