@@ -4,14 +4,14 @@
 package org.gradle.devprod.enterprise.export.generated.jooq;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.gradle.devprod.enterprise.export.generated.jooq.tables.Build;
 import org.gradle.devprod.enterprise.export.generated.jooq.tables.Tags;
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**

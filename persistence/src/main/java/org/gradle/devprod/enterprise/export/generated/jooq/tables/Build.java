@@ -4,6 +4,10 @@
 package org.gradle.devprod.enterprise.export.generated.jooq.tables;
 
 
+import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
+
 import org.gradle.devprod.enterprise.export.generated.jooq.Keys;
 import org.gradle.devprod.enterprise.export.generated.jooq.Public;
 import org.gradle.devprod.enterprise.export.generated.jooq.tables.records.BuildRecord;
@@ -19,10 +23,6 @@ import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
-
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
