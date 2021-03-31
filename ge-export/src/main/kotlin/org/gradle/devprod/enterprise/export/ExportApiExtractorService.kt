@@ -16,10 +16,9 @@ import org.gradle.devprod.enterprise.export.generated.jooq.Tables
 import org.gradle.devprod.enterprise.export.model.Build
 import org.gradle.devprod.enterprise.export.model.BuildEvent
 import org.jooq.DSLContext
+import org.jooq.impl.DSL
 import org.springframework.stereotype.Service
 import java.time.Duration
-import java.time.Instant
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -58,23 +57,25 @@ class ExportApiExtractorService(
             val agent = BuildAgent.extractFrom(events)
             val tags = Tags.extractFrom(events)
             println("Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}")
+            create.transaction { configuration ->
+                val ctx = DSL.using(configuration)
+                val record = ctx.newRecord(Tables.BUILD)
+                record.buildId = build.buildId
+                record.buildStart = OffsetDateTime.ofInstant(buildStarted, ZoneId.systemDefault())
+                record.buildFinish = OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
+                record.timeToFirstTestTask = timeToFirstTestTask?.toMillis()
+                record.pathToFirstTestTask = firstTestTaskStart?.first
+                record.rootProject = rootProjectName
+                record.username = agent.user
+                record.host = agent.host
+                record.store()
 
-            val record = create.newRecord(Tables.BUILD)
-            record.buildId = build.buildId
-            record.buildStart = OffsetDateTime.ofInstant(buildStarted, ZoneId.systemDefault())
-            record.buildFinish = OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
-            record.timeToFirstTestTask = timeToFirstTestTask?.toMillis()
-            record.pathToFirstTestTask = firstTestTaskStart?.first
-            record.rootProject = rootProjectName
-            record.username = agent.user
-            record.host = agent.host
-            record.store()
-
-            tags.forEach { tag ->
-                val tagRecord = create.newRecord(Tables.TAGS)
-                tagRecord.buildId = build.buildId
-                tagRecord.tagName = tag
-                tagRecord.store()
+                tags.forEach { tag ->
+                    val tagRecord = ctx.newRecord(Tables.TAGS)
+                    tagRecord.buildId = build.buildId
+                    tagRecord.tagName = tag
+                    tagRecord.store()
+                }
             }
         }
     }
