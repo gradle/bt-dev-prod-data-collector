@@ -28,7 +28,7 @@ jooq {
                         excludes = "flyway_schema_history"
                     }
                     target.apply {
-                        packageName = "org.gradle.devprod.enterprise.export.generated.jooq"
+                        packageName = "org.gradle.devprod.collector.persistence.generated.jooq"
                         directory = "src/main/java"
                     }
                     strategy.name = "org.jooq.codegen.DefaultGeneratorStrategy"
