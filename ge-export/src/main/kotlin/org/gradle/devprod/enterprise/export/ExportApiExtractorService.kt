@@ -18,6 +18,8 @@ import org.gradle.devprod.enterprise.export.model.Build
 import org.gradle.devprod.enterprise.export.model.BuildEvent
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -33,6 +35,8 @@ class ExportApiExtractorService(
     private
     val shutdownService: ShutdownService
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(javaClass)
+
     fun streamToDatabase(): Flow<Unit> =
         exportApiClient.createEventStream()
             .onEach {
@@ -42,7 +46,10 @@ class ExportApiExtractorService(
             .map { it.data() }
             .filterNotNull()
             .map(this::persistToDatabase)
-            .onCompletion { shutdownService.shutdown() }
+            .onCompletion { failure ->
+                failure?.let { logger.error("Failed streaming Gradle enterprise data", it) }
+                shutdownService.shutdown()
+            }
 
     private suspend fun persistToDatabase(build: Build) {
         val existing = create.fetchAny(Tables.BUILD, Tables.BUILD.BUILD_ID.eq(build.buildId))
