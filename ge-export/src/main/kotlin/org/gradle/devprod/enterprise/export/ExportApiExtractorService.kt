@@ -3,6 +3,7 @@ package org.gradle.devprod.enterprise.export
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toList
 import org.gradle.devprod.enterprise.export.extractor.BuildAgent
@@ -28,7 +29,9 @@ class ExportApiExtractorService(
     private
     val exportApiClient: ExportApiClient,
     private
-    val create: DSLContext
+    val create: DSLContext,
+    private
+    val shutdownService: ShutdownService
 ) {
     fun streamToDatabase(): Flow<Unit> =
         exportApiClient.createEventStream()
@@ -39,6 +42,7 @@ class ExportApiExtractorService(
             .map { it.data() }
             .filterNotNull()
             .map(this::persistToDatabase)
+            .onCompletion { shutdownService.shutdown() }
 
     private suspend fun persistToDatabase(build: Build) {
         val existing = create.fetchAny(Tables.BUILD, Tables.BUILD.BUILD_ID.eq(build.buildId))
