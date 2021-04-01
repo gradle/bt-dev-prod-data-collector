@@ -1,14 +1,9 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
+	`data-collector-common`
 	kotlin("jvm")
 	kotlin("kapt")
 	kotlin("plugin.spring")
 }
-
-group = "org.gradle.boot-test"
-version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
 	implementation(platform(project(":build-platform")))
@@ -32,15 +27,4 @@ dependencies {
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("io.projectreactor:reactor-test")
-}
-
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "11"
-	}
-}
-
-tasks.withType<Test> {
-	useJUnitPlatform()
 }

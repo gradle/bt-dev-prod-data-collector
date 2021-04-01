@@ -1,11 +1,8 @@
 plugins {
+    `data-collector-common`
     `java-library`
     id("nu.studer.jooq")
 }
-
-group = "org.gradle.boot-test"
-version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
 
 dependencies {
     jooqGenerator(platform(project(":build-platform")))
