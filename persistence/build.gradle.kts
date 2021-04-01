@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("nu.studer.jooq") version "5.2"
+    id("nu.studer.jooq")
 }
 
 group = "org.gradle.boot-test"
