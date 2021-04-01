@@ -1,9 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot")
 	kotlin("jvm")
-	kotlin("plugin.spring")
 	kotlin("kapt")
 }
 
@@ -28,12 +26,6 @@ dependencies {
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
 
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-
-	implementation("org.flywaydb:flyway-core")
-
-	runtimeOnly("org.postgresql:postgresql")
-
 	kapt(platform(project(":build-platform")))
 	kapt("org.springframework.boot:spring-boot-configuration-processor")
 
@@ -50,8 +42,4 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-}
-
-tasks.register("stage") {
-	dependsOn("assemble")
 }

@@ -1,4 +1,4 @@
-package org.gradle.devprod.enterprise.export.configuration
+package org.gradle.devprod.enterprise.export
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.ConstructorBinding

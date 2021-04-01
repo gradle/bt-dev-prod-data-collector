@@ -1,14 +1,9 @@
 package org.gradle.devprod.enterprise.export
 
 import kotlinx.coroutines.flow.Flow
-import org.gradle.devprod.enterprise.export.configuration.GradleEnterpriseServer
 import org.gradle.devprod.enterprise.export.model.Build
 import org.gradle.devprod.enterprise.export.model.BuildEvent
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.autoconfigure.jooq.JooqAutoConfiguration
-import org.springframework.context.annotation.Bean
 import org.springframework.http.codec.ServerSentEvent
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToFlow

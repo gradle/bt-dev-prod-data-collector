@@ -1,7 +1,6 @@
 package org.gradle.devprod.enterprise.export
 
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import org.gradle.devprod.enterprise.export.configuration.GradleEnterpriseServer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.context.properties.EnableConfigurationProperties
