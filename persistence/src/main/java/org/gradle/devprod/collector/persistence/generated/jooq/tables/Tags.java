@@ -4,6 +4,9 @@
 package org.gradle.devprod.collector.persistence.generated.jooq.tables;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.gradle.devprod.collector.persistence.generated.jooq.Keys;
 import org.gradle.devprod.collector.persistence.generated.jooq.Public;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.TagsRecord;
@@ -18,10 +21,8 @@ import org.jooq.TableField;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -30,7 +31,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tags extends TableImpl<TagsRecord> {
 
-    private static final long serialVersionUID = 1111463033;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The reference instance of <code>public.tags</code>
@@ -48,18 +49,19 @@ public class Tags extends TableImpl<TagsRecord> {
     /**
      * The column <code>public.tags.build_id</code>.
      */
-    public final TableField<TagsRecord, String> BUILD_ID = createField(DSL.name("build_id"), org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<TagsRecord, String> BUILD_ID = createField(DSL.name("build_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>public.tags.tag_name</code>.
      */
-    public final TableField<TagsRecord, String> TAG_NAME = createField(DSL.name("tag_name"), org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<TagsRecord, String> TAG_NAME = createField(DSL.name("tag_name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
-    /**
-     * Create a <code>public.tags</code> table reference
-     */
-    public Tags() {
-        this(DSL.name("tags"), null);
+    private Tags(Name alias, Table<TagsRecord> aliased) {
+        this(alias, aliased, null);
+    }
+
+    private Tags(Name alias, Table<TagsRecord> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -76,12 +78,11 @@ public class Tags extends TableImpl<TagsRecord> {
         this(alias, TAGS);
     }
 
-    private Tags(Name alias, Table<TagsRecord> aliased) {
-        this(alias, aliased, null);
-    }
-
-    private Tags(Name alias, Table<TagsRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
+    /**
+     * Create a <code>public.tags</code> table reference
+     */
+    public Tags() {
+        this(DSL.name("tags"), null);
     }
 
     public <O extends Record> Tags(Table<O> child, ForeignKey<O, TagsRecord> key) {
@@ -108,8 +109,13 @@ public class Tags extends TableImpl<TagsRecord> {
         return Arrays.<ForeignKey<TagsRecord, ?>>asList(Keys.TAGS__TAGS_BUILD_FK);
     }
 
+    private transient Build _build;
+
     public Build build() {
-        return new Build(this, Keys.TAGS__TAGS_BUILD_FK);
+        if (_build == null)
+            _build = new Build(this, Keys.TAGS__TAGS_BUILD_FK);
+
+        return _build;
     }
 
     @Override

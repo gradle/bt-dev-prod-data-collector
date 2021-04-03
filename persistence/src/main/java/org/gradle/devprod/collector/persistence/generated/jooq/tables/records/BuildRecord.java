@@ -4,14 +4,14 @@
 package org.gradle.devprod.collector.persistence.generated.jooq.tables.records;
 
 
+import java.time.OffsetDateTime;
+
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record8;
 import org.jooq.Row8;
 import org.jooq.impl.UpdatableRecordImpl;
-
-import java.time.OffsetDateTime;
 
 
 /**
@@ -20,7 +20,7 @@ import java.time.OffsetDateTime;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class BuildRecord extends UpdatableRecordImpl<BuildRecord> implements Record8<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String> {
 
-    private static final long serialVersionUID = -918053620;
+    private static final long serialVersionUID = 1L;
 
     /**
      * Setter for <code>public.build.build_id</code>.
@@ -355,13 +355,13 @@ public class BuildRecord extends UpdatableRecordImpl<BuildRecord> implements Rec
     public BuildRecord(String buildId, String rootProject, String pathToFirstTestTask, Long timeToFirstTestTask, OffsetDateTime buildStart, OffsetDateTime buildFinish, String username, String host) {
         super(Build.BUILD);
 
-        set(0, buildId);
-        set(1, rootProject);
-        set(2, pathToFirstTestTask);
-        set(3, timeToFirstTestTask);
-        set(4, buildStart);
-        set(5, buildFinish);
-        set(6, username);
-        set(7, host);
+        setBuildId(buildId);
+        setRootProject(rootProject);
+        setPathToFirstTestTask(pathToFirstTestTask);
+        setTimeToFirstTestTask(timeToFirstTestTask);
+        setBuildStart(buildStart);
+        setBuildFinish(buildFinish);
+        setUsername(username);
+        setHost(host);
     }
 }

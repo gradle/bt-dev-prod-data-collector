@@ -4,14 +4,15 @@
 package org.gradle.devprod.collector.persistence.generated.jooq;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Tags;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Public extends SchemaImpl {
 
-    private static final long serialVersionUID = 166296569;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The reference instance of <code>public</code>
@@ -36,6 +37,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.tags</code>.
      */
     public final Tags TAGS = Tags.TAGS;
+
+    /**
+     * The table <code>public.teamcity_build</code>.
+     */
+    public final TeamcityBuild TEAMCITY_BUILD = TeamcityBuild.TEAMCITY_BUILD;
 
     /**
      * No further instances allowed
@@ -54,6 +60,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             Build.BUILD,
-            Tags.TAGS);
+            Tags.TAGS,
+            TeamcityBuild.TEAMCITY_BUILD);
     }
 }

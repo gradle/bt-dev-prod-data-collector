@@ -4,6 +4,10 @@
 package org.gradle.devprod.collector.persistence.generated.jooq.tables;
 
 
+import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
+
 import org.gradle.devprod.collector.persistence.generated.jooq.Keys;
 import org.gradle.devprod.collector.persistence.generated.jooq.Public;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.BuildRecord;
@@ -18,11 +22,8 @@ import org.jooq.TableField;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.time.OffsetDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -31,7 +32,7 @@ import java.util.List;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Build extends TableImpl<BuildRecord> {
 
-    private static final long serialVersionUID = -221829303;
+    private static final long serialVersionUID = 1L;
 
     /**
      * The reference instance of <code>public.build</code>
@@ -49,48 +50,49 @@ public class Build extends TableImpl<BuildRecord> {
     /**
      * The column <code>public.build.build_id</code>.
      */
-    public final TableField<BuildRecord, String> BUILD_ID = createField(DSL.name("build_id"), org.jooq.impl.SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<BuildRecord, String> BUILD_ID = createField(DSL.name("build_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
      * The column <code>public.build.root_project</code>.
      */
-    public final TableField<BuildRecord, String> ROOT_PROJECT = createField(DSL.name("root_project"), org.jooq.impl.SQLDataType.VARCHAR(255), this, "");
+    public final TableField<BuildRecord, String> ROOT_PROJECT = createField(DSL.name("root_project"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>public.build.path_to_first_test_task</code>.
      */
-    public final TableField<BuildRecord, String> PATH_TO_FIRST_TEST_TASK = createField(DSL.name("path_to_first_test_task"), org.jooq.impl.SQLDataType.VARCHAR(255), this, "");
+    public final TableField<BuildRecord, String> PATH_TO_FIRST_TEST_TASK = createField(DSL.name("path_to_first_test_task"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>public.build.time_to_first_test_task</code>.
      */
-    public final TableField<BuildRecord, Long> TIME_TO_FIRST_TEST_TASK = createField(DSL.name("time_to_first_test_task"), org.jooq.impl.SQLDataType.BIGINT, this, "");
+    public final TableField<BuildRecord, Long> TIME_TO_FIRST_TEST_TASK = createField(DSL.name("time_to_first_test_task"), SQLDataType.BIGINT, this, "");
 
     /**
      * The column <code>public.build.build_start</code>.
      */
-    public final TableField<BuildRecord, OffsetDateTime> BUILD_START = createField(DSL.name("build_start"), org.jooq.impl.SQLDataType.TIMESTAMPWITHTIMEZONE, this, "");
+    public final TableField<BuildRecord, OffsetDateTime> BUILD_START = createField(DSL.name("build_start"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
 
     /**
      * The column <code>public.build.build_finish</code>.
      */
-    public final TableField<BuildRecord, OffsetDateTime> BUILD_FINISH = createField(DSL.name("build_finish"), org.jooq.impl.SQLDataType.TIMESTAMPWITHTIMEZONE, this, "");
+    public final TableField<BuildRecord, OffsetDateTime> BUILD_FINISH = createField(DSL.name("build_finish"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
 
     /**
      * The column <code>public.build.username</code>.
      */
-    public final TableField<BuildRecord, String> USERNAME = createField(DSL.name("username"), org.jooq.impl.SQLDataType.VARCHAR(255), this, "");
+    public final TableField<BuildRecord, String> USERNAME = createField(DSL.name("username"), SQLDataType.VARCHAR(255), this, "");
 
     /**
      * The column <code>public.build.host</code>.
      */
-    public final TableField<BuildRecord, String> HOST = createField(DSL.name("host"), org.jooq.impl.SQLDataType.VARCHAR(255), this, "");
+    public final TableField<BuildRecord, String> HOST = createField(DSL.name("host"), SQLDataType.VARCHAR(255), this, "");
 
-    /**
-     * Create a <code>public.build</code> table reference
-     */
-    public Build() {
-        this(DSL.name("build"), null);
+    private Build(Name alias, Table<BuildRecord> aliased) {
+        this(alias, aliased, null);
+    }
+
+    private Build(Name alias, Table<BuildRecord> aliased, Field<?>[] parameters) {
+        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
     }
 
     /**
@@ -107,12 +109,11 @@ public class Build extends TableImpl<BuildRecord> {
         this(alias, BUILD);
     }
 
-    private Build(Name alias, Table<BuildRecord> aliased) {
-        this(alias, aliased, null);
-    }
-
-    private Build(Name alias, Table<BuildRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment(""), TableOptions.table());
+    /**
+     * Create a <code>public.build</code> table reference
+     */
+    public Build() {
+        this(DSL.name("build"), null);
     }
 
     public <O extends Record> Build(Table<O> child, ForeignKey<O, BuildRecord> key) {
