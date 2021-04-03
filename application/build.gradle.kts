@@ -8,6 +8,7 @@ plugins {
 dependencies {
     implementation(platform(project(":build-platform")))
     implementation(project(":ge-export"))
+    implementation(project(":teamcity-export"))
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")

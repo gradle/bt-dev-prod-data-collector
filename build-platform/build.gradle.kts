@@ -11,5 +11,6 @@ dependencies {
 
     constraints {
         api("org.flywaydb:flyway-core:7.7.1")
+        api("org.jetbrains.teamcity:teamcity-rest-client:1.14.0")
     }
 }
