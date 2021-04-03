@@ -10,17 +10,23 @@ import java.time.temporal.ChronoUnit
 
 @Service
 class TeamcityClientService {
-    private val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory.guestAuth("https://builds.gradle.org")
-    private val readyForNightly = BuildConfigurationId("Gradle_Master_Check_Stage_ReadyforNightly_Trigger")
+    private
+    val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory.guestAuth("https://builds.gradle.org")
+    private
+    val pipelines = listOf("Master", "Release")
+    private
+    fun readyForNightlyFor(pipeline: String) = BuildConfigurationId("Gradle_${pipeline}_Check_Stage_ReadyforNightly_Trigger")
 
     fun loadBuildsForReadyForNightly(): Sequence<Build> =
-        teamCityInstance
-            .builds()
-            .fromConfiguration(readyForNightly)
-            .includeCanceled()
-            .includeFailed()
-            .withAllBranches()
-            .since(Instant.now().minus(5, ChronoUnit.DAYS))
-            .all()
+        pipelines.asSequence().flatMap { pipeline ->
+            teamCityInstance
+                .builds()
+                .fromConfiguration(readyForNightlyFor(pipeline))
+                .includeCanceled()
+                .includeFailed()
+                .withAllBranches()
+                .since(Instant.now().minus(5, ChronoUnit.DAYS))
+                .all()
+        }
 
 }
