@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
 @EnableConfigurationProperties(GradleEnterpriseServer::class)
-class ExportDataFromGradleEnterpriseApplication {
+class DeveloperProductivityDataCollector {
 	@Bean
 	fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer = Jackson2ObjectMapperBuilderCustomizer { builder ->
 		builder.modulesToInstall(KotlinModule())
@@ -18,5 +18,5 @@ class ExportDataFromGradleEnterpriseApplication {
 }
 
 fun main(args: Array<String>) {
-	runApplication<ExportDataFromGradleEnterpriseApplication>(*args)
+	runApplication<DeveloperProductivityDataCollector>(*args)
 }
