@@ -5,6 +5,13 @@ plugins {
 }
 
 dependencies {
+    implementation(platform(project(":build-platform")))
+    implementation("org.flywaydb:flyway-core")
+
+    api("org.springframework.boot:spring-boot-starter-jooq")
+
+    runtimeOnly("org.postgresql:postgresql")
+
     jooqGenerator(platform(project(":build-platform")))
     jooqGenerator("org.postgresql:postgresql")
 }
