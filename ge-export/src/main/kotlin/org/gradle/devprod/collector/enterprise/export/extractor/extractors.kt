@@ -44,6 +44,21 @@ object BuildAgent : Extractor<Agent>("BuildAgent") {
         events.first().data!!.let { Agent(it.stringProperty("localHostname"), it.stringProperty("username")) }
 }
 
+// https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/DaemonState_1_1.html
+object DaemonState : Extractor<Int>("DaemonState") {
+    override fun extract(events: Iterable<BuildEvent>): Int {
+        return events.first().data!!.intProperty("buildNumber")!!
+    }
+}
+
+// https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/DaemonUnhealthy_1_0.html
+object DaemonUnhealthy : Extractor<String?>("DaemonUnhealthy") {
+    override fun extract(events: Iterable<BuildEvent>): String? {
+        return events.firstOrNull()?.data?.stringProperty("reason")
+    }
+}
+
 data class Agent(val host: String?, val user: String?)
 
 private fun Any.stringProperty(name: String): String? = (this as Map<*, *>)[name] as String?
+private fun Any.intProperty(name: String): Int? = (this as Map<*, *>)[name] as Int?

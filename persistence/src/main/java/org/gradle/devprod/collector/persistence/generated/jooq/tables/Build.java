@@ -15,7 +15,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row8;
+import org.jooq.Row10;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -86,6 +86,16 @@ public class Build extends TableImpl<BuildRecord> {
      * The column <code>public.build.host</code>.
      */
     public final TableField<BuildRecord, String> HOST = createField(DSL.name("host"), SQLDataType.VARCHAR(255), this, "");
+
+    /**
+     * The column <code>public.build.daemon_age</code>.
+     */
+    public final TableField<BuildRecord, Integer> DAEMON_AGE = createField(DSL.name("daemon_age"), SQLDataType.INTEGER, this, "");
+
+    /**
+     * The column <code>public.build.daemon_unhealthy_reason</code>.
+     */
+    public final TableField<BuildRecord, String> DAEMON_UNHEALTHY_REASON = createField(DSL.name("daemon_unhealthy_reason"), SQLDataType.CLOB, this, "");
 
     private Build(Name alias, Table<BuildRecord> aliased) {
         this(alias, aliased, null);
@@ -162,11 +172,11 @@ public class Build extends TableImpl<BuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row8 type methods
+    // Row10 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public Row10<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 }
