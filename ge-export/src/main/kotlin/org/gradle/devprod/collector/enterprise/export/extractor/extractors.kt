@@ -45,9 +45,9 @@ object BuildAgent : Extractor<Agent>("BuildAgent") {
 }
 
 // https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/DaemonState_1_1.html
-object DaemonState : Extractor<Int>("DaemonState") {
-    override fun extract(events: Iterable<BuildEvent>): Int {
-        return events.first().data!!.intProperty("buildNumber")!!
+object DaemonState : Extractor<Int?>("DaemonState") {
+    override fun extract(events: Iterable<BuildEvent>): Int? {
+        return events.firstOrNull()?.data?.intProperty("buildNumber")!!
     }
 }
 
