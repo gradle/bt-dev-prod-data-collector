@@ -76,6 +76,7 @@ class ExportApiExtractorService(
                 val ctx = DSL.using(configuration)
                 val record = ctx.newRecord(Tables.BUILD)
                 record.buildId = build.buildId
+                record.gradleVersion = build.gradleVersion
                 record.buildStart = OffsetDateTime.ofInstant(buildStarted, ZoneId.systemDefault())
                 record.buildFinish = OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
                 record.timeToFirstTestTask = timeToFirstTestTask?.toMillis()
