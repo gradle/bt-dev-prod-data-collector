@@ -41,7 +41,7 @@ object Tags : Extractor<Set<String>>("UserTag") {
 
 object BuildAgent : Extractor<Agent>("BuildAgent") {
     override fun extract(events: Iterable<BuildEvent>): Agent =
-        events.first().data!!.let { Agent(it.stringProperty("localHostname"), it.stringProperty("username")) }
+        events.first().data!!.let { Agent(it.stringProperty("localHostname") ?: it.stringProperty("publicHostname"), it.stringProperty("username")) }
 }
 
 // https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/DaemonState_1_1.html
