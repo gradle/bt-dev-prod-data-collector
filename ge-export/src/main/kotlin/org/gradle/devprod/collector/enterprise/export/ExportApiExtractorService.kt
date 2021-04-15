@@ -13,6 +13,7 @@ import org.gradle.devprod.collector.enterprise.export.extractor.DaemonState
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonUnhealthy
 import org.gradle.devprod.collector.enterprise.export.extractor.Extractor
 import org.gradle.devprod.collector.enterprise.export.extractor.FirstTestTaskStart
+import org.gradle.devprod.collector.enterprise.export.extractor.IsGradleBuild
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
 import org.gradle.devprod.collector.enterprise.export.extractor.Tags
 import org.gradle.devprod.collector.enterprise.export.model.Build
@@ -61,6 +62,9 @@ class ExportApiExtractorService(
                 .map { it.data()!! }
                 .toList()
                 .groupBy(BuildEvent::eventType)
+            if (!IsGradleBuild.extractFrom(events)) {
+                return
+            }
             val buildStarted = BuildStarted.extractFrom(events)
             val buildFinished = BuildFinished.extractFrom(events)
             val buildTime = Duration.between(buildStarted, buildFinished)
