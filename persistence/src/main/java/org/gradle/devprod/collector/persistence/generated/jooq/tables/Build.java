@@ -15,7 +15,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row11;
+import org.jooq.Row12;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -102,6 +102,11 @@ public class Build extends TableImpl<BuildRecord> {
      */
     public final TableField<BuildRecord, String> GRADLE_VERSION = createField(DSL.name("gradle_version"), SQLDataType.VARCHAR(255), this, "");
 
+    /**
+     * The column <code>public.build.tags</code>.
+     */
+    public final TableField<BuildRecord, String[]> TAGS = createField(DSL.name("tags"), SQLDataType.VARCHAR(255).getArrayDataType(), this, "");
+
     private Build(Name alias, Table<BuildRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -177,11 +182,11 @@ public class Build extends TableImpl<BuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row11 type methods
+    // Row12 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row12<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[]> fieldsRow() {
+        return (Row12) super.fieldsRow();
     }
 }

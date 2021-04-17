@@ -90,14 +90,8 @@ class ExportApiExtractorService(
                 record.host = agent.host
                 record.daemonAge = daemonBuildNumber
                 record.daemonUnhealthyReason = daemonUnhealthyReason
+                record.tags = tags.toTypedArray()
                 record.store()
-
-                tags.forEach { tag ->
-                    val tagRecord = ctx.newRecord(Tables.TAGS)
-                    tagRecord.buildId = build.buildId
-                    tagRecord.tagName = tag
-                    tagRecord.store()
-                }
             }
         }
     }

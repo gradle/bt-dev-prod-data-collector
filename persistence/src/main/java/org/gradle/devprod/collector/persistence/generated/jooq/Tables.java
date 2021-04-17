@@ -5,7 +5,6 @@ package org.gradle.devprod.collector.persistence.generated.jooq;
 
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
-import org.gradle.devprod.collector.persistence.generated.jooq.tables.Tags;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 
 
@@ -19,11 +18,6 @@ public class Tables {
      * The table <code>public.build</code>.
      */
     public static final Build BUILD = Build.BUILD;
-
-    /**
-     * The table <code>public.tags</code>.
-     */
-    public static final Tags TAGS = Tags.TAGS;
 
     /**
      * The table <code>public.teamcity_build</code>.

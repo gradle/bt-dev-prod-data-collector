@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
-import org.gradle.devprod.collector.persistence.generated.jooq.tables.Tags;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 import org.jooq.Catalog;
 import org.jooq.Table;
@@ -34,11 +33,6 @@ public class Public extends SchemaImpl {
     public final Build BUILD = Build.BUILD;
 
     /**
-     * The table <code>public.tags</code>.
-     */
-    public final Tags TAGS = Tags.TAGS;
-
-    /**
      * The table <code>public.teamcity_build</code>.
      */
     public final TeamcityBuild TEAMCITY_BUILD = TeamcityBuild.TEAMCITY_BUILD;
@@ -60,7 +54,6 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             Build.BUILD,
-            Tags.TAGS,
             TeamcityBuild.TEAMCITY_BUILD);
     }
 }

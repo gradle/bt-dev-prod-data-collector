@@ -5,12 +5,9 @@ package org.gradle.devprod.collector.persistence.generated.jooq;
 
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
-import org.gradle.devprod.collector.persistence.generated.jooq.tables.Tags;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.BuildRecord;
-import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.TagsRecord;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.TeamcityBuildRecord;
-import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
@@ -29,12 +26,5 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<BuildRecord> BUILD_PK = Internal.createUniqueKey(Build.BUILD, DSL.name("build_pk"), new TableField[] { Build.BUILD.BUILD_ID }, true);
-    public static final UniqueKey<TagsRecord> TAGS_PK = Internal.createUniqueKey(Tags.TAGS, DSL.name("tags_pk"), new TableField[] { Tags.TAGS.BUILD_ID, Tags.TAGS.TAG_NAME }, true);
     public static final UniqueKey<TeamcityBuildRecord> TEAMCITY_BUILD_PK = Internal.createUniqueKey(TeamcityBuild.TEAMCITY_BUILD, DSL.name("teamcity_build_pk"), new TableField[] { TeamcityBuild.TEAMCITY_BUILD.BUILD_ID }, true);
-
-    // -------------------------------------------------------------------------
-    // FOREIGN KEY definitions
-    // -------------------------------------------------------------------------
-
-    public static final ForeignKey<TagsRecord, BuildRecord> TAGS__TAGS_BUILD_FK = Internal.createForeignKey(Tags.TAGS, DSL.name("tags_build_fk"), new TableField[] { Tags.TAGS.BUILD_ID }, Keys.BUILD_PK, new TableField[] { Build.BUILD.BUILD_ID }, true);
 }
