@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.toList
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildAgent
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildFinished
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildStarted
+import org.gradle.devprod.collector.enterprise.export.extractor.CustomValues
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonState
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonUnhealthy
 import org.gradle.devprod.collector.enterprise.export.extractor.Extractor
@@ -19,6 +20,7 @@ import org.gradle.devprod.collector.enterprise.export.extractor.Tags
 import org.gradle.devprod.collector.enterprise.export.model.Build
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables
+import org.gradle.devprod.collector.persistence.generated.jooq.udt.records.KeyValueRecord
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.slf4j.Logger
@@ -57,7 +59,7 @@ class ExportApiExtractorService(
     private suspend fun persistToDatabase(build: Build) {
         val existing = create.fetchAny(Tables.BUILD, Tables.BUILD.BUILD_ID.eq(build.buildId))
         if (existing == null) {
-            val extractors = listOf(BuildStarted, BuildFinished, FirstTestTaskStart, Tags, RootProjectNames, BuildAgent, DaemonState, DaemonUnhealthy)
+            val extractors = listOf(BuildStarted, BuildFinished, FirstTestTaskStart, Tags, CustomValues, RootProjectNames, BuildAgent, DaemonState, DaemonUnhealthy)
             val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, extractors.map(Extractor<*>::eventType))
                 .map { it.data()!! }
                 .toList()
@@ -73,6 +75,7 @@ class ExportApiExtractorService(
             val timeToFirstTestTask = firstTestTaskStart?.let { Duration.between(buildStarted, it.second) }
             val agent = BuildAgent.extractFrom(events)
             val tags = Tags.extractFrom(events)
+            val customValues = CustomValues.extractFrom(events)
             val daemonBuildNumber = DaemonState.extractFrom(events)
             val daemonUnhealthyReason = DaemonUnhealthy.extractFrom(events)
             println("Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}")
@@ -91,6 +94,7 @@ class ExportApiExtractorService(
                 record.daemonAge = daemonBuildNumber
                 record.daemonUnhealthyReason = daemonUnhealthyReason
                 record.tags = tags.toTypedArray()
+                record.customValues = customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
                 record.store()
             }
         }

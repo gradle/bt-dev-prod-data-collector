@@ -46,6 +46,11 @@ object Tags : Extractor<Set<String>>("UserTag") {
 
 }
 
+object CustomValues : Extractor<List<Pair<String,String>>>("UserNamedValue") {
+    override fun extract(events: Iterable<BuildEvent>): List<Pair<String, String>> =
+        events.map { it.data?.stringProperty("key")!! to it.data.stringProperty("value")!! }.toList()
+}
+
 object BuildAgent : Extractor<Agent>("BuildAgent") {
     override fun extract(events: Iterable<BuildEvent>): Agent =
         events.first().data!!.let { Agent(it.stringProperty("localHostname") ?: it.stringProperty("publicHostname"), it.stringProperty("username")) }

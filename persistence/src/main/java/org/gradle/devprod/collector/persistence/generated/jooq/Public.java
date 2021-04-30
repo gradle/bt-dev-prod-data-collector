@@ -9,8 +9,10 @@ import java.util.List;
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
+import org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue;
 import org.jooq.Catalog;
 import org.jooq.Table;
+import org.jooq.UDT;
 import org.jooq.impl.SchemaImpl;
 
 
@@ -55,5 +57,11 @@ public class Public extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             Build.BUILD,
             TeamcityBuild.TEAMCITY_BUILD);
+    }
+
+    @Override
+    public final List<UDT<?>> getUDTs() {
+        return Arrays.<UDT<?>>asList(
+            KeyValue.KEY_VALUE);
     }
 }

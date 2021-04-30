@@ -11,11 +11,12 @@ import java.util.List;
 import org.gradle.devprod.collector.persistence.generated.jooq.Keys;
 import org.gradle.devprod.collector.persistence.generated.jooq.Public;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.BuildRecord;
+import org.gradle.devprod.collector.persistence.generated.jooq.udt.records.KeyValueRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row12;
+import org.jooq.Row13;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -107,6 +108,11 @@ public class Build extends TableImpl<BuildRecord> {
      */
     public final TableField<BuildRecord, String[]> TAGS = createField(DSL.name("tags"), SQLDataType.VARCHAR(255).getArrayDataType(), this, "");
 
+    /**
+     * The column <code>public.build.custom_values</code>.
+     */
+    public final TableField<BuildRecord, KeyValueRecord[]> CUSTOM_VALUES = createField(DSL.name("custom_values"), org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue.KEY_VALUE.getDataType().getArrayDataType(), this, "");
+
     private Build(Name alias, Table<BuildRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -182,11 +188,11 @@ public class Build extends TableImpl<BuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row12 type methods
+    // Row13 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row12<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[]> fieldsRow() {
-        return (Row12) super.fieldsRow();
+    public Row13<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[]> fieldsRow() {
+        return (Row13) super.fieldsRow();
     }
 }
