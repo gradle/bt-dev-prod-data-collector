@@ -15,7 +15,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row10;
+import org.jooq.Row11;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -97,6 +97,11 @@ public class TeamcityBuild extends TableImpl<TeamcityBuildRecord> {
      */
     public final TableField<TeamcityBuildRecord, String> GIT_COMMIT_ID = createField(DSL.name("git_commit_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
+    /**
+     * The column <code>public.teamcity_build.pre_tested_commit_success_rate</code>.
+     */
+    public final TableField<TeamcityBuildRecord, Double> PRE_TESTED_COMMIT_SUCCESS_RATE = createField(DSL.name("pre_tested_commit_success_rate"), SQLDataType.DOUBLE, this, "");
+
     private TeamcityBuild(Name alias, Table<TeamcityBuildRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -172,11 +177,11 @@ public class TeamcityBuild extends TableImpl<TeamcityBuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row10 type methods
+    // Row11 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row10<String, String, OffsetDateTime, OffsetDateTime, OffsetDateTime, String, String, String, String, String> fieldsRow() {
-        return (Row10) super.fieldsRow();
+    public Row11<String, String, OffsetDateTime, OffsetDateTime, OffsetDateTime, String, String, String, String, String, Double> fieldsRow() {
+        return (Row11) super.fieldsRow();
     }
 }
