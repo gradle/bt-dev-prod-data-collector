@@ -23,7 +23,7 @@ class TeamcityExport(
         val builds = teamcityClientService.loadBuildsForReadyForNightly().toList().sortedBy { it.finishDateTime }
         builds.forEachIndexed { index, build ->
             val existing = create.fetchAny(Tables.TEAMCITY_BUILD, Tables.TEAMCITY_BUILD.BUILD_ID.eq(build.id.stringId))
-            if (existing == null || (build.isPreTestCommitBuild() && existing.preTestedCommitSuccessRate == null)) {
+            if (existing == null) {
                 val branch = build.branch.name
                 val status = build.status?.name
                 val gitCommitId = build.revisions.first { it.vcsRootInstance.vcsRootId.stringId == "Gradle_Branches_GradlePersonalBranches" }
@@ -46,6 +46,11 @@ class TeamcityExport(
 
                     record.store()
                 }
+            } else if ((build.isPreTestCommitBuild() && existing.preTestedCommitSuccessRate == null)) {
+                create.update(Tables.TEAMCITY_BUILD)
+                    .set(Tables.TEAMCITY_BUILD.PRE_TESTED_COMMIT_SUCCESS_RATE, calculatePreTestedCommitSuccessRate(index, builds))
+                    .where(Tables.TEAMCITY_BUILD.BUILD_ID.eq(existing.buildId))
+                    .execute()
             }
         }
     }
