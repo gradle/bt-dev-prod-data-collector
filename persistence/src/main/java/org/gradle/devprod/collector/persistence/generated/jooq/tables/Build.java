@@ -16,7 +16,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row13;
+import org.jooq.Row14;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -113,6 +113,11 @@ public class Build extends TableImpl<BuildRecord> {
      */
     public final TableField<BuildRecord, KeyValueRecord[]> CUSTOM_VALUES = createField(DSL.name("custom_values"), org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue.KEY_VALUE.getDataType().getArrayDataType(), this, "");
 
+    /**
+     * The column <code>public.build.successful</code>.
+     */
+    public final TableField<BuildRecord, Boolean> SUCCESSFUL = createField(DSL.name("successful"), SQLDataType.BOOLEAN.nullable(false), this, "");
+
     private Build(Name alias, Table<BuildRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -188,11 +193,11 @@ public class Build extends TableImpl<BuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row13 type methods
+    // Row14 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row13<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[]> fieldsRow() {
-        return (Row13) super.fieldsRow();
+    public Row14<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[], Boolean> fieldsRow() {
+        return (Row14) super.fieldsRow();
     }
 }

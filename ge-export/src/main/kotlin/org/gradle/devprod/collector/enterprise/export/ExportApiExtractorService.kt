@@ -5,8 +5,9 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.toSet
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildAgent
+import org.gradle.devprod.collector.enterprise.export.extractor.BuildFailure
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildFinished
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildStarted
 import org.gradle.devprod.collector.enterprise.export.extractor.CustomValues
@@ -59,8 +60,8 @@ class ExportApiExtractorService(
     private suspend fun persistToDatabase(build: Build) {
         val existing = create.fetchAny(Tables.BUILD, Tables.BUILD.BUILD_ID.eq(build.buildId))
         if (existing == null) {
-            val extractors = listOf(BuildStarted, BuildFinished, FirstTestTaskStart, Tags, CustomValues, RootProjectNames, BuildAgent, DaemonState, DaemonUnhealthy)
-            val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, extractors.map(Extractor<*>::eventType))
+            val extractors = listOf(BuildStarted, BuildFinished, BuildFailure, FirstTestTaskStart, Tags, CustomValues, RootProjectNames, BuildAgent, DaemonState, DaemonUnhealthy)
+            val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, extractors.map(Extractor<*>::eventType)).toSet()
                 .map { it.data()!! }
                 .toList()
                 .groupBy(BuildEvent::eventType)
@@ -70,6 +71,7 @@ class ExportApiExtractorService(
             val buildStarted = BuildStarted.extractFrom(events)
             val buildFinished = BuildFinished.extractFrom(events)
             val buildTime = Duration.between(buildStarted, buildFinished)
+            val buildFailed = BuildFailure.extractFrom(events)
             val rootProjectName = RootProjectNames.extractFrom(events).firstOrNull { !it.startsWith("build-logic") }
             val firstTestTaskStart = FirstTestTaskStart.extractFrom(events)
             val timeToFirstTestTask = firstTestTaskStart?.let { Duration.between(buildStarted, it.second) }
@@ -86,6 +88,7 @@ class ExportApiExtractorService(
                 record.gradleVersion = build.gradleVersion
                 record.buildStart = OffsetDateTime.ofInstant(buildStarted, ZoneId.systemDefault())
                 record.buildFinish = OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
+                record.successful = !buildFailed
                 record.timeToFirstTestTask = timeToFirstTestTask?.toMillis()
                 record.pathToFirstTestTask = firstTestTaskStart?.first
                 record.rootProject = rootProjectName

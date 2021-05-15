@@ -21,6 +21,11 @@ object BuildFinished : Extractor<Instant>("BuildFinished") {
         Instant.ofEpochMilli(events.first().timestamp)
 }
 
+object BuildFailure : Extractor<Boolean>("BuildFinished") {
+    override fun extract(events: Iterable<BuildEvent>): Boolean =
+        events.first().data?.anyProperty("failureId") != null
+}
+
 object RootProjectNames : Extractor<List<String>>("ProjectStructure") {
     override fun extract(events: Iterable<BuildEvent>): List<String> =
         events.filter { it.eventType == "ProjectStructure" }
@@ -73,4 +78,5 @@ object DaemonUnhealthy : Extractor<String?>("DaemonUnhealthy") {
 data class Agent(val host: String?, val user: String?)
 
 private fun Any.stringProperty(name: String): String? = (this as Map<*, *>)[name] as String?
+private fun Any.anyProperty(name: String): Any? = (this as Map<*, *>)[name]
 private fun Any.intProperty(name: String): Int? = (this as Map<*, *>)[name] as Int?
