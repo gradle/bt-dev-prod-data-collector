@@ -1,6 +1,7 @@
 package org.gradle.devprod.collector.enterprise.export.extractor
 
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
+import java.time.Duration
 import java.time.Instant
 
 // Maven builds don't seem to have a build started event
@@ -14,6 +15,39 @@ object BuildStarted : Extractor<Instant>("BuildStarted") {
     override
     fun extract(events: Iterable<BuildEvent>): Instant =
         Instant.ofEpochMilli(events.first().timestamp)
+}
+
+data class TestIdAndClassName(
+    val id: Long,
+    val className: String
+)
+
+object TestStarted : Extractor<Map<TestIdAndClassName, Instant>>("TestStarted") {
+    override fun extract(events: Iterable<BuildEvent>): Map<TestIdAndClassName, Instant> =
+        events.flatMap {
+            val id = it.data?.longProperty("id")
+            val className = it.data?.stringProperty("className")
+            val startTime = Instant.ofEpochMilli(it.timestamp)
+            if (id == null || className == null)
+                emptyList()
+            else
+                listOf(TestIdAndClassName(id, className) to startTime)
+        }.toMap()
+}
+
+class TestFinished(
+    private val testClassStartTimes: Map<TestIdAndClassName, Instant>
+) : Extractor<Map<String, Duration>>("TestFinished") {
+    private val testIdToClassName: Map<Long, String> = testClassStartTimes.keys.associate { it.id to it.className }
+    private val testIdToStartTime: Map<Long, Instant> = testClassStartTimes.map { it.key.id to it.value }.toMap()
+    override fun extract(events: Iterable<BuildEvent>): Map<String, Duration> = events.filter {
+        testIdToClassName.containsKey(it.data?.longProperty("id"))
+    }.associate {
+        val id = it.data?.longProperty("id")!!
+        val endTime = Instant.ofEpochMilli(it.timestamp)
+
+        testIdToClassName.getValue(id) to Duration.between(testIdToStartTime.getValue(id), endTime)
+    }
 }
 
 object BuildFinished : Extractor<Instant>("BuildFinished") {
@@ -51,14 +85,17 @@ object Tags : Extractor<Set<String>>("UserTag") {
 
 }
 
-object CustomValues : Extractor<List<Pair<String,String>>>("UserNamedValue") {
+object CustomValues : Extractor<List<Pair<String, String>>>("UserNamedValue") {
     override fun extract(events: Iterable<BuildEvent>): List<Pair<String, String>> =
         events.map { it.data?.stringProperty("key")!! to it.data.stringProperty("value")!! }.toList()
 }
 
 object BuildAgent : Extractor<Agent>("BuildAgent") {
     override fun extract(events: Iterable<BuildEvent>): Agent =
-        events.first().data!!.let { Agent(it.stringProperty("localHostname") ?: it.stringProperty("publicHostname"), it.stringProperty("username")) }
+        events.first().data!!.let {
+            Agent(it.stringProperty("localHostname")
+                ?: it.stringProperty("publicHostname"), it.stringProperty("username"))
+        }
 }
 
 // https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/DaemonState_1_1.html
@@ -80,3 +117,4 @@ data class Agent(val host: String?, val user: String?)
 private fun Any.stringProperty(name: String): String? = (this as Map<*, *>)[name] as String?
 private fun Any.anyProperty(name: String): Any? = (this as Map<*, *>)[name]
 private fun Any.intProperty(name: String): Int? = (this as Map<*, *>)[name] as Int?
+private fun Any.longProperty(name: String): Long? = (this as Map<*, *>)[name] as Long?
