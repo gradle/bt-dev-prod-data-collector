@@ -36,18 +36,22 @@ object TestStarted : Extractor<Map<TestIdAndClassName, Instant>>("TestStarted") 
 }
 
 class TestFinished(
-    private val testClassStartTimes: Map<TestIdAndClassName, Instant>
+    testClassStartTimes: Map<TestIdAndClassName, Instant>
 ) : Extractor<Map<String, Duration>>("TestFinished") {
     private val testIdToClassName: Map<Long, String> = testClassStartTimes.keys.associate { it.id to it.className }
     private val testIdToStartTime: Map<Long, Instant> = testClassStartTimes.map { it.key.id to it.value }.toMap()
-    override fun extract(events: Iterable<BuildEvent>): Map<String, Duration> = events.filter {
-        testIdToClassName.containsKey(it.data?.longProperty("id"))
-    }.associate {
-        val id = it.data?.longProperty("id")!!
-        val endTime = Instant.ofEpochMilli(it.timestamp)
-
-        testIdToClassName.getValue(id) to Duration.between(testIdToStartTime.getValue(id), endTime)
-    }
+    override fun extract(events: Iterable<BuildEvent>): Map<String, Duration> =
+        events.filter {
+            testIdToClassName.containsKey(it.data?.longProperty("id"))
+        }.map {
+            val id = it.data?.longProperty("id")!!
+            val endTime = Instant.ofEpochMilli(it.timestamp)
+            testIdToClassName.getValue(id) to Duration.between(testIdToStartTime.getValue(id), endTime)
+        }.groupBy({ it.first }) {
+            it.second
+        }.mapValues { it: Map.Entry<String, List<Duration>> ->
+            it.value.maxOf { it }
+        }
 }
 
 object BuildFinished : Extractor<Instant>("BuildFinished") {
