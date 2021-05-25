@@ -22,27 +22,22 @@ data class TestIdAndClassName(
     val className: String
 )
 
-object TestStarted : Extractor<Map<TestIdAndClassName, Instant>>("TestStarted") {
-    override fun extract(events: Iterable<BuildEvent>): Map<TestIdAndClassName, Instant> =
-        events.flatMap {
-            val id = it.data?.longProperty("id")
-            val className = it.data?.stringProperty("className")
-            val startTime = Instant.ofEpochMilli(it.timestamp)
-            if (id == null || className == null)
-                emptyList()
-            else
-                listOf(TestIdAndClassName(id, className) to startTime)
-        }.toMap()
-}
-
-class TestFinished(
-    testClassStartTimes: Map<TestIdAndClassName, Instant>
-) : Extractor<Map<String, Duration>>("TestFinished") {
-    private val testIdToClassName: Map<Long, String> = testClassStartTimes.keys.associate { it.id to it.className }
-    private val testIdToStartTime: Map<Long, Instant> = testClassStartTimes.map { it.key.id to it.value }.toMap()
-    override fun extract(events: Iterable<BuildEvent>): Map<String, Duration> =
-        events.filter {
-            testIdToClassName.containsKey(it.data?.longProperty("id"))
+object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestStarted", "TestFinished")) {
+    override fun extract(events: Iterable<BuildEvent>): Map<String, Duration> {
+        val testIdToClassName: MutableMap<Long, String> = mutableMapOf()
+        val testIdToStartTime: MutableMap<Long, Instant> = mutableMapOf()
+        events.filter { it.eventType == "TestStarted" }
+            .forEach {
+                val id = it.data?.longProperty("id")
+                val className = it.data?.stringProperty("className")
+                val startTime = Instant.ofEpochMilli(it.timestamp)
+                if (id != null && className != null) {
+                    testIdToClassName[id] = className
+                    testIdToStartTime[id] = startTime
+                }
+            }
+        return events.filter {
+            it.eventType == "TestFinished" && testIdToClassName.containsKey(it.data?.longProperty("id"))
         }.map {
             val id = it.data?.longProperty("id")!!
             val endTime = Instant.ofEpochMilli(it.timestamp)
@@ -50,8 +45,9 @@ class TestFinished(
         }.groupBy({ it.first }) {
             it.second
         }.mapValues { it: Map.Entry<String, List<Duration>> ->
-            it.value.maxOf { it }
+            it.value.maxOrNull()!!
         }
+    }
 }
 
 object BuildFinished : Extractor<Instant>("BuildFinished") {

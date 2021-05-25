@@ -101,24 +101,24 @@ public class LongTest extends TableImpl<LongTestRecord> {
 
     @Override
     public UniqueKey<LongTestRecord> getPrimaryKey() {
-        return Keys.TAGS_PK;
+        return Keys.LONG_TEST_PK;
     }
 
     @Override
     public List<UniqueKey<LongTestRecord>> getKeys() {
-        return Arrays.<UniqueKey<LongTestRecord>>asList(Keys.TAGS_PK);
+        return Arrays.<UniqueKey<LongTestRecord>>asList(Keys.LONG_TEST_PK);
     }
 
     @Override
     public List<ForeignKey<LongTestRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<LongTestRecord, ?>>asList(Keys.LONG_TEST__TAGS_BUILD_FK);
+        return Arrays.<ForeignKey<LongTestRecord, ?>>asList(Keys.LONG_TEST__LONG_TEST_BUILD_FK);
     }
 
     private transient Build _build;
 
     public Build build() {
         if (_build == null)
-            _build = new Build(this, Keys.LONG_TEST__TAGS_BUILD_FK);
+            _build = new Build(this, Keys.LONG_TEST__LONG_TEST_BUILD_FK);
 
         return _build;
     }

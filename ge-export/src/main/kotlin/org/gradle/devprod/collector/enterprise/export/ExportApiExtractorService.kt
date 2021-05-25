@@ -15,10 +15,9 @@ import org.gradle.devprod.collector.enterprise.export.extractor.DaemonState
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonUnhealthy
 import org.gradle.devprod.collector.enterprise.export.extractor.FirstTestTaskStart
 import org.gradle.devprod.collector.enterprise.export.extractor.IsGradleBuild
+import org.gradle.devprod.collector.enterprise.export.extractor.LongTestClassExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
 import org.gradle.devprod.collector.enterprise.export.extractor.Tags
-import org.gradle.devprod.collector.enterprise.export.extractor.TestFinished
-import org.gradle.devprod.collector.enterprise.export.extractor.TestStarted
 import org.gradle.devprod.collector.enterprise.export.model.Build
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables
@@ -65,21 +64,21 @@ class ExportApiExtractorService(
     private suspend fun persistToDatabase(build: Build) {
         val existing = create.fetchAny(Tables.BUILD, Tables.BUILD.BUILD_ID.eq(build.buildId))
         if (existing == null) {
-            val eventTypesToExtract: List<String> = listOf(
-                BuildStarted.eventType,
-                BuildFinished.eventType,
-                TestStarted.eventType,
-                TestFinished::class.simpleName!!,
-                BuildFailure.eventType,
-                FirstTestTaskStart.eventType,
-                Tags.eventType,
-                CustomValues.eventType,
-                RootProjectNames.eventType,
-                BuildAgent.eventType,
-                DaemonState.eventType,
-                DaemonUnhealthy.eventType
+            val extractors = listOf(
+                BuildStarted,
+                BuildFinished,
+                BuildFailure,
+                LongTestClassExtractor,
+                FirstTestTaskStart,
+                Tags,
+                CustomValues,
+                RootProjectNames,
+                BuildAgent,
+                DaemonState,
+                DaemonUnhealthy
             )
-            val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, eventTypesToExtract).toSet()
+            val eventTypes = extractors.flatMap { it.eventTypes }.distinct()
+            val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, eventTypes).toSet()
                 .map { it.data()!! }
                 .toList()
                 .groupBy(BuildEvent::eventType)
@@ -88,9 +87,7 @@ class ExportApiExtractorService(
             }
             val buildStarted = BuildStarted.extractFrom(events)
             val buildFinished = BuildFinished.extractFrom(events)
-            val testStarted = TestStarted.extractFrom(events)
-            val testFinished = TestFinished(testStarted).extractFrom(events)
-            val longRunningTestClasses: Map<String, Duration> = testFinished.filter { it.value.toMillis() > LONG_TEST_MS }
+            val longRunningTestClasses: Map<String, Duration> = LongTestClassExtractor.extractFrom(events)
             val buildTime = Duration.between(buildStarted, buildFinished)
             val buildFailed = BuildFailure.extractFrom(events)
             val rootProjectName = RootProjectNames.extractFrom(events).firstOrNull { !it.startsWith("build-logic") }
@@ -122,9 +119,9 @@ class ExportApiExtractorService(
                 record.store()
 
                 if (longRunningTestClasses.isNotEmpty()) {
-                    create.batch(
+                    ctx.batch(
                         *longRunningTestClasses.map {
-                            create.insertInto(LONG_TEST, LONG_TEST.BUILD_ID, LONG_TEST.CLASS_NAME, LONG_TEST.DURATION_MS).values(build.buildId, it.key, it.value.toMillis())
+                            ctx.insertInto(LONG_TEST, LONG_TEST.BUILD_ID, LONG_TEST.CLASS_NAME, LONG_TEST.DURATION_MS).values(build.buildId, it.key, it.value.toMillis())
                         }.toTypedArray()
                     ).execute()
                 }
