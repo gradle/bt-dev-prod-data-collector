@@ -13,14 +13,15 @@ import org.gradle.devprod.collector.enterprise.export.extractor.BuildStarted
 import org.gradle.devprod.collector.enterprise.export.extractor.CustomValues
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonState
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonUnhealthy
-import org.gradle.devprod.collector.enterprise.export.extractor.Extractor
 import org.gradle.devprod.collector.enterprise.export.extractor.FirstTestTaskStart
 import org.gradle.devprod.collector.enterprise.export.extractor.IsGradleBuild
+import org.gradle.devprod.collector.enterprise.export.extractor.LongTestClassExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
 import org.gradle.devprod.collector.enterprise.export.extractor.Tags
 import org.gradle.devprod.collector.enterprise.export.model.Build
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.LONG_TEST
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.records.KeyValueRecord
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
@@ -31,6 +32,9 @@ import java.time.Duration
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
+
+// We only care long running test classes
+const val LONG_TEST_MS = 60 * 1000
 
 @Service
 class ExportApiExtractorService(
@@ -60,8 +64,21 @@ class ExportApiExtractorService(
     private suspend fun persistToDatabase(build: Build) {
         val existing = create.fetchAny(Tables.BUILD, Tables.BUILD.BUILD_ID.eq(build.buildId))
         if (existing == null) {
-            val extractors = listOf(BuildStarted, BuildFinished, BuildFailure, FirstTestTaskStart, Tags, CustomValues, RootProjectNames, BuildAgent, DaemonState, DaemonUnhealthy)
-            val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, extractors.map(Extractor<*>::eventType)).toSet()
+            val extractors = listOf(
+                BuildStarted,
+                BuildFinished,
+                BuildFailure,
+                LongTestClassExtractor,
+                FirstTestTaskStart,
+                Tags,
+                CustomValues,
+                RootProjectNames,
+                BuildAgent,
+                DaemonState,
+                DaemonUnhealthy
+            )
+            val eventTypes = extractors.flatMap { it.eventTypes }.distinct()
+            val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, eventTypes).toSet()
                 .map { it.data()!! }
                 .toList()
                 .groupBy(BuildEvent::eventType)
@@ -70,6 +87,7 @@ class ExportApiExtractorService(
             }
             val buildStarted = BuildStarted.extractFrom(events)
             val buildFinished = BuildFinished.extractFrom(events)
+            val longRunningTestClasses: Map<String, Duration> = LongTestClassExtractor.extractFrom(events)
             val buildTime = Duration.between(buildStarted, buildFinished)
             val buildFailed = BuildFailure.extractFrom(events)
             val rootProjectName = RootProjectNames.extractFrom(events).firstOrNull { !it.startsWith("build-logic") }
@@ -99,6 +117,14 @@ class ExportApiExtractorService(
                 record.tags = tags.toTypedArray()
                 record.customValues = customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
                 record.store()
+
+                if (longRunningTestClasses.isNotEmpty()) {
+                    ctx.batch(
+                        *longRunningTestClasses.map {
+                            ctx.insertInto(LONG_TEST, LONG_TEST.BUILD_ID, LONG_TEST.CLASS_NAME, LONG_TEST.DURATION_MS).values(build.buildId, it.key, it.value.toMillis())
+                        }.toTypedArray()
+                    ).execute()
+                }
             }
         }
     }

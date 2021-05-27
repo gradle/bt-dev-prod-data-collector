@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue;
 import org.jooq.Catalog;
@@ -35,6 +36,11 @@ public class Public extends SchemaImpl {
     public final Build BUILD = Build.BUILD;
 
     /**
+     * The table <code>public.long_test</code>.
+     */
+    public final LongTest LONG_TEST = LongTest.LONG_TEST;
+
+    /**
      * The table <code>public.teamcity_build</code>.
      */
     public final TeamcityBuild TEAMCITY_BUILD = TeamcityBuild.TEAMCITY_BUILD;
@@ -56,6 +62,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             Build.BUILD,
+            LongTest.LONG_TEST,
             TeamcityBuild.TEAMCITY_BUILD);
     }
 
