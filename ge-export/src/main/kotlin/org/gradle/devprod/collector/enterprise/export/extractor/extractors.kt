@@ -5,28 +5,23 @@ import java.time.Duration
 import java.time.Instant
 
 // Maven builds don't seem to have a build started event
-object IsGradleBuild : Extractor<Boolean>("BuildStarted") {
+object IsGradleBuild : SingleEventExtractor<Boolean>("BuildStarted") {
     override
     fun extract(events: Iterable<BuildEvent>): Boolean =
         events.any()
 }
 
-object BuildStarted : Extractor<Instant>("BuildStarted") {
+object BuildStarted : SingleEventExtractor<Instant>("BuildStarted") {
     override
     fun extract(events: Iterable<BuildEvent>): Instant =
         Instant.ofEpochMilli(events.first().timestamp)
 }
 
-data class TestIdAndClassName(
-    val id: Long,
-    val className: String
-)
-
 object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestStarted", "TestFinished")) {
-    override fun extract(events: Iterable<BuildEvent>): Map<String, Duration> {
+    override fun extractFrom(events: Map<String?, List<BuildEvent>>): Map<String, Duration> {
         val testIdToClassName: MutableMap<Long, String> = mutableMapOf()
         val testIdToStartTime: MutableMap<Long, Instant> = mutableMapOf()
-        events.filter { it.eventType == "TestStarted" }
+        events.getOrDefault(eventTypes[0], emptyList()).filter { it.eventType == "TestStarted" }
             .forEach {
                 val id = it.data?.longProperty("id")
                 val className = it.data?.stringProperty("className")
@@ -36,7 +31,7 @@ object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestSta
                     testIdToStartTime[id] = startTime
                 }
             }
-        return events.filter {
+        return events.getOrDefault(eventTypes[1], emptyList()).filter {
             it.eventType == "TestFinished" && testIdToClassName.containsKey(it.data?.longProperty("id"))
         }.map {
             val id = it.data?.longProperty("id")!!
@@ -50,23 +45,23 @@ object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestSta
     }
 }
 
-object BuildFinished : Extractor<Instant>("BuildFinished") {
+object BuildFinished : SingleEventExtractor<Instant>("BuildFinished") {
     override fun extract(events: Iterable<BuildEvent>): Instant =
         Instant.ofEpochMilli(events.first().timestamp)
 }
 
-object BuildFailure : Extractor<Boolean>("BuildFinished") {
+object BuildFailure : SingleEventExtractor<Boolean>("BuildFinished") {
     override fun extract(events: Iterable<BuildEvent>): Boolean =
         events.first().data?.anyProperty("failureId") != null
 }
 
-object RootProjectNames : Extractor<List<String>>("ProjectStructure") {
+object RootProjectNames : SingleEventExtractor<List<String>>("ProjectStructure") {
     override fun extract(events: Iterable<BuildEvent>): List<String> =
         events.filter { it.eventType == "ProjectStructure" }
             .mapNotNull { it.data?.stringProperty("rootProjectName") }
 }
 
-object FirstTestTaskStart : Extractor<Pair<String, Instant>?>("TaskStarted") {
+object FirstTestTaskStart : SingleEventExtractor<Pair<String, Instant>?>("TaskStarted") {
     override fun extract(events: Iterable<BuildEvent>): Pair<String, Instant>? {
         val testTasksStarted = events
             .filter { it.data?.stringProperty("className")?.endsWith("Test") ?: false }
@@ -79,18 +74,18 @@ object FirstTestTaskStart : Extractor<Pair<String, Instant>?>("TaskStarted") {
     }
 }
 
-object Tags : Extractor<Set<String>>("UserTag") {
+object Tags : SingleEventExtractor<Set<String>>("UserTag") {
     override fun extract(events: Iterable<BuildEvent>): Set<String> =
         events.map { it.data?.stringProperty("tag")!! }.toSet()
 
 }
 
-object CustomValues : Extractor<List<Pair<String, String>>>("UserNamedValue") {
+object CustomValues : SingleEventExtractor<List<Pair<String, String>>>("UserNamedValue") {
     override fun extract(events: Iterable<BuildEvent>): List<Pair<String, String>> =
         events.map { it.data?.stringProperty("key")!! to it.data.stringProperty("value")!! }.toList()
 }
 
-object BuildAgent : Extractor<Agent>("BuildAgent") {
+object BuildAgent : SingleEventExtractor<Agent>("BuildAgent") {
     override fun extract(events: Iterable<BuildEvent>): Agent =
         events.first().data!!.let {
             Agent(it.stringProperty("localHostname")
@@ -99,14 +94,14 @@ object BuildAgent : Extractor<Agent>("BuildAgent") {
 }
 
 // https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/DaemonState_1_1.html
-object DaemonState : Extractor<Int?>("DaemonState") {
+object DaemonState : SingleEventExtractor<Int?>("DaemonState") {
     override fun extract(events: Iterable<BuildEvent>): Int? {
         return events.firstOrNull()?.data?.intProperty("buildNumber")
     }
 }
 
 // https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/DaemonUnhealthy_1_0.html
-object DaemonUnhealthy : Extractor<String?>("DaemonUnhealthy") {
+object DaemonUnhealthy : SingleEventExtractor<String?>("DaemonUnhealthy") {
     override fun extract(events: Iterable<BuildEvent>): String? {
         return events.firstOrNull()?.data?.stringProperty("reason")
     }
