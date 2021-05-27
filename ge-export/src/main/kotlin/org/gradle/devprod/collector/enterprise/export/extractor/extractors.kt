@@ -21,7 +21,7 @@ object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestSta
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): Map<String, Duration> {
         val testIdToClassName: MutableMap<Long, String> = mutableMapOf()
         val testIdToStartTime: MutableMap<Long, Instant> = mutableMapOf()
-        events.getOrDefault(eventTypes[0], emptyList()).filter { it.eventType == "TestStarted" }
+        events.getOrDefault(eventTypes[0], emptyList())
             .forEach {
                 val id = it.data?.longProperty("id")
                 val className = it.data?.stringProperty("className")
@@ -32,7 +32,7 @@ object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestSta
                 }
             }
         return events.getOrDefault(eventTypes[1], emptyList()).filter {
-            it.eventType == "TestFinished" && testIdToClassName.containsKey(it.data?.longProperty("id"))
+            testIdToClassName.containsKey(it.data?.longProperty("id"))
         }.map {
             val id = it.data?.longProperty("id")!!
             val endTime = Instant.ofEpochMilli(it.timestamp)
