@@ -1,1 +1,1 @@
-web: java -Xmx200M -XX:MaxMetaspaceSize=100M -jar application/build/libs/application-*.jar
+web: java -Xmx150M -XX:MaxMetaspaceSize=128M -jar application/build/libs/application-*.jar
