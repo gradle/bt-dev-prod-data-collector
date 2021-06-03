@@ -79,7 +79,7 @@ class ExportApiExtractorService(
             )
             val eventTypes = extractors.flatMap { it.eventTypes }.distinct()
             val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, eventTypes).toSet()
-                .map { it.data()!! }
+                .mapNotNull { it.data() }
                 .toList()
                 .groupBy(BuildEvent::eventType)
             if (!IsGradleBuild.extractFrom(events)) {
