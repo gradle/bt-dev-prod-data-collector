@@ -17,6 +17,13 @@ object BuildStarted : SingleEventExtractor<Instant>("BuildStarted") {
         Instant.ofEpochMilli(events.first().timestamp)
 }
 
+/**
+ * This is how we extract the test class running time:
+ *
+ * 1. Find out a `TestStarted` event with `data.suite=true` and `data.name=data.className, not null`, extract its `id`.
+ * 2. Find out a `TestFinished` event with that `id`.
+ * 3. Subtract to get the time (in ms).
+ */
 object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestStarted", "TestFinished")) {
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): Map<String, Duration> {
         val testIdToClassName: MutableMap<Long, String> = mutableMapOf()
@@ -24,9 +31,11 @@ object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestSta
         events.getOrDefault(eventTypes[0], emptyList())
             .forEach {
                 val id = it.data?.longProperty("id")
+                val name = it.data?.stringProperty("name")
                 val className = it.data?.stringProperty("className")
-                val startTime = Instant.ofEpochMilli(it.timestamp)
-                if (id != null && className != null) {
+                val suite = it.data?.booleanProperty("suite")
+                if (suite == true && id != null && className != null && name == className) {
+                    val startTime = Instant.ofEpochMilli(it.timestamp)
                     testIdToClassName[id] = className
                     testIdToStartTime[id] = startTime
                 }
@@ -89,7 +98,8 @@ object BuildAgent : SingleEventExtractor<Agent>("BuildAgent") {
     override fun extract(events: Iterable<BuildEvent>): Agent =
         events.first().data!!.let {
             Agent(it.stringProperty("localHostname")
-                ?: it.stringProperty("publicHostname"), it.stringProperty("username"))
+                ?: it.stringProperty("publicHostname"), it.stringProperty("username")
+            )
         }
 }
 
@@ -109,6 +119,7 @@ object DaemonUnhealthy : SingleEventExtractor<String?>("DaemonUnhealthy") {
 
 data class Agent(val host: String?, val user: String?)
 
+private fun Any.booleanProperty(name: String): Boolean? = (this as Map<*, *>)[name] as Boolean?
 private fun Any.stringProperty(name: String): String? = (this as Map<*, *>)[name] as String?
 private fun Any.anyProperty(name: String): Any? = (this as Map<*, *>)[name]
 private fun Any.intProperty(name: String): Int? = (this as Map<*, *>)[name] as Int?
