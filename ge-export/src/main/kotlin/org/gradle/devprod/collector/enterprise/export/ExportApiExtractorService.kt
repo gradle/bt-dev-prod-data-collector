@@ -33,9 +33,6 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-// We only care long running test classes
-const val LONG_TEST_MS = 60 * 1000
-
 @Service
 class ExportApiExtractorService(
     private
