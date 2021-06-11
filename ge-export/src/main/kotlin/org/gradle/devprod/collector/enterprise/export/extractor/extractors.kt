@@ -4,13 +4,6 @@ import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import java.time.Duration
 import java.time.Instant
 
-// Maven builds don't seem to have a build started event
-object IsGradleBuild : SingleEventExtractor<Boolean>("BuildStarted") {
-    override
-    fun extract(events: Iterable<BuildEvent>): Boolean =
-        events.any()
-}
-
 object BuildStarted : SingleEventExtractor<Instant>("BuildStarted") {
     override
     fun extract(events: Iterable<BuildEvent>): Instant =

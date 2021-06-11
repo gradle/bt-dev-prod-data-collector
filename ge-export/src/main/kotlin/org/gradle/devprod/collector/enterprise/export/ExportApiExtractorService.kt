@@ -1,6 +1,7 @@
 package org.gradle.devprod.collector.enterprise.export
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
@@ -14,7 +15,6 @@ import org.gradle.devprod.collector.enterprise.export.extractor.CustomValues
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonState
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonUnhealthy
 import org.gradle.devprod.collector.enterprise.export.extractor.FirstTestTaskStart
-import org.gradle.devprod.collector.enterprise.export.extractor.IsGradleBuild
 import org.gradle.devprod.collector.enterprise.export.extractor.LongTestClassExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
 import org.gradle.devprod.collector.enterprise.export.extractor.Tags
@@ -55,6 +55,7 @@ class ExportApiExtractorService(
             }
             .map { it.data() }
             .filterNotNull()
+            .filter { it.toolType == "gradle" }
             .map(this::persistToDatabase)
             .onCompletion { failure ->
                 failure?.let { logger.error("Failed streaming Gradle enterprise data", it) }
@@ -82,9 +83,6 @@ class ExportApiExtractorService(
                 .mapNotNull { it.data() }
                 .toList()
                 .groupBy(BuildEvent::eventType)
-            if (!IsGradleBuild.extractFrom(events)) {
-                return
-            }
             val buildStarted = BuildStarted.extractFrom(events)
             val buildFinished = BuildFinished.extractFrom(events)
             val longRunningTestClasses: Map<String, Duration> = LongTestClassExtractor.extractFrom(events)
@@ -103,7 +101,7 @@ class ExportApiExtractorService(
                 val ctx = DSL.using(configuration)
                 val record = ctx.newRecord(Tables.BUILD)
                 record.buildId = build.buildId
-                record.gradleVersion = build.gradleVersion
+                record.gradleVersion = build.toolVersion
                 record.buildStart = OffsetDateTime.ofInstant(buildStarted, ZoneId.systemDefault())
                 record.buildFinish = OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
                 record.successful = !buildFailed
