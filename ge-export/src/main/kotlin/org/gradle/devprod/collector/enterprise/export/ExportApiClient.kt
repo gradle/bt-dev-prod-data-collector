@@ -16,7 +16,7 @@ class ExportApiClient(
     private val client: WebClient = WebClient.create("${server.url}/build-export")
 
     fun createEventStream(): Flow<ServerSentEvent<Build?>> = client.get()
-        .uri("/v1/builds/since/${System.currentTimeMillis() - 72 * 60 * 60 * 1000}?stream")
+        .uri("/v2/builds/since/${System.currentTimeMillis() - 72 * 60 * 60 * 1000}?stream")
         .bearerAuth()
         .retrieve()
         .bodyToFlow()
@@ -27,7 +27,7 @@ class ExportApiClient(
             )
 
     fun getEvents(build: Build, events: List<String>): Flow<ServerSentEvent<BuildEvent>> = client.get()
-        .uri("/v1/build/${build.buildId}/events?eventTypes=${events.joinToString(",")}")
+        .uri("/v2/build/${build.buildId}/events?eventTypes=${events.joinToString(",")}")
         .bearerAuth()
         .retrieve()
         .bodyToFlow()
