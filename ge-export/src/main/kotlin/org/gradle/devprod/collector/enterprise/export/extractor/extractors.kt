@@ -18,6 +18,9 @@ object BuildStarted : SingleEventExtractor<Instant>("BuildStarted") {
  * 3. Subtract to get the time (in ms).
  */
 object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestStarted", "TestFinished")) {
+    // We only care long running test classes
+    private val longTestThreshold: Duration = Duration.ofSeconds(60)
+
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): Map<String, Duration> {
         val testIdToClassName: MutableMap<Long, String> = mutableMapOf()
         val testIdToStartTime: MutableMap<Long, Instant> = mutableMapOf()
@@ -41,9 +44,9 @@ object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestSta
             testIdToClassName.getValue(id) to Duration.between(testIdToStartTime.getValue(id), endTime)
         }.groupBy({ it.first }) {
             it.second
-        }.mapValues { it: Map.Entry<String, List<Duration>> ->
+        }.mapValues {
             it.value.maxOrNull()!!
-        }
+        }.filterValues { it > longTestThreshold }
     }
 }
 
