@@ -17,17 +17,17 @@ class TeamcityClientService {
     val pipelines = listOf("Master", "Release")
 
     private
-    val buildConfigurations = listOf(
-        "Gradle_{pipeline}_Check_Stage_QuickFeedbackLinuxOnly_Trigger",
-        "Gradle_{pipeline}_Check_Stage_QuickFeedback_Trigger",
-        "Gradle_{pipeline}_Check_Stage_ReadyforMerge_Trigger",
-        "Gradle_{pipeline}_Check_Stage_ReadyforNightly_Trigger",
-        "Gradle_{pipeline}_Check_Stage_ReadyforRelease_Trigger"
+    val buildConfigurationFor: List<(String) -> String> = listOf(
+        { pipeline -> "Gradle_${pipeline}_Check_Stage_QuickFeedbackLinuxOnly_Trigger" },
+        { pipeline -> "Gradle_${pipeline}_Check_Stage_QuickFeedback_Trigger" },
+        { pipeline -> "Gradle_${pipeline}_Check_Stage_ReadyforMerge_Trigger" },
+        { pipeline -> "Gradle_${pipeline}_Check_Stage_ReadyforNightly_Trigger" },
+        { pipeline -> "Gradle_${pipeline}_Check_Stage_ReadyforRelease_Trigger" }
     )
 
     fun loadBuilds(): Sequence<Build> =
         pipelines.flatMap { pipeline ->
-            buildConfigurations.map { it.replace("{pipeline}", pipeline) }
+            buildConfigurationFor.map { it(pipeline) }
         }.asSequence().flatMap { buildConfiguration ->
             teamCityInstance
                 .builds()
