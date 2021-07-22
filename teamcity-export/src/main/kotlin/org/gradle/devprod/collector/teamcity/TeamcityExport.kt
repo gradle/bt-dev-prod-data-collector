@@ -18,7 +18,7 @@ class TeamcityExport(
     @Scheduled(fixedDelay = 10 * 60 * 1000)
     fun loadBuilds() {
         println("Loading data from Teamcity")
-        val builds = teamcityClientService.loadBuildsForReadyForNightly()
+        val builds = teamcityClientService.loadBuilds()
         builds.forEach { build ->
                 val existing = create.fetchAny(Tables.TEAMCITY_BUILD, Tables.TEAMCITY_BUILD.BUILD_ID.eq(build.id.stringId))
                 if (existing == null) {
