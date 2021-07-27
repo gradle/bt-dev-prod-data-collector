@@ -29,7 +29,6 @@ class ExportApiClient(
 
     fun createEventStream(): Flow<ServerSentEvent<Build?>> = createEventStreamFlux().asFlow()
         .onEach {
-            reconnectCount.set(0)
             lastStreamEventId.set(it.id())
         }
 
@@ -44,7 +43,9 @@ class ExportApiClient(
             if (reconnectCount.getAndIncrement() >= MAX_RECONNECT_COUNT) {
                 throw IllegalStateException("Failed to connect after $MAX_RECONNECT_COUNT retries", throwable)
             } else {
-                createEventStreamFlux()
+                createEventStreamFlux().apply {
+                    reconnectCount.set(0)
+                }
             }
         }
 
