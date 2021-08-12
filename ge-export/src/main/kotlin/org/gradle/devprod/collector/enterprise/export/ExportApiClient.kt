@@ -57,7 +57,7 @@ class ExportApiClient(
     // https://docs.gradle.com/enterprise/export-api/#reconnect_resume
     // https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
     private fun WebClient.RequestHeadersSpec<*>.setLastEventId(): WebClient.RequestHeadersSpec<*> {
-        val lastStreamEventId = lastStreamEventId.get()
+        val lastStreamEventId = lastStreamEventId.get() ?: ""
         if (lastStreamEventId.isNotEmpty()) {
             header("Last-Event-ID", lastStreamEventId)
         }
