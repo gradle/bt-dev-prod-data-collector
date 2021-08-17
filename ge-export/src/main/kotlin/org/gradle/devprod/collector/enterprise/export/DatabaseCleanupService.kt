@@ -18,7 +18,7 @@ class DatabaseCleanupService(
     @Async
     @Scheduled(fixedDelay = 6 * 60 * 60 * 1000)
     fun cleanupDb() {
-        val limitDate = OffsetDateTime.now().minusMonths(2)
+        val limitDate = OffsetDateTime.now().minusMonths(3)
         val beforeLimitData = BUILD.BUILD_START.lessOrEqual(limitDate)
         val oldBuildIdsQuery = create.select(BUILD.BUILD_ID)
             .from(BUILD)
