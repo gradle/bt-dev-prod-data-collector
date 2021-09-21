@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.toSet
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildAgent
+import org.gradle.devprod.collector.enterprise.export.extractor.BuildCacheLoadFailure
+import org.gradle.devprod.collector.enterprise.export.extractor.BuildCacheStoreFailure
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildFailure
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildFinished
 import org.gradle.devprod.collector.enterprise.export.extractor.BuildStarted
@@ -66,6 +68,8 @@ class ExportApiExtractorService(
                 BuildStarted,
                 BuildFinished,
                 BuildFailure,
+                BuildCacheLoadFailure,
+                BuildCacheStoreFailure,
                 LongTestClassExtractor,
                 FirstTestTaskStart,
                 Tags,
@@ -96,6 +100,8 @@ class ExportApiExtractorService(
                 val daemonBuildNumber = DaemonState.extractFrom(events)
                 val daemonUnhealthyReason = DaemonUnhealthy.extractFrom(events)
                 println("Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}")
+                val buildCacheLoadFailure = BuildCacheLoadFailure.extractFrom(events)
+                val buildCacheStoreFailure = BuildCacheStoreFailure.extractFrom(events)
                 create.transaction { configuration ->
                     val ctx = DSL.using(configuration)
                     val record = ctx.newRecord(Tables.BUILD)
@@ -113,6 +119,8 @@ class ExportApiExtractorService(
                     record.daemonUnhealthyReason = daemonUnhealthyReason
                     record.tags = tags.toTypedArray()
                     record.customValues = customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
+                    record.buildCacheLoadFailure = buildCacheLoadFailure
+                    record.buildCacheStoreFailure = buildCacheStoreFailure
                     record.store()
 
                     if (longRunningTestClasses.isNotEmpty()) {
