@@ -16,7 +16,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row14;
+import org.jooq.Row16;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -118,6 +118,16 @@ public class Build extends TableImpl<BuildRecord> {
      */
     public final TableField<BuildRecord, Boolean> SUCCESSFUL = createField(DSL.name("successful"), SQLDataType.BOOLEAN.nullable(false), this, "");
 
+    /**
+     * The column <code>public.build.build_cache_load_failure</code>.
+     */
+    public final TableField<BuildRecord, Boolean> BUILD_CACHE_LOAD_FAILURE = createField(DSL.name("build_cache_load_failure"), SQLDataType.BOOLEAN.nullable(false), this, "");
+
+    /**
+     * The column <code>public.build.build_cache_store_failure</code>.
+     */
+    public final TableField<BuildRecord, Boolean> BUILD_CACHE_STORE_FAILURE = createField(DSL.name("build_cache_store_failure"), SQLDataType.BOOLEAN.nullable(false), this, "");
+
     private Build(Name alias, Table<BuildRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -193,11 +203,11 @@ public class Build extends TableImpl<BuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row14 type methods
+    // Row16 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row14<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[], Boolean> fieldsRow() {
-        return (Row14) super.fieldsRow();
+    public Row16<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[], Boolean, Boolean, Boolean> fieldsRow() {
+        return (Row16) super.fieldsRow();
     }
 }

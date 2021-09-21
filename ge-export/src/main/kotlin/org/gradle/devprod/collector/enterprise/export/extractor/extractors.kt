@@ -60,6 +60,16 @@ object BuildFailure : SingleEventExtractor<Boolean>("BuildFinished") {
         events.first().data?.anyProperty("failureId") != null
 }
 
+object BuildCacheLoadFailure : SingleEventExtractor<Boolean>("BuildCacheRemoteLoadFinished") {
+    override fun extract(events: Iterable<BuildEvent>): Boolean =
+        events.any { it.data?.anyProperty("failureId") != null }
+}
+
+object BuildCacheStoreFailure : SingleEventExtractor<Boolean>("BuildCacheRemoteStoreFinished") {
+    override fun extract(events: Iterable<BuildEvent>): Boolean =
+        events.any { it.data?.anyProperty("failureId") != null }
+}
+
 object RootProjectNames : SingleEventExtractor<List<String>>("ProjectStructure") {
     override fun extract(events: Iterable<BuildEvent>): List<String> =
         events.filter { it.eventType == "ProjectStructure" }
