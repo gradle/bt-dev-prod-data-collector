@@ -94,14 +94,8 @@ object ExecutedTestTasks : SingleEventExtractor<List<String>>("TaskFinished") {
     override fun extract(events: Iterable<BuildEvent>): List<String> {
         return events
             .filter { it.data?.stringProperty("outcome") in listOf("SUCCESS", "FAILED") }
-            .flatMap {
-                val path = it.data?.stringProperty("path")
-                if (path?.endsWith("Test") == true) {
-                    listOf(path)
-                } else {
-                    emptyList()
-                }
-            }
+            .mapNotNull { it.data?.stringProperty("path") }
+            .filter { it.endsWith("Test") }
     }
 }
 
@@ -119,8 +113,9 @@ object CustomValues : SingleEventExtractor<List<Pair<String, String>>>("UserName
 object BuildAgent : SingleEventExtractor<Agent>("BuildAgent") {
     override fun extract(events: Iterable<BuildEvent>): Agent =
         events.first().data!!.let {
-            Agent(it.stringProperty("localHostname")
-                ?: it.stringProperty("publicHostname"), it.stringProperty("username")
+            Agent(
+                it.stringProperty("localHostname")
+                    ?: it.stringProperty("publicHostname"), it.stringProperty("username")
             )
         }
 }
