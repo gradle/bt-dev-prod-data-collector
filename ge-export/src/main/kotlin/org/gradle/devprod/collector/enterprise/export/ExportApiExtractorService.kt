@@ -16,6 +16,7 @@ import org.gradle.devprod.collector.enterprise.export.extractor.BuildStarted
 import org.gradle.devprod.collector.enterprise.export.extractor.CustomValues
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonState
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonUnhealthy
+import org.gradle.devprod.collector.enterprise.export.extractor.ExecutedTestTasks
 import org.gradle.devprod.collector.enterprise.export.extractor.FirstTestTaskStart
 import org.gradle.devprod.collector.enterprise.export.extractor.LongTestClassExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
@@ -77,7 +78,8 @@ class ExportApiExtractorService(
                 RootProjectNames,
                 BuildAgent,
                 DaemonState,
-                DaemonUnhealthy
+                DaemonUnhealthy,
+                ExecutedTestTasks
             )
             val eventTypes = extractors.flatMap { it.eventTypes }.distinct()
             val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, eventTypes).toSet()
@@ -102,6 +104,7 @@ class ExportApiExtractorService(
                 println("Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}")
                 val buildCacheLoadFailure = BuildCacheLoadFailure.extractFrom(events)
                 val buildCacheStoreFailure = BuildCacheStoreFailure.extractFrom(events)
+                val executedTestTasks = ExecutedTestTasks.extractFrom(events)
                 create.transaction { configuration ->
                     val ctx = DSL.using(configuration)
                     val record = ctx.newRecord(Tables.BUILD)
@@ -121,6 +124,7 @@ class ExportApiExtractorService(
                     record.customValues = customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
                     record.buildCacheLoadFailure = buildCacheLoadFailure
                     record.buildCacheStoreFailure = buildCacheStoreFailure
+                    record.executedTestTasks = executedTestTasks.toTypedArray()
                     record.store()
 
                     if (longRunningTestClasses.isNotEmpty()) {

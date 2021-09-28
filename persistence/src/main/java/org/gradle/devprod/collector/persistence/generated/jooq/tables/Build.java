@@ -8,15 +8,17 @@ import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import org.gradle.devprod.collector.persistence.generated.jooq.Indexes;
 import org.gradle.devprod.collector.persistence.generated.jooq.Keys;
 import org.gradle.devprod.collector.persistence.generated.jooq.Public;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.BuildRecord;
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.records.KeyValueRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row16;
+import org.jooq.Row17;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -128,6 +130,11 @@ public class Build extends TableImpl<BuildRecord> {
      */
     public final TableField<BuildRecord, Boolean> BUILD_CACHE_STORE_FAILURE = createField(DSL.name("build_cache_store_failure"), SQLDataType.BOOLEAN.nullable(false), this, "");
 
+    /**
+     * The column <code>public.build.executed_test_tasks</code>.
+     */
+    public final TableField<BuildRecord, String[]> EXECUTED_TEST_TASKS = createField(DSL.name("executed_test_tasks"), SQLDataType.VARCHAR(255).getArrayDataType(), this, "");
+
     private Build(Name alias, Table<BuildRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -167,6 +174,11 @@ public class Build extends TableImpl<BuildRecord> {
     }
 
     @Override
+    public List<Index> getIndexes() {
+        return Arrays.<Index>asList(Indexes.BUILD_FINISH_IDX, Indexes.BUILD_START_IDX);
+    }
+
+    @Override
     public UniqueKey<BuildRecord> getPrimaryKey() {
         return Keys.BUILD_PK;
     }
@@ -203,11 +215,11 @@ public class Build extends TableImpl<BuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row16 type methods
+    // Row17 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row16<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[], Boolean, Boolean, Boolean> fieldsRow() {
-        return (Row16) super.fieldsRow();
+    public Row17<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[], Boolean, Boolean, Boolean, String[]> fieldsRow() {
+        return (Row17) super.fieldsRow();
     }
 }
