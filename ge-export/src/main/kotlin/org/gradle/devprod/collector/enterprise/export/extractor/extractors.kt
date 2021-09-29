@@ -89,11 +89,21 @@ object FirstTestTaskStart : SingleEventExtractor<Pair<String, Instant>?>("TaskSt
     }
 }
 
+// https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/gradle/TaskStarted_1_0.html
 // https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/gradle/TaskFinished_1_0.html
-object ExecutedTestTasks : SingleEventExtractor<List<String>>("TaskFinished") {
-    override fun extract(events: Iterable<BuildEvent>): List<String> {
-        return events
-            .filter { it.data?.stringProperty("outcome") in listOf("SUCCESS", "FAILED") }
+object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFinished")) {
+    // Find the task whose name ends with "Test" and className ends with "Test"
+    override fun extractFrom(events: Map<String?, List<BuildEvent>>): List<String> {
+        val idToClassName = events.getOrDefault(LongTestClassExtractor.eventTypes[0], emptyList())
+            .map { it.data?.stringProperty("id") to it.data?.stringProperty("className") }
+            .filter { it.first != null && it.second != null }
+            .toMap()
+
+        return events.getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList())
+            .filter {
+                it.data?.stringProperty("outcome")?.toUpperCase() in listOf("SUCCESS", "FAILED") &&
+                    idToClassName[it.data?.stringProperty("id")]?.endsWith("Test") == true
+            }
             .mapNotNull { it.data?.stringProperty("path") }
             .filter { it.endsWith("Test") }
     }
