@@ -89,6 +89,16 @@ object FirstTestTaskStart : SingleEventExtractor<Pair<String, Instant>?>("TaskSt
     }
 }
 
+// https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/gradle/TaskFinished_1_0.html
+object ExecutedTestTasks : SingleEventExtractor<List<String>>("TaskFinished") {
+    override fun extract(events: Iterable<BuildEvent>): List<String> {
+        return events
+            .filter { it.data?.stringProperty("outcome") in listOf("SUCCESS", "FAILED") }
+            .mapNotNull { it.data?.stringProperty("path") }
+            .filter { it.endsWith("Test") }
+    }
+}
+
 object Tags : SingleEventExtractor<Set<String>>("UserTag") {
     override fun extract(events: Iterable<BuildEvent>): Set<String> =
         events.map { it.data?.stringProperty("tag")!! }.toSet()
@@ -103,8 +113,9 @@ object CustomValues : SingleEventExtractor<List<Pair<String, String>>>("UserName
 object BuildAgent : SingleEventExtractor<Agent>("BuildAgent") {
     override fun extract(events: Iterable<BuildEvent>): Agent =
         events.first().data!!.let {
-            Agent(it.stringProperty("localHostname")
-                ?: it.stringProperty("publicHostname"), it.stringProperty("username")
+            Agent(
+                it.stringProperty("localHostname")
+                    ?: it.stringProperty("publicHostname"), it.stringProperty("username")
             )
         }
 }
