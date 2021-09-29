@@ -95,14 +95,14 @@ object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFi
     // Find the task whose name ends with "Test" and className ends with "Test"
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): List<String> {
         val idToClassName = events.getOrDefault(LongTestClassExtractor.eventTypes[0], emptyList())
-            .map { it.data?.stringProperty("id") to it.data?.stringProperty("className") }
+            .map { it.data?.longProperty("id") to it.data?.stringProperty("className") }
             .filter { it.first != null && it.second != null }
             .toMap()
 
         return events.getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList())
             .filter {
                 it.data?.stringProperty("outcome")?.toUpperCase() in listOf("SUCCESS", "FAILED") &&
-                    idToClassName[it.data?.stringProperty("id")]?.endsWith("Test") == true
+                    idToClassName[it.data?.longProperty("id")]?.endsWith("Test") == true
             }
             .mapNotNull { it.data?.stringProperty("path") }
             .filter { it.endsWith("Test") }
