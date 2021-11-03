@@ -2,13 +2,47 @@ package org.gradle.devprod.collector.teamcity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.Instant;
 import java.util.List;
 
-/**
- * This class is created with IDEA "GsonFormatPlus" plugin.
- */
-public class TeamCityResponse {
+/*
+  This class is created with IDEA "GsonFormatPlus" plugin.
 
+  {
+  "count": 100,
+  "nextHref": "/app/rest/builds?affectedProject%3A%28id%3AGradle_Check%29%2CfailedToStart%3Afalse%2Cstatus%3AFAILURE%2Cbranch%3Aall%2CsinceDate%3A20211031T153557%2B0000%2CuntilDate%3A20211101T153557%2B0000%2Ccount=100&fields=nextHref%2Ccount%2Cbuild%28id%2Cagent%28name%29%2CbuildType%28id%2Cname%2CprojectName%29%2CfailedToStart%2Crevisions%28revision%28version%2CvcsRoot%28vcsRootId%29%29%29%2CbranchName%2Cstatus%2CstatusText%2Cstate%2CqueuedDate%2CstartDate%2CfinishDate%29&locator=count:100,start:100",
+  "build": [
+    {
+      "id": 46968030,
+      "status": "SUCCESS",
+      "state": "finished",
+      "failedToStart": false,
+      "branchName": "master",
+      "statusText": "Success",
+      "buildType": {
+        "id": "Enterprise_Master_Operations_GradleEnterpriseEnvironments_ShipUnstableCheckForUpdates",
+        "name": "Ship Unstable - Check For Updates",
+        "projectName": "Enterprise / Master / Operation / Gradle Enterprise Environments"
+      },
+      "queuedDate": "20211101T103657+0100",
+      "startDate": "20211101T103658+0100",
+      "finishDate": "20211101T103723+0100",
+      "revisions": {
+        "revision": [
+          {
+            "version": "400ec00125f6222d2b338a3fc184e9b048ca3c09"
+          }
+        ]
+      },
+      "agent": {
+        "name": "dev96-agent1"
+      }
+    }
+  ]
+}
+ */
+
+public class TeamCityResponse {
     @JsonProperty("count")
     private Integer count;
     @JsonProperty("nextHref")

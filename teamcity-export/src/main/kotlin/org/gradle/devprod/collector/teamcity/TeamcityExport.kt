@@ -49,7 +49,7 @@ class TeamcityExport(
     }
 
     @Async
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+    @Scheduled(fixedDelay = 60 * 60 * 1000)
     fun loadFailedBuilds() {
         teamcityClientService.loadFailedBuilds().store()
     }

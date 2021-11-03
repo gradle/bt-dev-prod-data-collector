@@ -6,10 +6,11 @@ import org.jetbrains.teamcity.rest.TeamCityInstance
 import org.jetbrains.teamcity.rest.TeamCityInstanceFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.bodyToMono
+import reactor.core.publisher.Mono
 import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -20,19 +21,20 @@ import java.time.temporal.ChronoUnit
 @Service
 class TeamcityClientService(
     @Value("${'$'}{teamcity.api.token}")
-    private val teamCityApiToken: String
+    private val teamCityApiToken: String,
+    private val objectMapper: ObjectMapper
 ) {
     private
     val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory.guestAuth("https://builds.gradle.org")
 
     private
+    val teamCityRestApiBuildsUrl = "https://builds.gradle.org/app/rest/builds"
+
+    private
+    val client: WebClient = WebClient.create(teamCityRestApiBuildsUrl)
+
+    private
     val pipelines = listOf("Master", "Release")
-
-    private
-    val objectMapper = ObjectMapper()
-
-    private
-    val httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build()
 
     private
     fun buildConfigurationsFor(pipeline: String): List<String> = listOf(
@@ -58,9 +60,15 @@ class TeamcityClientService(
                 .map { it.toTeamCityBuild() }
         }
 
+    // The rest client has no "affectProject(id:Gradle_Master_Check)" buildLocator
     fun loadFailedBuilds(): Sequence<TeamCityBuild> =
         pipelines.asSequence().flatMap { pipeline ->
-            var nextPageUrl: String? = initUrl(pipeline)
+            // We have ~200 failed builds per day
+            var nextPageUrl: String? = loadingFailedBuildsUrl(
+                pipeline,
+                Instant.now().minus(1, ChronoUnit.DAYS),
+                Instant.now()
+            )
             var buildIterator: Iterator<TeamCityResponse.BuildBean> = emptyList<TeamCityResponse.BuildBean>().iterator()
             generateSequence {
                 if (buildIterator.hasNext()) {
@@ -96,12 +104,12 @@ class TeamcityClientService(
     )
 
     private
-    fun initUrl(pipeline: String): String {
-        // We have ~200 failed builds per day
-        val pageSize = 100
-        val end = Instant.now()
-        // this is triggered once per hour, let's make the timespan a bit longer
-        val start = end.minus(61, ChronoUnit.MINUTES)
+    fun loadingFailedBuildsUrl(
+        pipeline: String,
+        start: Instant,
+        end: Instant,
+        pageSize: Int = 100
+    ): String {
         val locators = mapOf(
             "affectedProject" to "(id:Gradle_${pipeline}_Check)",
             "failedToStart" to "true",
@@ -109,40 +117,43 @@ class TeamcityClientService(
             "branch" to "default:any",
             "sinceDate" to formatRFC822(start),
             "untilDate" to formatRFC822(end),
-        )
+        ).entries.joinToString(",") { "${it.key}:${it.value}" }
+
         val fields = "nextHref,count,build(id,agent(name),buildType(id,name,projectName),failedToStart,revisions(revision(version)),branchName,status,statusText,state,queuedDate,startDate,finishDate)"
-        return "https://builds.gradle.org/app/rest/builds/?locator=${locators.entries.joinToString(",") { "${it.key}:${it.value}" }}&fields=$fields&count=$pageSize"
+
+        return "${teamCityRestApiBuildsUrl}/?locator=${locators}&fields=$fields&count=$pageSize"
     }
+
+    private
+    fun WebClient.RequestHeadersSpec<*>.accept(accept: String): WebClient.RequestHeadersSpec<*> = header("Accept", accept)
+
+    private
+    fun WebClient.RequestHeadersSpec<*>.bearerAuth(): WebClient.RequestHeadersSpec<*> = header("Authorization", "Bearer $teamCityApiToken")
 
     private
     fun TeamCityResponse.BuildBean.loadBuildScans(): List<String> {
-        val response = invokeTeamCityApi("https://builds.gradle.org/app/rest/builds/id:$id/artifacts/content/.teamcity/build_scans/build_scans.txt", "text/plain")
-        if (response.statusCode() == 404) {
-            return emptyList()
-        }
-        require(response.statusCode() in 200..299) {
-            "Get response ${response.statusCode()}: ${response.body()}"
-        }
-        return response.body().lines().map { it.trim() }.filter { it.isNotBlank() }
+        val response: Mono<String> = client.get()
+            .uri("/id:$id/artifacts/content/.teamcity/build_scans/build_scans.txt")
+            .accept("text/plain")
+            .bearerAuth()
+            .retrieve()
+            .bodyToMono<String>()
+            .onErrorResume(WebClientResponseException::class.java) {
+                if (it.statusCode.value() == 404) Mono.just("") else Mono.error(it)
+            }
+
+        return response.blockOptional().orElse("").lines().map { it.trim() }.filter { it.isNotBlank() }
     }
 
     private
-    fun invokeTeamCityApi(url: String, accept: String): HttpResponse<String> {
-        val request = HttpRequest.newBuilder(URI(url))
-            .header("Accept", accept)
-            .header("Authorization", "Bearer $teamCityApiToken")
-            .build()
-        return httpClient.send(request, HttpResponse.BodyHandlers.ofString())
-    }
-
-    private
-    fun loadFailedBuilds(nextPageUrl: String): TeamCityResponse {
-        val response = invokeTeamCityApi(nextPageUrl, "application/json")
-        require(response.statusCode() in 200..299) {
-            "Get response ${response.statusCode()}: ${response.body()}"
-        }
-        return objectMapper.readValue(response.body(), TeamCityResponse::class.java)
-    }
+    fun loadFailedBuilds(nextPageUrl: String): TeamCityResponse = client.get()
+        .uri(URI.create(nextPageUrl))
+        .accept("application/json")
+        .bearerAuth()
+        .retrieve()
+        .bodyToMono<String>()
+        .block()
+        .let { objectMapper.readValue(it, TeamCityResponse::class.java) }
 
     private val rfc822: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss").withZone(ZoneId.systemDefault())
 
