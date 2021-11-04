@@ -1,11 +1,14 @@
 package org.gradle.devprod.collector.teamcity
 
-import org.gradle.devprod.collector.persistence.generated.jooq.Tables
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD
+import org.jetbrains.teamcity.rest.BuildStatus
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Component
 class TeamcityExport(
@@ -24,12 +27,12 @@ class TeamcityExport(
     private
     fun Sequence<TeamCityBuild>.store() {
         forEach { build ->
-            val existing = create.fetchAny(Tables.TEAMCITY_BUILD, Tables.TEAMCITY_BUILD.BUILD_ID.eq(build.id))
+            val existing = create.fetchAny(TEAMCITY_BUILD, TEAMCITY_BUILD.BUILD_ID.eq(build.id))
             if (existing == null) {
                 println("Found build for branch ${build.branch} with status ${build.status}, queued at ${build.queuedDateTime}")
                 create.transaction { configuration ->
                     val ctx = DSL.using(configuration)
-                    val record = ctx.newRecord(Tables.TEAMCITY_BUILD)
+                    val record = ctx.newRecord(TEAMCITY_BUILD)
                     record.buildId = build.id
                     record.configuration = build.buildConfigurationId
                     record.queued = build.queuedDateTime
@@ -40,6 +43,7 @@ class TeamcityExport(
                     record.statusText = build.statusText
                     record.branch = build.branch
                     record.gitCommitId = build.gitCommitId
+                    record.composite = build.composite
                     record.buildscanUrls = build.buildScanUrls.toTypedArray()
 
                     record.store()
@@ -51,6 +55,16 @@ class TeamcityExport(
     @Async
     @Scheduled(fixedDelay = 60 * 60 * 1000)
     fun loadFailedBuilds() {
-        teamcityClientService.loadFailedBuilds().store()
+        println("Loading failed builds from Teamcity")
+        val latestFailedBuild = create.select(TEAMCITY_BUILD.FINISHED)
+            .from(TEAMCITY_BUILD)
+            .where(TEAMCITY_BUILD.COMPOSITE.eq(false).and(TEAMCITY_BUILD.STATUS.notEqual(BuildStatus.SUCCESS.name)))
+            .orderBy(TEAMCITY_BUILD.FINISHED.desc())
+            .fetchAny()
+
+        val since = if (latestFailedBuild == null) Instant.now().minus(5, ChronoUnit.DAYS)
+        else TEAMCITY_BUILD.FINISHED.get(latestFailedBuild)!!.toInstant().minus(1, ChronoUnit.DAYS)
+
+        teamcityClientService.loadFailedBuilds(since).store()
     }
 }

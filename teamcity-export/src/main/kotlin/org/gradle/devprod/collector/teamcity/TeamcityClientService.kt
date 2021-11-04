@@ -5,6 +5,7 @@ import org.jetbrains.teamcity.rest.BuildConfigurationId
 import org.jetbrains.teamcity.rest.TeamCityInstance
 import org.jetbrains.teamcity.rest.TeamCityInstanceFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
@@ -61,12 +62,12 @@ class TeamcityClientService(
         }
 
     // The rest client has no "affectProject(id:Gradle_Master_Check)" buildLocator
-    fun loadFailedBuilds(): Sequence<TeamCityBuild> =
+    fun loadFailedBuilds(since: Instant): Sequence<TeamCityBuild> =
         pipelines.asSequence().flatMap { pipeline ->
             // We have ~200 failed builds per day
             var nextPageUrl: String? = loadingFailedBuildsUrl(
                 pipeline,
-                Instant.now().minus(1, ChronoUnit.DAYS),
+                since,
                 Instant.now()
             )
             var buildIterator: Iterator<TeamCityResponse.BuildBean> = emptyList<TeamCityResponse.BuildBean>().iterator()
@@ -100,6 +101,7 @@ class TeamcityClientService(
         state,
         buildType.id,
         statusText,
+        isComposite,
         loadBuildScans()
     )
 
@@ -112,20 +114,17 @@ class TeamcityClientService(
     ): String {
         val locators = mapOf(
             "affectedProject" to "(id:Gradle_${pipeline}_Check)",
-            "failedToStart" to "true",
             "status" to "FAILURE",
             "branch" to "default:any",
+            "composite" to "false",
             "sinceDate" to formatRFC822(start),
             "untilDate" to formatRFC822(end),
         ).entries.joinToString(",") { "${it.key}:${it.value}" }
 
-        val fields = "nextHref,count,build(id,agent(name),buildType(id,name,projectName),failedToStart,revisions(revision(version)),branchName,status,statusText,state,queuedDate,startDate,finishDate)"
+        val fields = "nextHref,count,build(id,agent(name),buildType(id,name,projectName),failedToStart,revisions(revision(version)),branchName,status,statusText,state,queuedDate,startDate,finishDate,composite)"
 
         return "${teamCityRestApiBuildsUrl}/?locator=${locators}&fields=$fields&count=$pageSize"
     }
-
-    private
-    fun WebClient.RequestHeadersSpec<*>.accept(accept: String): WebClient.RequestHeadersSpec<*> = header("Accept", accept)
 
     private
     fun WebClient.RequestHeadersSpec<*>.bearerAuth(): WebClient.RequestHeadersSpec<*> = header("Authorization", "Bearer $teamCityApiToken")
@@ -134,7 +133,7 @@ class TeamcityClientService(
     fun TeamCityResponse.BuildBean.loadBuildScans(): List<String> {
         val response: Mono<String> = client.get()
             .uri("/id:$id/artifacts/content/.teamcity/build_scans/build_scans.txt")
-            .accept("text/plain")
+            .accept(MediaType.TEXT_PLAIN)
             .bearerAuth()
             .retrieve()
             .bodyToMono<String>()
@@ -148,7 +147,7 @@ class TeamcityClientService(
     private
     fun loadFailedBuilds(nextPageUrl: String): TeamCityResponse = client.get()
         .uri(URI.create(nextPageUrl))
-        .accept("application/json")
+        .accept(MediaType.APPLICATION_JSON)
         .bearerAuth()
         .retrieve()
         .bodyToMono<String>()

@@ -15,7 +15,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row11;
+import org.jooq.Row12;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -102,6 +102,11 @@ public class TeamcityBuild extends TableImpl<TeamcityBuildRecord> {
      */
     public final TableField<TeamcityBuildRecord, String[]> BUILDSCAN_URLS = createField(DSL.name("buildscan_urls"), SQLDataType.VARCHAR(255).getArrayDataType(), this, "");
 
+    /**
+     * The column <code>public.teamcity_build.composite</code>.
+     */
+    public final TableField<TeamcityBuildRecord, Boolean> COMPOSITE = createField(DSL.name("composite"), SQLDataType.BOOLEAN, this, "");
+
     private TeamcityBuild(Name alias, Table<TeamcityBuildRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -177,11 +182,11 @@ public class TeamcityBuild extends TableImpl<TeamcityBuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row11 type methods
+    // Row12 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<String, String, OffsetDateTime, OffsetDateTime, OffsetDateTime, String, String, String, String, String, String[]> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row12<String, String, OffsetDateTime, OffsetDateTime, OffsetDateTime, String, String, String, String, String, String[], Boolean> fieldsRow() {
+        return (Row12) super.fieldsRow();
     }
 }

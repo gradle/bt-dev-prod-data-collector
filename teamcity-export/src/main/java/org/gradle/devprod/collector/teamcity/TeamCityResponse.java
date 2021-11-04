@@ -99,6 +99,16 @@ public class TeamCityResponse {
         private RevisionsBean revisions;
         @JsonProperty("agent")
         private AgentBean agent;
+        @JsonProperty("composite")
+        private boolean composite;
+
+        public boolean isComposite() {
+            return composite;
+        }
+
+        public void setComposite(boolean composite) {
+            this.composite = composite;
+        }
 
         public Integer getId() {
             return id;

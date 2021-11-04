@@ -14,6 +14,7 @@ data class TeamCityBuild(
     val state: String,
     val buildConfigurationId: String,
     val statusText: String?,
+    val composite: Boolean,
     val buildScanUrls: List<String> = emptyList()
 )
 
@@ -27,5 +28,6 @@ fun Build.toTeamCityBuild() = TeamCityBuild(
     finishDateTime?.toOffsetDateTime(),
     state.name,
     buildConfigurationId.stringId,
-    statusText
+    statusText,
+    composite == true
 )
