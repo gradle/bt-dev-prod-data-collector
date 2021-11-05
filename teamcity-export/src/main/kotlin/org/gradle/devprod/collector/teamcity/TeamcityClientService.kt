@@ -67,8 +67,7 @@ class TeamcityClientService(
             // We have ~200 failed builds per day
             var nextPageUrl: String? = loadingFailedBuildsUrl(
                 pipeline,
-                since,
-                Instant.now()
+                since
             )
             var buildIterator: Iterator<TeamCityResponse.BuildBean> = emptyList<TeamCityResponse.BuildBean>().iterator()
             generateSequence {
@@ -109,7 +108,6 @@ class TeamcityClientService(
     fun loadingFailedBuildsUrl(
         pipeline: String,
         start: Instant,
-        end: Instant,
         pageSize: Int = 100
     ): String {
         val locators = mapOf(
@@ -117,8 +115,7 @@ class TeamcityClientService(
             "status" to "FAILURE",
             "branch" to "default:any",
             "composite" to "false",
-            "sinceDate" to formatRFC822(start),
-            "untilDate" to formatRFC822(end),
+            "sinceDate" to formatRFC822(start)
         ).entries.joinToString(",") { "${it.key}:${it.value}" }
 
         val fields = "nextHref,count,build(id,agent(name),buildType(id,name,projectName),failedToStart,revisions(revision(version)),branchName,status,statusText,state,queuedDate,startDate,finishDate,composite)"
