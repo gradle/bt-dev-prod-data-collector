@@ -105,7 +105,7 @@ public class TeamcityBuild extends TableImpl<TeamcityBuildRecord> {
     /**
      * The column <code>public.teamcity_build.composite</code>.
      */
-    public final TableField<TeamcityBuildRecord, Boolean> COMPOSITE = createField(DSL.name("composite"), SQLDataType.BOOLEAN, this, "");
+    public final TableField<TeamcityBuildRecord, Boolean> COMPOSITE = createField(DSL.name("composite"), SQLDataType.BOOLEAN.nullable(false), this, "");
 
     private TeamcityBuild(Name alias, Table<TeamcityBuildRecord> aliased) {
         this(alias, aliased, null);
