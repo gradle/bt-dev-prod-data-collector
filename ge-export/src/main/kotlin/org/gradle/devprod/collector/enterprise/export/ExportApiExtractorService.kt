@@ -38,17 +38,15 @@ import java.time.ZonedDateTime
 
 @Service
 class ExportApiExtractorService(
-    private
-    val exportApiClient: ExportApiClient,
-    private
-    val create: DSLContext,
-    private
-    val shutdownService: ShutdownService
+    private val exportApiClient: ExportApiClient,
+    private val create: DSLContext,
+    private val shutdownService: ShutdownService
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
     fun streamToDatabase(): Flow<Unit> =
-        exportApiClient.createEventStream()
+        exportApiClient
+            .createEventStream()
             .onEach {
                 val data = it.data()
                 println("Received at ${ZonedDateTime.now()}: $data")
@@ -65,43 +63,52 @@ class ExportApiExtractorService(
     private suspend fun persistToDatabase(build: Build) {
         val existing = create.fetchAny(Tables.BUILD, Tables.BUILD.BUILD_ID.eq(build.buildId))
         if (existing == null) {
-            val extractors = listOf(
-                BuildStarted,
-                BuildFinished,
-                BuildFailure,
-                BuildCacheLoadFailure,
-                BuildCacheStoreFailure,
-                LongTestClassExtractor,
-                FirstTestTaskStart,
-                Tags,
-                CustomValues,
-                RootProjectNames,
-                BuildAgent,
-                DaemonState,
-                DaemonUnhealthy,
-                ExecutedTestTasks
-            )
+            val extractors =
+                listOf(
+                    BuildStarted,
+                    BuildFinished,
+                    BuildFailure,
+                    BuildCacheLoadFailure,
+                    BuildCacheStoreFailure,
+                    LongTestClassExtractor,
+                    FirstTestTaskStart,
+                    Tags,
+                    CustomValues,
+                    RootProjectNames,
+                    BuildAgent,
+                    DaemonState,
+                    DaemonUnhealthy,
+                    ExecutedTestTasks
+                )
             val eventTypes = extractors.flatMap { it.eventTypes }.distinct()
-            val events: Map<String?, List<BuildEvent>> = exportApiClient.getEvents(build, eventTypes).toSet()
-                .mapNotNull { it.data() }
-                .toList()
-                .groupBy(BuildEvent::eventType)
+            val events: Map<String?, List<BuildEvent>> =
+                exportApiClient
+                    .getEvents(build, eventTypes)
+                    .toSet()
+                    .mapNotNull { it.data() }
+                    .toList()
+                    .groupBy(BuildEvent::eventType)
 
             try {
                 val buildStarted = BuildStarted.extractFrom(events)
                 val buildFinished = BuildFinished.extractFrom(events)
-                val longRunningTestClasses: Map<String, Duration> = LongTestClassExtractor.extractFrom(events)
+                val longRunningTestClasses: Map<String, Duration> =
+                    LongTestClassExtractor.extractFrom(events)
                 val buildTime = Duration.between(buildStarted, buildFinished)
                 val buildFailed = BuildFailure.extractFrom(events)
-                val rootProjectName = RootProjectNames.extractFrom(events).firstOrNull { !it.startsWith("build-logic") }
+                val rootProjectName =
+                    RootProjectNames.extractFrom(events).firstOrNull { !it.startsWith("build-logic") }
                 val firstTestTaskStart = FirstTestTaskStart.extractFrom(events)
-                val timeToFirstTestTask = firstTestTaskStart?.let { Duration.between(buildStarted, it.second) }
+                val timeToFirstTestTask =
+                    firstTestTaskStart?.let { Duration.between(buildStarted, it.second) }
                 val agent = BuildAgent.extractFrom(events)
                 val tags = Tags.extractFrom(events)
                 val customValues = CustomValues.extractFrom(events)
                 val daemonBuildNumber = DaemonState.extractFrom(events)
                 val daemonUnhealthyReason = DaemonUnhealthy.extractFrom(events)
-                println("Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}")
+                println(
+                    "Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}"
+                )
                 val buildCacheLoadFailure = BuildCacheLoadFailure.extractFrom(events)
                 val buildCacheStoreFailure = BuildCacheStoreFailure.extractFrom(events)
                 val executedTestTasks = ExecutedTestTasks.extractFrom(events)
@@ -121,7 +128,8 @@ class ExportApiExtractorService(
                     record.daemonAge = daemonBuildNumber
                     record.daemonUnhealthyReason = daemonUnhealthyReason
                     record.tags = tags.toTypedArray()
-                    record.customValues = customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
+                    record.customValues =
+                        customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
                     record.buildCacheLoadFailure = buildCacheLoadFailure
                     record.buildCacheStoreFailure = buildCacheStoreFailure
                     record.executedTestTasks = executedTestTasks.toTypedArray()
@@ -129,10 +137,19 @@ class ExportApiExtractorService(
 
                     if (longRunningTestClasses.isNotEmpty()) {
                         ctx.batch(
-                            *longRunningTestClasses.map {
-                                ctx.insertInto(LONG_TEST, LONG_TEST.BUILD_ID, LONG_TEST.CLASS_NAME, LONG_TEST.DURATION_MS).values(build.buildId, it.key, it.value.toMillis())
-                            }.toTypedArray()
-                        ).execute()
+                            *longRunningTestClasses
+                                .map {
+                                    ctx.insertInto(
+                                        LONG_TEST,
+                                        LONG_TEST.BUILD_ID,
+                                        LONG_TEST.CLASS_NAME,
+                                        LONG_TEST.DURATION_MS
+                                    )
+                                        .values(build.buildId, it.key, it.value.toMillis())
+                                }
+                                .toTypedArray()
+                        )
+                            .execute()
                     }
                 }
             } catch (e: Exception) {

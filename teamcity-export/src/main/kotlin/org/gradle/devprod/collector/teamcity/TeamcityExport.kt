@@ -12,10 +12,8 @@ import java.time.temporal.ChronoUnit
 
 @Component
 class TeamcityExport(
-    private
-    val create: DSLContext,
-    private
-    val teamcityClientService: TeamcityClientService
+    private val create: DSLContext,
+    private val teamcityClientService: TeamcityClientService
 ) {
     @Async
     @Scheduled(fixedDelay = 10 * 60 * 1000)
@@ -24,12 +22,13 @@ class TeamcityExport(
         teamcityClientService.loadTriggerBuilds().store()
     }
 
-    private
-    fun Sequence<TeamCityBuild>.store() {
+    private fun Sequence<TeamCityBuild>.store() {
         forEach { build ->
             val existing = create.fetchAny(TEAMCITY_BUILD, TEAMCITY_BUILD.BUILD_ID.eq(build.id))
             if (existing == null) {
-                println("Found build for branch ${build.branch} with status ${build.status}, queued at ${build.queuedDateTime}")
+                println(
+                    "Found build for branch ${build.branch} with status ${build.status}, queued at ${build.queuedDateTime}"
+                )
                 create.transaction { configuration ->
                     val ctx = DSL.using(configuration)
                     val record = ctx.newRecord(TEAMCITY_BUILD)
@@ -56,14 +55,22 @@ class TeamcityExport(
     @Scheduled(fixedDelay = 60 * 60 * 1000)
     fun loadFailedBuilds() {
         println("Loading failed builds from Teamcity")
-        val latestFailedBuild = create.select(TEAMCITY_BUILD.FINISHED)
-            .from(TEAMCITY_BUILD)
-            .where(TEAMCITY_BUILD.COMPOSITE.eq(false).and(TEAMCITY_BUILD.STATUS.notEqual(BuildStatus.SUCCESS.name)))
-            .orderBy(TEAMCITY_BUILD.FINISHED.desc())
-            .fetchAny()
+        val latestFailedBuild =
+            create
+                .select(TEAMCITY_BUILD.FINISHED)
+                .from(TEAMCITY_BUILD)
+                .where(
+                    TEAMCITY_BUILD
+                        .COMPOSITE
+                        .eq(false)
+                        .and(TEAMCITY_BUILD.STATUS.notEqual(BuildStatus.SUCCESS.name))
+                )
+                .orderBy(TEAMCITY_BUILD.FINISHED.desc())
+                .fetchAny()
 
-        val since = if (latestFailedBuild == null) Instant.now().minus(5, ChronoUnit.DAYS)
-        else TEAMCITY_BUILD.FINISHED.get(latestFailedBuild)!!.toInstant().minus(1, ChronoUnit.DAYS)
+        val since =
+            if (latestFailedBuild == null) Instant.now().minus(5, ChronoUnit.DAYS)
+            else TEAMCITY_BUILD.FINISHED.get(latestFailedBuild)!!.toInstant().minus(1, ChronoUnit.DAYS)
 
         teamcityClientService.loadFailedBuilds(since).store()
     }

@@ -19,40 +19,39 @@ import java.util.concurrent.atomic.AtomicReference
 private const val MAX_RECONNECT_COUNT = 2
 
 @Service
-class ExportApiClient(
-    private val server: GradleEnterpriseServer
-) {
+class ExportApiClient(private val server: GradleEnterpriseServer) {
     private val client: WebClient = WebClient.create("${server.url}/build-export")
     private val lastStreamEventId = AtomicReference("")
     private val reconnectCount = AtomicInteger(0)
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    fun createEventStream(): Flow<ServerSentEvent<Build?>> = createEventStreamFlux().asFlow()
-        .onEach {
-            lastStreamEventId.set(it.id())
-        }
+    fun createEventStream(): Flow<ServerSentEvent<Build?>> =
+        createEventStreamFlux().asFlow().onEach { lastStreamEventId.set(it.id()) }
 
-    private fun createEventStreamFlux(): Flux<ServerSentEvent<Build?>> = client.get()
-        .uri("/v2/builds/since/${System.currentTimeMillis() - 72 * 60 * 60 * 1000}?stream")
-        .setLastEventId()
-        .bearerAuth()
-        .retrieve()
-        .bodyToFlux<ServerSentEvent<Build?>>()
-        .onErrorResume { throwable ->
-            logger.error("Failure with /builds/since export API", throwable)
-            if (reconnectCount.getAndIncrement() >= MAX_RECONNECT_COUNT) {
-                throw IllegalStateException("Failed to connect after $MAX_RECONNECT_COUNT retries", throwable)
-            } else {
-                createEventStreamFlux().apply {
-                    reconnectCount.set(0)
+    private fun createEventStreamFlux(): Flux<ServerSentEvent<Build?>> =
+        client
+            .get()
+            .uri("/v2/builds/since/${System.currentTimeMillis() - 72 * 60 * 60 * 1000}?stream")
+            .setLastEventId()
+            .bearerAuth()
+            .retrieve()
+            .bodyToFlux<ServerSentEvent<Build?>>()
+            .onErrorResume { throwable ->
+                logger.error("Failure with /builds/since export API", throwable)
+                if (reconnectCount.getAndIncrement() >= MAX_RECONNECT_COUNT) {
+                    throw IllegalStateException(
+                        "Failed to connect after $MAX_RECONNECT_COUNT retries", throwable
+                    )
+                } else {
+                    createEventStreamFlux().apply { reconnectCount.set(0) }
                 }
             }
-        }
 
-    private fun WebClient.RequestHeadersSpec<*>.bearerAuth() = header(
-        "Authorization",
-        "Bearer ${Base64.getEncoder().encodeToString(server.apiToken.toByteArray())}"
-    )
+    private fun WebClient.RequestHeadersSpec<*>.bearerAuth() =
+        header(
+            "Authorization",
+            "Bearer ${Base64.getEncoder().encodeToString(server.apiToken.toByteArray())}"
+        )
 
     // https://docs.gradle.com/enterprise/export-api/#reconnect_resume
     // https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
@@ -64,9 +63,11 @@ class ExportApiClient(
         return this
     }
 
-    fun getEvents(build: Build, events: List<String>): Flow<ServerSentEvent<BuildEvent>> = client.get()
-        .uri("/v2/build/${build.buildId}/events?eventTypes=${events.joinToString(",")}")
-        .bearerAuth()
-        .retrieve()
-        .bodyToFlow()
+    fun getEvents(build: Build, events: List<String>): Flow<ServerSentEvent<BuildEvent>> =
+        client
+            .get()
+            .uri("/v2/build/${build.buildId}/events?eventTypes=${events.joinToString(",")}")
+            .bearerAuth()
+            .retrieve()
+            .bodyToFlow()
 }

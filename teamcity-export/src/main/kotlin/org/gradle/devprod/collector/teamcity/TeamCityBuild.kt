@@ -18,16 +18,21 @@ data class TeamCityBuild(
     val buildScanUrls: List<String> = emptyList()
 )
 
-fun Build.toTeamCityBuild() = TeamCityBuild(
-    id.stringId,
-    branch.name,
-    status?.name,
-    revisions.first { it.vcsRootInstance.vcsRootId.stringId == "Gradle_Branches_GradlePersonalBranches" }.version,
-    queuedDateTime.toOffsetDateTime(),
-    startDateTime?.toOffsetDateTime(),
-    finishDateTime?.toOffsetDateTime(),
-    state.name,
-    buildConfigurationId.stringId,
-    statusText,
-    composite == true
-)
+fun Build.toTeamCityBuild() =
+    TeamCityBuild(
+        id.stringId,
+        branch.name,
+        status?.name,
+        revisions
+            .first {
+                it.vcsRootInstance.vcsRootId.stringId == "Gradle_Branches_GradlePersonalBranches"
+            }
+            .version,
+        queuedDateTime.toOffsetDateTime(),
+        startDateTime?.toOffsetDateTime(),
+        finishDateTime?.toOffsetDateTime(),
+        state.name,
+        buildConfigurationId.stringId,
+        statusText,
+        composite == true
+    )

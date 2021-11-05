@@ -5,48 +5,49 @@ import java.time.Duration
 import java.time.Instant
 
 object BuildStarted : SingleEventExtractor<Instant>("BuildStarted") {
-    override
-    fun extract(events: Iterable<BuildEvent>): Instant =
+    override fun extract(events: Iterable<BuildEvent>): Instant =
         Instant.ofEpochMilli(events.first().timestamp)
 }
 
 /**
  * This is how we extract the test class running time:
  *
- * 1. Find out a `TestStarted` event with `data.suite=true` and `data.name=data.className, not null`, extract its `id`.
+ * 1. Find out a `TestStarted` event with `data.suite=true` and `data.name=data.className, not
+ * null`, extract its `id`.
  * 2. Find out a `TestFinished` event with that `id`.
  * 3. Subtract to get the time (in ms).
  */
-object LongTestClassExtractor : Extractor<Map<String, Duration>>(listOf("TestStarted", "TestFinished")) {
+object LongTestClassExtractor :
+    Extractor<Map<String, Duration>>(listOf("TestStarted", "TestFinished")) {
     // We only care long running test classes
     private val longTestThreshold: Duration = Duration.ofSeconds(60)
 
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): Map<String, Duration> {
         val testIdToClassName: MutableMap<Long, String> = mutableMapOf()
         val testIdToStartTime: MutableMap<Long, Instant> = mutableMapOf()
-        events.getOrDefault(eventTypes[0], emptyList())
-            .forEach {
-                val id = it.data?.longProperty("id")
-                val name = it.data?.stringProperty("name")
-                val className = it.data?.stringProperty("className")
-                val suite = it.data?.booleanProperty("suite")
-                if (suite == true && id != null && className != null && name == className) {
-                    val startTime = Instant.ofEpochMilli(it.timestamp)
-                    testIdToClassName[id] = className
-                    testIdToStartTime[id] = startTime
-                }
+        events.getOrDefault(eventTypes[0], emptyList()).forEach {
+            val id = it.data?.longProperty("id")
+            val name = it.data?.stringProperty("name")
+            val className = it.data?.stringProperty("className")
+            val suite = it.data?.booleanProperty("suite")
+            if (suite == true && id != null && className != null && name == className) {
+                val startTime = Instant.ofEpochMilli(it.timestamp)
+                testIdToClassName[id] = className
+                testIdToStartTime[id] = startTime
             }
-        return events.getOrDefault(eventTypes[1], emptyList()).filter {
-            testIdToClassName.containsKey(it.data?.longProperty("id"))
-        }.map {
-            val id = it.data?.longProperty("id")!!
-            val endTime = Instant.ofEpochMilli(it.timestamp)
-            testIdToClassName.getValue(id) to Duration.between(testIdToStartTime.getValue(id), endTime)
-        }.groupBy({ it.first }) {
-            it.second
-        }.mapValues {
-            it.value.maxOrNull()!!
-        }.filterValues { it > longTestThreshold }
+        }
+        return events
+            .getOrDefault(eventTypes[1], emptyList())
+            .filter { testIdToClassName.containsKey(it.data?.longProperty("id")) }
+            .map {
+                val id = it.data?.longProperty("id")!!
+                val endTime = Instant.ofEpochMilli(it.timestamp)
+                testIdToClassName.getValue(id) to
+                    Duration.between(testIdToStartTime.getValue(id), endTime)
+            }
+            .groupBy({ it.first }) { it.second }
+            .mapValues { it.value.maxOrNull()!! }
+            .filterValues { it > longTestThreshold }
     }
 }
 
@@ -72,15 +73,15 @@ object BuildCacheStoreFailure : SingleEventExtractor<Boolean>("BuildCacheRemoteS
 
 object RootProjectNames : SingleEventExtractor<List<String>>("ProjectStructure") {
     override fun extract(events: Iterable<BuildEvent>): List<String> =
-        events.filter { it.eventType == "ProjectStructure" }
-            .mapNotNull { it.data?.stringProperty("rootProjectName") }
+        events.filter { it.eventType == "ProjectStructure" }.mapNotNull {
+            it.data?.stringProperty("rootProjectName")
+        }
 }
 
 object FirstTestTaskStart : SingleEventExtractor<Pair<String, Instant>?>("TaskStarted") {
     override fun extract(events: Iterable<BuildEvent>): Pair<String, Instant>? {
-        val testTasksStarted = events
-            .filter { it.data?.stringProperty("className")?.endsWith("Test") ?: false }
-            .map {
+        val testTasksStarted =
+            events.filter { it.data?.stringProperty("className")?.endsWith("Test") ?: false }.map {
                 val path = it.data?.stringProperty("path")!!
                 val startTime = Instant.ofEpochMilli(it.timestamp)
                 path to startTime
@@ -94,12 +95,15 @@ object FirstTestTaskStart : SingleEventExtractor<Pair<String, Instant>?>("TaskSt
 object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFinished")) {
     // Find the task whose name ends with "Test" and className ends with "Test"
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): List<String> {
-        val idToClassName = events.getOrDefault(LongTestClassExtractor.eventTypes[0], emptyList())
-            .map { it.data?.longProperty("id") to it.data?.stringProperty("className") }
-            .filter { it.first != null && it.second != null }
-            .toMap()
+        val idToClassName =
+            events
+                .getOrDefault(LongTestClassExtractor.eventTypes[0], emptyList())
+                .map { it.data?.longProperty("id") to it.data?.stringProperty("className") }
+                .filter { it.first != null && it.second != null }
+                .toMap()
 
-        return events.getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList())
+        return events
+            .getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList())
             .filter {
                 it.data?.stringProperty("outcome")?.toUpperCase() in listOf("SUCCESS", "FAILED") &&
                     idToClassName[it.data?.longProperty("id")]?.endsWith("Test") == true
@@ -112,7 +116,6 @@ object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFi
 object Tags : SingleEventExtractor<Set<String>>("UserTag") {
     override fun extract(events: Iterable<BuildEvent>): Set<String> =
         events.map { it.data?.stringProperty("tag")!! }.toSet()
-
 }
 
 object CustomValues : SingleEventExtractor<List<Pair<String, String>>>("UserNamedValue") {
@@ -124,8 +127,8 @@ object BuildAgent : SingleEventExtractor<Agent>("BuildAgent") {
     override fun extract(events: Iterable<BuildEvent>): Agent =
         events.first().data!!.let {
             Agent(
-                it.stringProperty("localHostname")
-                    ?: it.stringProperty("publicHostname"), it.stringProperty("username")
+                it.stringProperty("localHostname") ?: it.stringProperty("publicHostname"),
+                it.stringProperty("username")
             )
         }
 }
@@ -147,7 +150,11 @@ object DaemonUnhealthy : SingleEventExtractor<String?>("DaemonUnhealthy") {
 data class Agent(val host: String?, val user: String?)
 
 private fun Any.booleanProperty(name: String): Boolean? = (this as Map<*, *>)[name] as Boolean?
+
 private fun Any.stringProperty(name: String): String? = (this as Map<*, *>)[name] as String?
+
 private fun Any.anyProperty(name: String): Any? = (this as Map<*, *>)[name]
+
 private fun Any.intProperty(name: String): Int? = (this as Map<*, *>)[name] as Int?
+
 private fun Any.longProperty(name: String): Long? = (this as Map<*, *>)[name] as Long?
