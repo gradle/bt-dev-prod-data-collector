@@ -11,7 +11,11 @@ dependencies {
     implementation(project(":persistence"))
 
     implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.jetbrains.teamcity:teamcity-rest-client")
+    implementation("com.fasterxml.jackson.core:jackson-core")
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.core:jackson-annotations")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
