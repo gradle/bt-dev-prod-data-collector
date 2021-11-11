@@ -15,12 +15,13 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableAsync
 @EnableConfigurationProperties(GradleEnterpriseServer::class)
 class DeveloperProductivityDataCollector {
-	@Bean
-	fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer = Jackson2ObjectMapperBuilderCustomizer { builder ->
-		builder.modulesToInstall(KotlinModule())
-	}
+    @Bean
+    fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer =
+        Jackson2ObjectMapperBuilderCustomizer { builder ->
+            builder.modulesToInstall(KotlinModule())
+        }
 }
 
 fun main(args: Array<String>) {
-	runApplication<DeveloperProductivityDataCollector>(*args)
+    runApplication<DeveloperProductivityDataCollector>(*args)
 }

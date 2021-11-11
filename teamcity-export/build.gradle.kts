@@ -5,7 +5,6 @@ plugins {
     kotlin("plugin.spring")
 }
 
-
 dependencies {
     implementation(platform(project(":build-platform")))
     implementation(project(":persistence"))

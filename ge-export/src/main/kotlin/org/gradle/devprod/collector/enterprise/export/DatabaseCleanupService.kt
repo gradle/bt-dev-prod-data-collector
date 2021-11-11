@@ -11,20 +11,19 @@ import java.time.OffsetDateTime
 const val BULK_SIZE = 10000
 
 @Component
-class DatabaseCleanupService(
-    private
-    val create: DSLContext
-) {
+class DatabaseCleanupService(private val create: DSLContext) {
     @Async
     @Scheduled(fixedDelay = 6 * 60 * 60 * 1000)
     fun cleanupDb() {
         val limitDate = OffsetDateTime.now().minusMonths(3)
         val beforeLimitData = BUILD.BUILD_START.lessOrEqual(limitDate)
-        val oldBuildIdsQuery = create.select(BUILD.BUILD_ID)
-            .from(BUILD)
-            .where(beforeLimitData)
-            .orderBy(BUILD.BUILD_START.desc())
-            .limit(BULK_SIZE)
+        val oldBuildIdsQuery =
+            create
+                .select(BUILD.BUILD_ID)
+                .from(BUILD)
+                .where(beforeLimitData)
+                .orderBy(BUILD.BUILD_START.desc())
+                .limit(BULK_SIZE)
         var result: List<String>
 
         do {

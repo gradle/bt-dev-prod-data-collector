@@ -9,9 +9,10 @@ import org.springframework.stereotype.Component
 class JobRunningHealthIndicator(private val job: Job) : HealthIndicator {
     private val messageKey = "Stream to database job"
 
-    override fun health(): Health = if (job.isActive) {
-        Health.up().withDetail(messageKey, "Running").build()
-    } else {
-        Health.down().withDetail(messageKey, "Not Running").build()
-    }
+    override fun health(): Health =
+        if (job.isActive) {
+            Health.up().withDetail(messageKey, "Running").build()
+        } else {
+            Health.down().withDetail(messageKey, "Not Running").build()
+        }
 }
