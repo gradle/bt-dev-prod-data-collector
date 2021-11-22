@@ -27,9 +27,7 @@ class TeamcityClientService(
     private val teamCityInstance: TeamCityInstance =
         TeamCityInstanceFactory.guestAuth("https://builds.gradle.org")
 
-    private val teamCityRestApiBuildsUrl = "https://builds.gradle.org/app/rest/builds"
-
-    private val client: WebClient = WebClient.create(teamCityRestApiBuildsUrl)
+    private val client: WebClient = WebClient.create()
 
     private val pipelines = listOf("Master", "Release")
 
@@ -116,7 +114,7 @@ class TeamcityClientService(
         val fields =
             "nextHref,count,build(id,agent(name),buildType(id,name,projectName),failedToStart,revisions(revision(version)),branchName,status,statusText,state,queuedDate,startDate,finishDate,composite)"
 
-        return "$teamCityRestApiBuildsUrl/?locator=$locators&fields=$fields&count=$pageSize"
+        return "/app/rest/builds/?locator=$locators&fields=$fields&count=$pageSize"
     }
 
     private fun WebClient.RequestHeadersSpec<*>.bearerAuth(): WebClient.RequestHeadersSpec<*> =
@@ -126,7 +124,7 @@ class TeamcityClientService(
         val response: Mono<String> =
             client
                 .get()
-                .uri("/id:$id/artifacts/content/.teamcity/build_scans/build_scans.txt")
+                .uri(createTeamcityUri("/app/rest/builds/id:$id/artifacts/content/.teamcity/build_scans/build_scans.txt"))
                 .accept(MediaType.TEXT_PLAIN)
                 .bearerAuth()
                 .retrieve()
@@ -141,13 +139,21 @@ class TeamcityClientService(
     private fun loadFailedBuilds(nextPageUrl: String): TeamCityResponse =
         client
             .get()
-            .uri(URI.create(nextPageUrl))
+            .uri(createTeamcityUri(nextPageUrl))
             .accept(MediaType.APPLICATION_JSON)
             .bearerAuth()
             .retrieve()
             .bodyToMono<String>()
             .block()
             .let { objectMapper.readValue(it, TeamCityResponse::class.java) }
+
+    private fun createTeamcityUri(url: String): URI =
+        if (url.startsWith("http")) {
+            URI.create(url)
+        } else {
+            val relativePath = if (url.startsWith("/")) url else "/$url"
+            URI.create("https://builds.gradle.org$relativePath")
+        }
 
     private val rfc822: DateTimeFormatter =
         DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss").withZone(ZoneId.systemDefault())
