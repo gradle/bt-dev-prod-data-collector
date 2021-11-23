@@ -27,7 +27,7 @@ class TeamcityExport(
             val existing = create.fetchAny(TEAMCITY_BUILD, TEAMCITY_BUILD.BUILD_ID.eq(build.id))
             if (existing == null) {
                 println(
-                    "Found build for branch ${build.branch} with status ${build.status}, queued at ${build.queuedDateTime}"
+                    "Found build ${build.id} for branch ${build.branch} with status ${build.status}, queued at ${build.queuedDateTime}, buildscan: ${build.buildScanUrls}"
                 )
                 create.transaction { configuration ->
                     val ctx = DSL.using(configuration)
