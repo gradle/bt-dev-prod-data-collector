@@ -20,7 +20,9 @@ private const val MAX_RECONNECT_COUNT = 2
 
 @Service
 class ExportApiClient(private val server: GradleEnterpriseServer) {
-    private val client: WebClient = WebClient.create("${server.url}/build-export")
+    private val client: WebClient = WebClient.builder().baseUrl("${server.url}/build-export")
+        .codecs { it.defaultCodecs().maxInMemorySize(512 * 1024) }
+        .build()
     private val lastStreamEventId = AtomicReference("")
     private val reconnectCount = AtomicInteger(0)
     private val logger = LoggerFactory.getLogger(javaClass)
