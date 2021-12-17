@@ -47,12 +47,9 @@ class ExportApiExtractorService(
     fun streamToDatabase(): Flow<Unit> =
         exportApiClient
             .createEventStream()
-            .onEach {
-                val data = it.data()
-                println("Received at ${ZonedDateTime.now()}: $data")
-            }
             .map { it.data() }
             .filterNotNull()
+            .onEach { println("Received at ${ZonedDateTime.now()}: $it") }
             .filter { it.toolType == "gradle" }
             .map(this::persistToDatabase)
             .onCompletion { failure ->
