@@ -18,21 +18,30 @@ data class TeamCityBuild(
     val buildScanUrls: List<String> = emptyList()
 )
 
-fun Build.toTeamCityBuild() =
-    TeamCityBuild(
-        id.stringId,
-        branch.name,
-        status?.name,
-        revisions
-            .first {
-                it.vcsRootInstance.vcsRootId.stringId.startsWith("GradleBuildToo")
-            }
-            .version,
-        queuedDateTime.toOffsetDateTime(),
-        startDateTime?.toOffsetDateTime(),
-        finishDateTime?.toOffsetDateTime(),
-        state.name,
-        buildConfigurationId.stringId,
-        statusText,
-        composite == true
-    )
+fun Build.toTeamCityBuild(): TeamCityBuild? {
+    val revision = revisions
+        .firstOrNull {
+            val vcsRootId = it.vcsRootInstance.vcsRootId.stringId
+            vcsRootId.startsWith("GradleBuildToo") ||
+                vcsRootId == "Gradle_Branches_GradlePersonalBranches"
+        }
+    // For builds which have been cancelled early, there won't be any VCS root. We'll ignore those.
+    if (revision == null) {
+        println("No revision found for ${buildConfigurationId.stringId}, ${id.stringId}: VCS roots: ${revisions.joinToString(", ") { it.vcsRootInstance.vcsRootId.stringId }}")
+    }
+    return revision?.let {
+        TeamCityBuild(
+            id.stringId,
+            branch.name,
+            status?.name,
+            it.version,
+            queuedDateTime.toOffsetDateTime(),
+            startDateTime?.toOffsetDateTime(),
+            finishDateTime?.toOffsetDateTime(),
+            state.name,
+            buildConfigurationId.stringId,
+            statusText,
+            composite == true
+        )
+    }
+}

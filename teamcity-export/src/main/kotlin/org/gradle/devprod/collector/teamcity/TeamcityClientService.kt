@@ -51,7 +51,7 @@ class TeamcityClientService(
                 .withAllBranches()
                 .since(Instant.now().minus(5, ChronoUnit.DAYS))
                 .all()
-                .map { it.toTeamCityBuild() }
+                .mapNotNull { it.toTeamCityBuild() }
         }
 
     // The rest client has no "affectProject(id:Gradle_Master_Check)" buildLocator
