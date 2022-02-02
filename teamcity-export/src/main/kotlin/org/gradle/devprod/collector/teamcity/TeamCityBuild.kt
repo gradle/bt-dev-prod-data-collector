@@ -25,7 +25,7 @@ fun Build.toTeamCityBuild() =
         status?.name,
         revisions
             .first {
-                it.vcsRootInstance.vcsRootId.stringId == "Gradle_Branches_GradlePersonalBranches"
+                it.vcsRootInstance.vcsRootId.stringId.startsWith("GradleBuildToo")
             }
             .version,
         queuedDateTime.toOffsetDateTime(),
