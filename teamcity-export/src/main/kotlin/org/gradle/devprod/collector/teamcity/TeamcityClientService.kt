@@ -42,18 +42,35 @@ class TeamcityClientService(
         )
 
     fun loadTriggerBuilds(): Sequence<TeamCityBuild> =
-        pipelines.flatMap { pipeline -> buildConfigurationsFor(pipeline) }.asSequence().flatMap {
-            buildConfiguration ->
-            teamCityInstance
-                .builds()
-                .fromConfiguration(BuildConfigurationId(buildConfiguration))
-                .includeCanceled()
-                .includeFailed()
-                .withAllBranches()
-                .since(Instant.now().minus(5, ChronoUnit.DAYS))
-                .all()
-                .mapNotNull { it.toTeamCityBuild() }
+        pipelines.flatMap { pipeline -> buildConfigurationsFor(pipeline) }
+            .mapNotNull { verifyBuildConfigurationId(it) }
+            .asSequence()
+            .flatMap { buildConfiguration ->
+                teamCityInstance
+                    .builds()
+                    .fromConfiguration(buildConfiguration)
+                    .includeCanceled()
+                    .includeFailed()
+                    .withAllBranches()
+                    .since(Instant.now().minus(5, ChronoUnit.DAYS))
+                    .all()
+                    .mapNotNull { it.toTeamCityBuild() }
+            }
+
+    private fun verifyBuildConfigurationId(buildConfigurationId: String): BuildConfigurationId? {
+        val id = BuildConfigurationId(buildConfigurationId)
+        try {
+            teamCityInstance.buildConfiguration(id).name
+            return id
+        } catch (e: Exception) {
+            // org.jetbrains.teamcity.rest.TeamCityConversationException:
+            // Failed to connect to https://builds.gradle.org/guestAuth/app/rest/buildTypes/id:Gradle_Release_Check_Stage_ReadyforMerge_Trigger: 404  Responding with error, status code: 404 (Not Found).
+            if (e.message?.contains("404 (Not Found)") == true) {
+                return null
+            }
+            throw e
         }
+    }
 
     // The rest client has no "affectProject(id:Gradle_Master_Check)" buildLocator
     fun loadFailedBuilds(since: Instant): Sequence<TeamCityBuild> =
