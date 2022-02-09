@@ -35,7 +35,6 @@ class TeamcityClientService(
         listOf(
             "Gradle_${pipeline}_Check_Stage_QuickFeedbackLinuxOnly_Trigger",
             "Gradle_${pipeline}_Check_Stage_QuickFeedback_Trigger",
-            "Gradle_${pipeline}_Check_Stage_ReadyforMerge_Trigger",
             "Gradle_${pipeline}_Check_Stage_PullRequestFeedback_Trigger",
             "Gradle_${pipeline}_Check_Stage_ReadyforNightly_Trigger",
             "Gradle_${pipeline}_Check_Stage_ReadyforRelease_Trigger"
