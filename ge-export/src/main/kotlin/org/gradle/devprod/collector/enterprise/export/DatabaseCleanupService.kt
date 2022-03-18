@@ -2,6 +2,7 @@ package org.gradle.devprod.collector.enterprise.export
 
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.BUILD
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.LONG_TEST
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD_QUEUE_LENGTH
 import org.jooq.DSLContext
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
@@ -34,5 +35,7 @@ class DatabaseCleanupService(private val create: DSLContext) {
 
             println("Deleted ${result.size} old builds")
         } while (result.size == BULK_SIZE)
+
+        create.delete(TEAMCITY_BUILD_QUEUE_LENGTH).where(TEAMCITY_BUILD_QUEUE_LENGTH.TIME.lessOrEqual(limitDate)).execute()
     }
 }

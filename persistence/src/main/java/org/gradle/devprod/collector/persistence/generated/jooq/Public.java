@@ -10,6 +10,7 @@ import java.util.List;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuildQueueLength;
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue;
 import org.jooq.Catalog;
 import org.jooq.Table;
@@ -46,6 +47,11 @@ public class Public extends SchemaImpl {
     public final TeamcityBuild TEAMCITY_BUILD = TeamcityBuild.TEAMCITY_BUILD;
 
     /**
+     * The table <code>public.teamcity_build_queue_length</code>.
+     */
+    public final TeamcityBuildQueueLength TEAMCITY_BUILD_QUEUE_LENGTH = TeamcityBuildQueueLength.TEAMCITY_BUILD_QUEUE_LENGTH;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -63,7 +69,8 @@ public class Public extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             Build.BUILD,
             LongTest.LONG_TEST,
-            TeamcityBuild.TEAMCITY_BUILD);
+            TeamcityBuild.TEAMCITY_BUILD,
+            TeamcityBuildQueueLength.TEAMCITY_BUILD_QUEUE_LENGTH);
     }
 
     @Override

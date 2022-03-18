@@ -27,6 +27,8 @@ class TeamcityClientService(
     private val teamCityInstance: TeamCityInstance =
         TeamCityInstanceFactory.guestAuth("https://builds.gradle.org")
 
+    private val queryBuildQueueLengthUri = "/app/rest/buildQueue?fields=count"
+
     private val client: WebClient = WebClient.create()
 
     private val pipelines = listOf("Master", "Release")
@@ -41,8 +43,7 @@ class TeamcityClientService(
         )
 
     fun loadTriggerBuilds(): Sequence<TeamCityBuild> =
-        pipelines.flatMap { pipeline -> buildConfigurationsFor(pipeline) }.asSequence().flatMap {
-            buildConfiguration ->
+        pipelines.flatMap { pipeline -> buildConfigurationsFor(pipeline) }.asSequence().flatMap { buildConfiguration ->
             teamCityInstance
                 .builds()
                 .fromConfiguration(BuildConfigurationId(buildConfiguration))
@@ -136,16 +137,18 @@ class TeamcityClientService(
         return response.blockOptional().orElse("").lines().map { it.trim() }.filter { it.isNotBlank() }
     }
 
-    private fun loadFailedBuilds(nextPageUrl: String): TeamCityResponse =
-        client
-            .get()
-            .uri(createTeamcityUri(nextPageUrl))
-            .accept(MediaType.APPLICATION_JSON)
-            .bearerAuth()
-            .retrieve()
-            .bodyToMono<String>()
-            .block()
-            .let { objectMapper.readValue(it, TeamCityResponse::class.java) }
+    private fun <T> WebClient.getJson(uri: String, klass: Class<T>): T = client.get()
+        .uri(createTeamcityUri(uri))
+        .accept(MediaType.APPLICATION_JSON)
+        .bearerAuth()
+        .retrieve()
+        .bodyToMono<String>()
+        .block()
+        .let { objectMapper.readValue(it, klass) }
+
+    fun loadCurrentBuildQueueSize() = client.getJson(queryBuildQueueLengthUri, Map::class.java).get("count")?.toString()?.toIntOrNull()
+
+    private fun loadFailedBuilds(nextPageUrl: String): TeamCityResponse = client.getJson(nextPageUrl, TeamCityResponse::class.java)
 
     private fun createTeamcityUri(url: String): URI =
         if (url.startsWith("http")) {

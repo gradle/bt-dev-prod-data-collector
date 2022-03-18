@@ -7,6 +7,7 @@ package org.gradle.devprod.collector.persistence.generated.jooq;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuildQueueLength;
 
 
 /**
@@ -29,4 +30,9 @@ public class Tables {
      * The table <code>public.teamcity_build</code>.
      */
     public static final TeamcityBuild TEAMCITY_BUILD = TeamcityBuild.TEAMCITY_BUILD;
+
+    /**
+     * The table <code>public.teamcity_build_queue_length</code>.
+     */
+    public static final TeamcityBuildQueueLength TEAMCITY_BUILD_QUEUE_LENGTH = TeamcityBuildQueueLength.TEAMCITY_BUILD_QUEUE_LENGTH;
 }

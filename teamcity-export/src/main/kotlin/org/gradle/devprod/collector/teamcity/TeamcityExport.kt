@@ -1,6 +1,7 @@
 package org.gradle.devprod.collector.teamcity
 
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD_QUEUE_LENGTH
 import org.jetbrains.teamcity.rest.BuildStatus
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
@@ -8,6 +9,7 @@ import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.Instant
+import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 @Component
@@ -20,6 +22,21 @@ class TeamcityExport(
     fun loadTriggerBuilds() {
         println("Loading trigger builds from Teamcity")
         teamcityClientService.loadTriggerBuilds().store()
+    }
+
+    @Async
+    @Scheduled(cron = "* * * * *", fixedDelay = 60 * 1000)
+    fun monitorBuildQueueLength() {
+        println("Loading build queue size from Teamcity")
+        val buildQueueSize = teamcityClientService.loadCurrentBuildQueueSize() ?: return
+        create.transaction { configuration ->
+            val ctx = DSL.using(configuration)
+            val record = ctx.newRecord(TEAMCITY_BUILD_QUEUE_LENGTH)
+            record.length = buildQueueSize
+            record.time = ZonedDateTime.now().toOffsetDateTime()
+
+            record.store()
+        }
     }
 
     private fun Sequence<TeamCityBuild>.store() {

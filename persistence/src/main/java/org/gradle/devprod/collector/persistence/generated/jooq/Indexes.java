@@ -5,6 +5,7 @@ package org.gradle.devprod.collector.persistence.generated.jooq;
 
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuildQueueLength;
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
@@ -23,4 +24,5 @@ public class Indexes {
 
     public static final Index BUILD_FINISH_IDX = Internal.createIndex(DSL.name("build_finish_idx"), Build.BUILD, new OrderField[] { Build.BUILD.BUILD_FINISH }, false);
     public static final Index BUILD_START_IDX = Internal.createIndex(DSL.name("build_start_idx"), Build.BUILD, new OrderField[] { Build.BUILD.BUILD_START }, false);
+    public static final Index TEAMCITY_BUILD_QUEUE_LENGTH_TIME = Internal.createIndex(DSL.name("teamcity_build_queue_length_time"), TeamcityBuildQueueLength.TEAMCITY_BUILD_QUEUE_LENGTH, new OrderField[] { TeamcityBuildQueueLength.TEAMCITY_BUILD_QUEUE_LENGTH.TIME }, false);
 }
