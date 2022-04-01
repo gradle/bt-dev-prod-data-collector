@@ -7,7 +7,7 @@ javaPlatform {
 }
 
 dependencies {
-    api(platform("org.springframework.boot:spring-boot-dependencies:2.4.4"))
+    api(platform("org.springframework.boot:spring-boot-dependencies:2.5.12"))
 
     constraints {
         api("org.apache.logging.log4j:log4j-api:2.16.0")
