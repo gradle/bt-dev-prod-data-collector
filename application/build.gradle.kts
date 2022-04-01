@@ -32,6 +32,10 @@ tasks.register("stage") {
     dependsOn("assemble")
 }
 
+tasks.named<Jar>("jar") {
+    enabled = false
+}
+
 tasks.named<JavaExec>("bootRun") {
     maxHeapSize = "150M"
     jvmArgs("-XX:MaxMetaspaceSize=128M")
