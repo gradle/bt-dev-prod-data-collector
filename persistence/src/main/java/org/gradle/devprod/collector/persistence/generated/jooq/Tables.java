@@ -5,6 +5,7 @@ package org.gradle.devprod.collector.persistence.generated.jooq;
 
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 
@@ -19,6 +20,11 @@ public class Tables {
      * The table <code>public.build</code>.
      */
     public static final Build BUILD = Build.BUILD;
+
+    /**
+     * The table <code>public.flaky_test_class</code>.
+     */
+    public static final FlakyTestClass FLAKY_TEST_CLASS = FlakyTestClass.FLAKY_TEST_CLASS;
 
     /**
      * The table <code>public.long_test</code>.

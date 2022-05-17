@@ -113,6 +113,46 @@ object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFi
     }
 }
 
+data class TestCase(val name: String, val className: String)
+
+/**
+ * Extract flaky test classes from the build events.
+ *
+ * Currently, Export API doesn't provide this information directly,
+ * so we need to construct a mapping of [testCase -> testResult],
+ * and find out the flaky test classes.
+ */
+object FlakyTestClassExtractor : Extractor<Set<String>>(listOf("TestStarted", "TestFinished")) {
+    override fun extractFrom(events: Map<String?, List<BuildEvent>>): Set<String> {
+        val testIdToTestCase: MutableMap<Long, TestCase> = mutableMapOf()
+        events.getOrDefault(LongTestClassExtractor.eventTypes[0], emptyList()).forEach {
+            val id = it.data?.longProperty("id")
+            val name = it.data?.stringProperty("name")
+            val className = it.data?.stringProperty("className")
+
+            if (id != null && name != null && className != null) {
+                val testCase = TestCase(name, className)
+                testIdToTestCase[id] = testCase
+            }
+        }
+        val flakyTestClasses = mutableSetOf<String>()
+        val testCaseToFailedResult: MutableMap<TestCase, Boolean> = mutableMapOf()
+        events.getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList()).forEach {
+            val id = it.data?.longProperty("id")
+            val failed = it.data?.booleanProperty("failed") ?: return@forEach
+            val testCase = testIdToTestCase[id] ?: return@forEach
+            val existingSuccessResult = testCaseToFailedResult[testCase]
+            if (existingSuccessResult == null) {
+                testCaseToFailedResult[testCase] = failed
+            } else if (existingSuccessResult != failed) {
+                flakyTestClasses.add(testCase.className)
+            }
+        }
+
+        return flakyTestClasses
+    }
+}
+
 object Tags : SingleEventExtractor<Set<String>>("UserTag") {
     override fun extract(events: Iterable<BuildEvent>): Set<String> =
         events.map { it.data?.stringProperty("tag")!! }.toSet()
