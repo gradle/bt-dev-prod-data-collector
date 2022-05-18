@@ -39,5 +39,6 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<FlakyTestClassRecord, BuildRecord> FLAKY_TEST_CLASS__FLAKY_TEST_CLASS_BUILD_ID_FKEY = Internal.createForeignKey(FlakyTestClass.FLAKY_TEST_CLASS, DSL.name("flaky_test_class_build_id_fkey"), new TableField[] { FlakyTestClass.FLAKY_TEST_CLASS.BUILD_ID }, Keys.BUILD_PK, new TableField[] { Build.BUILD.BUILD_ID }, true);
     public static final ForeignKey<LongTestRecord, BuildRecord> LONG_TEST__LONG_TEST_BUILD_FK = Internal.createForeignKey(LongTest.LONG_TEST, DSL.name("long_test_build_fk"), new TableField[] { LongTest.LONG_TEST.BUILD_ID }, Keys.BUILD_PK, new TableField[] { Build.BUILD.BUILD_ID }, true);
 }

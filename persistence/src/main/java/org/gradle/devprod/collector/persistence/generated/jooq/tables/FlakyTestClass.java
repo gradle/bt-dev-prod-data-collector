@@ -105,6 +105,20 @@ public class FlakyTestClass extends TableImpl<FlakyTestClassRecord> {
     }
 
     @Override
+    public List<ForeignKey<FlakyTestClassRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<FlakyTestClassRecord, ?>>asList(Keys.FLAKY_TEST_CLASS__FLAKY_TEST_CLASS_BUILD_ID_FKEY);
+    }
+
+    private transient Build _build;
+
+    public Build build() {
+        if (_build == null)
+            _build = new Build(this, Keys.FLAKY_TEST_CLASS__FLAKY_TEST_CLASS_BUILD_ID_FKEY);
+
+        return _build;
+    }
+
+    @Override
     public FlakyTestClass as(String alias) {
         return new FlakyTestClass(DSL.name(alias), this);
     }
