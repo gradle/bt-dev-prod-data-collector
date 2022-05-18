@@ -54,7 +54,7 @@ public class FlakyTestClass extends TableImpl<FlakyTestClassRecord> {
     /**
      * The column <code>public.flaky_test_class.flaky_test_fqcn</code>.
      */
-    public final TableField<FlakyTestClassRecord, String> FLAKY_TEST_FQCN = createField(DSL.name("flaky_test_fqcn"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<FlakyTestClassRecord, String> FLAKY_TEST_FQCN = createField(DSL.name("flaky_test_fqcn"), SQLDataType.VARCHAR(1024).nullable(false), this, "");
 
     private FlakyTestClass(Name alias, Table<FlakyTestClassRecord> aliased) {
         this(alias, aliased, null);

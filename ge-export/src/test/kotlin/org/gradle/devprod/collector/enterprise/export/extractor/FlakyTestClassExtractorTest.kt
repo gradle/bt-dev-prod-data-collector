@@ -8,6 +8,6 @@ class FlakyTestClassExtractorTest {
     fun `can extract flaky test classes`() {
         val events = parse("/BuildWithFlakyTests_TestStarted_TestFinished.txt")
         val flakyTestClasses = FlakyTestClassExtractor.extractFrom(events.groupBy { it.eventType })
-        Assertions.assertEquals(setOf("org.gradle.ide.visualstudio.plugins.VisualStudioPluginTest"), flakyTestClasses)
+        Assertions.assertEquals(setOf("org.gradle.cli.FlakyTest"), flakyTestClasses)
     }
 }

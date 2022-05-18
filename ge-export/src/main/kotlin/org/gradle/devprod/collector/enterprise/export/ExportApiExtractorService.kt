@@ -89,16 +89,19 @@ class ExportApiExtractorService(
                     .groupBy(BuildEvent::eventType)
 
             try {
-                insertIntoBuildTable(build, events)
-                insertIntoLongRunningTestTable(build, events)
-                insertIntoFlakyTestClassTable(build, events)
+                create.transaction { configuration ->
+                    val ctx = DSL.using(configuration)
+                    ctx.insertIntoBuildTable(build, events)
+                    ctx.insertIntoLongRunningTestTable(build, events)
+                    ctx.insertIntoFlakyTestClassTable(build, events)
+                }
             } catch (e: Exception) {
                 throw IllegalStateException("Error processing $build, events: $events", e)
             }
         }
     }
 
-    private fun insertIntoBuildTable(build: Build, events: Map<String?, List<BuildEvent>>) {
+    private fun DSLContext.insertIntoBuildTable(build: Build, events: Map<String?, List<BuildEvent>>) {
         val buildStarted = BuildStarted.extractFrom(events)
         val buildFinished = BuildFinished.extractFrom(events)
         val buildTime = Duration.between(buildStarted, buildFinished)
@@ -119,69 +122,59 @@ class ExportApiExtractorService(
         val buildCacheLoadFailure = BuildCacheLoadFailure.extractFrom(events)
         val buildCacheStoreFailure = BuildCacheStoreFailure.extractFrom(events)
         val executedTestTasks = ExecutedTestTasks.extractFrom(events)
-        create.transaction { configuration ->
-            val ctx = DSL.using(configuration)
-            val record = ctx.newRecord(Tables.BUILD)
-            record.buildId = build.buildId
-            record.gradleVersion = build.toolVersion
-            record.buildStart = OffsetDateTime.ofInstant(buildStarted, ZoneId.systemDefault())
-            record.buildFinish = OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
-            record.successful = !buildFailed
-            record.timeToFirstTestTask = timeToFirstTestTask?.toMillis()
-            record.pathToFirstTestTask = firstTestTaskStart?.first
-            record.rootProject = rootProjectName
-            record.username = agent.user
-            record.host = agent.host
-            record.daemonAge = daemonBuildNumber
-            record.daemonUnhealthyReason = daemonUnhealthyReason
-            record.tags = tags.toTypedArray()
-            record.customValues =
-                customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
-            record.buildCacheLoadFailure = buildCacheLoadFailure
-            record.buildCacheStoreFailure = buildCacheStoreFailure
-            record.executedTestTasks = executedTestTasks.toTypedArray()
-            record.store()
-        }
+        val record = newRecord(Tables.BUILD)
+        record.buildId = build.buildId
+        record.gradleVersion = build.toolVersion
+        record.buildStart = OffsetDateTime.ofInstant(buildStarted, ZoneId.systemDefault())
+        record.buildFinish = OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
+        record.successful = !buildFailed
+        record.timeToFirstTestTask = timeToFirstTestTask?.toMillis()
+        record.pathToFirstTestTask = firstTestTaskStart?.first
+        record.rootProject = rootProjectName
+        record.username = agent.user
+        record.host = agent.host
+        record.daemonAge = daemonBuildNumber
+        record.daemonUnhealthyReason = daemonUnhealthyReason
+        record.tags = tags.toTypedArray()
+        record.customValues = customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
+        record.buildCacheLoadFailure = buildCacheLoadFailure
+        record.buildCacheStoreFailure = buildCacheStoreFailure
+        record.executedTestTasks = executedTestTasks.toTypedArray()
+        record.store()
     }
 
-    private fun insertIntoLongRunningTestTable(build: Build, events: Map<String?, List<BuildEvent>>) {
+    private fun DSLContext.insertIntoLongRunningTestTable(build: Build, events: Map<String?, List<BuildEvent>>) {
         val longRunningTestClasses: Map<String, Duration> = LongTestClassExtractor.extractFrom(events)
-        create.transaction { configuration ->
-            val ctx = DSL.using(configuration)
-            if (longRunningTestClasses.isNotEmpty()) {
-                ctx.batch(
-                    *longRunningTestClasses
-                        .map {
-                            ctx.insertInto(
-                                LONG_TEST,
-                                LONG_TEST.BUILD_ID,
-                                LONG_TEST.CLASS_NAME,
-                                LONG_TEST.DURATION_MS
-                            ).values(build.buildId, it.key, it.value.toMillis())
-                        }
-                        .toTypedArray()
-                ).execute()
-            }
+        if (longRunningTestClasses.isNotEmpty()) {
+            batch(
+                *longRunningTestClasses
+                    .map {
+                        insertInto(
+                            LONG_TEST,
+                            LONG_TEST.BUILD_ID,
+                            LONG_TEST.CLASS_NAME,
+                            LONG_TEST.DURATION_MS
+                        ).values(build.buildId, it.key, it.value.toMillis())
+                    }
+                    .toTypedArray()
+            ).execute()
         }
     }
 
-    private fun insertIntoFlakyTestClassTable(build: Build, events: Map<String?, List<BuildEvent>>) {
+    private fun DSLContext.insertIntoFlakyTestClassTable(build: Build, events: Map<String?, List<BuildEvent>>) {
         val flakyTestClasses = FlakyTestClassExtractor.extractFrom(events)
-        create.transaction { configuration ->
-            val ctx = DSL.using(configuration)
-            if (flakyTestClasses.isNotEmpty()) {
-                ctx.batch(
-                    *flakyTestClasses
-                        .map {
-                            ctx.insertInto(
-                                FLAKY_TEST_CLASS,
-                                FLAKY_TEST_CLASS.BUILD_ID,
-                                FLAKY_TEST_CLASS.FLAKY_TEST_FQCN
-                            ).values(build.buildId, it)
-                        }
-                        .toTypedArray()
-                ).execute()
-            }
+        if (flakyTestClasses.isNotEmpty()) {
+            batch(
+                *flakyTestClasses
+                    .map {
+                        insertInto(
+                            FLAKY_TEST_CLASS,
+                            FLAKY_TEST_CLASS.BUILD_ID,
+                            FLAKY_TEST_CLASS.FLAKY_TEST_FQCN
+                        ).values(build.buildId, it)
+                    }
+                    .toTypedArray()
+            ).execute()
         }
     }
 }

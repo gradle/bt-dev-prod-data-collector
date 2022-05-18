@@ -141,10 +141,10 @@ object FlakyTestClassExtractor : Extractor<Set<String>>(listOf("TestStarted", "T
             val id = it.data?.longProperty("id")
             val failed = it.data?.booleanProperty("failed") ?: return@forEach
             val testCase = testIdToTestCase[id] ?: return@forEach
-            val existingSuccessResult = testCaseToFailedResult[testCase]
-            if (existingSuccessResult == null) {
+            val existingResult = testCaseToFailedResult[testCase]
+            if (existingResult == null) {
                 testCaseToFailedResult[testCase] = failed
-            } else if (existingSuccessResult != failed) {
+            } else if (existingResult != failed) {
                 flakyTestClasses.add(testCase.className)
             }
         }
