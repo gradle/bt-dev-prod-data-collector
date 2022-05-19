@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 class FlakyTestClassExtractorTest {
     @Test
     fun `can extract flaky test classes`() {
-        val events = parse("/BuildWithFlakyTests_TestStarted_TestFinished.txt")
+        val events = parse("/BuildWithFlakyTests_TestStarted_TestFinished_TaskStarted.txt")
         val flakyTestClasses = FlakyTestClassExtractor.extractFrom(events.groupBy { it.eventType })
         Assertions.assertEquals(setOf("org.gradle.cli.FlakyTest"), flakyTestClasses)
     }

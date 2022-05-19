@@ -113,7 +113,7 @@ object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFi
     }
 }
 
-data class TestCase(val name: String, val className: String)
+data class TestCase(val taskPath: String, val name: String, val className: String)
 
 /**
  * Extract flaky test classes from the build events.
@@ -122,19 +122,9 @@ data class TestCase(val name: String, val className: String)
  * so we need to construct a mapping of [testCase -> testResult],
  * and find out the flaky test classes.
  */
-object FlakyTestClassExtractor : Extractor<Set<String>>(listOf("TestStarted", "TestFinished")) {
+object FlakyTestClassExtractor : Extractor<Set<String>>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): Set<String> {
-        val testIdToTestCase: MutableMap<Long, TestCase> = mutableMapOf()
-        events.getOrDefault(LongTestClassExtractor.eventTypes[0], emptyList()).forEach {
-            val id = it.data?.longProperty("id")
-            val name = it.data?.stringProperty("name")
-            val className = it.data?.stringProperty("className")
-
-            if (id != null && name != null && className != null) {
-                val testCase = TestCase(name, className)
-                testIdToTestCase[id] = testCase
-            }
-        }
+        val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
         val flakyTestClasses = mutableSetOf<String>()
         val testCaseToFailedResult: MutableMap<TestCase, Boolean> = mutableMapOf()
         events.getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList()).forEach {
@@ -150,6 +140,35 @@ object FlakyTestClassExtractor : Extractor<Set<String>>(listOf("TestStarted", "T
         }
 
         return flakyTestClasses
+    }
+
+    private fun getTestIdToTestCaseMap(typeToEvents: Map<String?, List<BuildEvent>>): Map<Long, TestCase> {
+        val idToTaskPath: Map<Long, String> = getIdToTaskPathMap(typeToEvents.getOrDefault("TaskStarted", emptyList()))
+        val testIdToTestCase: MutableMap<Long, TestCase> = mutableMapOf()
+        typeToEvents.getOrDefault("TestStarted", emptyList()).forEach {
+            val id = it.data?.longProperty("id")
+            val name = it.data?.stringProperty("name")
+            val className = it.data?.stringProperty("className")
+            val taskPath = it.data?.longProperty("task")?.let { idToTaskPath[it] }
+
+            if (id != null && name != null && className != null && taskPath != null) {
+                val testCase = TestCase(taskPath, name, className)
+                testIdToTestCase[id] = testCase
+            }
+        }
+        return testIdToTestCase
+    }
+
+    private fun getIdToTaskPathMap(events: List<BuildEvent>): Map<Long, String> {
+        val result: MutableMap<Long, String> = mutableMapOf()
+        events.forEach {
+            val id = it.data?.longProperty("id")
+            val path = it.data?.stringProperty("path")
+            if (id != null && path != null) {
+                result[id] = path
+            }
+        }
+        return result
     }
 }
 

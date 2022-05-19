@@ -1,0 +1,1528 @@
+id: ych5t54ec6q32
+event: Build
+data: {"buildId":"ych5t54ec6q32","toolType":"gradle","toolVersion":"7.6-20220513164305+0000","agentVersion":"3.10","timestamp":1652836920014}
+
+id: 0
+event: BuildEvent
+data: {"timestamp":1652836901627,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8051436671238486227,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 1
+event: BuildEvent
+data: {"timestamp":1652836901632,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2551360163103208154,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 2
+event: BuildEvent
+data: {"timestamp":1652836901633,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3869431716287008039,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 3
+event: BuildEvent
+data: {"timestamp":1652836901635,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5997530617079986656,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 4
+event: BuildEvent
+data: {"timestamp":1652836901638,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":9208327237927760955,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 5
+event: BuildEvent
+data: {"timestamp":1652836901639,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":429883376956499874,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 6
+event: BuildEvent
+data: {"timestamp":1652836901654,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4707832970789051165,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 7
+event: BuildEvent
+data: {"timestamp":1652836901655,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2271830911855291981,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 8
+event: BuildEvent
+data: {"timestamp":1652836901655,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3022181223671515982,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 9
+event: BuildEvent
+data: {"timestamp":1652836901656,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7807837804723617437,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 10
+event: BuildEvent
+data: {"timestamp":1652836901656,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7881437246656117879,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 11
+event: BuildEvent
+data: {"timestamp":1652836901657,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2950803493111476284,"buildPath":":build-logic-settings","path":":build-logic-settings-plugin:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 12
+event: BuildEvent
+data: {"timestamp":1652836901883,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6167739317078165710,"buildPath":":build-logic-commons","path":":gradle-plugin:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 13
+event: BuildEvent
+data: {"timestamp":1652836901886,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5072023492063366953,"buildPath":":build-logic-commons","path":":gradle-plugin:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 14
+event: BuildEvent
+data: {"timestamp":1652836901887,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6022494669978007053,"buildPath":":build-logic-commons","path":":gradle-plugin:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 15
+event: BuildEvent
+data: {"timestamp":1652836901889,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8112956886060218653,"buildPath":":build-logic-commons","path":":gradle-plugin:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 16
+event: BuildEvent
+data: {"timestamp":1652836901892,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-9193561124350733916,"buildPath":":build-logic-commons","path":":gradle-plugin:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 17
+event: BuildEvent
+data: {"timestamp":1652836901892,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1675491258106692168,"buildPath":":build-logic-commons","path":":gradle-plugin:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 18
+event: BuildEvent
+data: {"timestamp":1652836901905,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":701936034740070604,"buildPath":":build-logic-commons","path":":gradle-plugin:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 19
+event: BuildEvent
+data: {"timestamp":1652836901905,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5815547662082232869,"buildPath":":build-logic-commons","path":":gradle-plugin:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 20
+event: BuildEvent
+data: {"timestamp":1652836901906,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5195431838191115198,"buildPath":":build-logic-commons","path":":gradle-plugin:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 21
+event: BuildEvent
+data: {"timestamp":1652836901907,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6754024519527271640,"buildPath":":build-logic-commons","path":":gradle-plugin:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 22
+event: BuildEvent
+data: {"timestamp":1652836901907,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6728075920934063889,"buildPath":":build-logic-commons","path":":gradle-plugin:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 23
+event: BuildEvent
+data: {"timestamp":1652836901912,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3159065761575350382,"buildPath":":build-logic-commons","path":":gradle-plugin:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 24
+event: BuildEvent
+data: {"timestamp":1652836902675,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1313994001550137656,"buildPath":":build-logic","path":":build-update-utils:extractPluginRequests","className":"org.gradle.plugin.devel.internal.precompiled.ExtractPluginRequestsTask","thread":null,"noActions":false}}
+
+id: 25
+event: BuildEvent
+data: {"timestamp":1652836902675,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2862136337153965618,"buildPath":":build-logic","path":":root-build:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 26
+event: BuildEvent
+data: {"timestamp":1652836902675,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1619539484884531100,"buildPath":":build-logic","path":":idea:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 27
+event: BuildEvent
+data: {"timestamp":1652836902675,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3590427756685698757,"buildPath":":build-logic","path":":integration-testing:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 28
+event: BuildEvent
+data: {"timestamp":1652836902675,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8468549354225245612,"buildPath":":build-logic","path":":buildquality:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 29
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7573701276769998576,"buildPath":":build-logic","path":":performance-testing:extractPluginRequests","className":"org.gradle.plugin.devel.internal.precompiled.ExtractPluginRequestsTask","thread":null,"noActions":false}}
+
+id: 30
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-817263350805247733,"buildPath":":build-logic","path":":profiling:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 31
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7278585908155252207,"buildPath":":build-logic","path":":lifecycle:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 32
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4589477387136320890,"buildPath":":build-logic","path":":binary-compatibility:extractPluginRequests","className":"org.gradle.plugin.devel.internal.precompiled.ExtractPluginRequestsTask","thread":null,"noActions":false}}
+
+id: 33
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4881508888693507719,"buildPath":":build-logic","path":":basics:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 34
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5171391016595747142,"buildPath":":build-logic","path":":dependency-modules:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 35
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7976720706654117317,"buildPath":":build-logic","path":":documentation:extractPluginRequests","className":"org.gradle.plugin.devel.internal.precompiled.ExtractPluginRequestsTask","thread":null,"noActions":false}}
+
+id: 36
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7712827629941237092,"buildPath":":build-logic","path":":cleanup:extractPluginRequests","className":"org.gradle.plugin.devel.internal.precompiled.ExtractPluginRequestsTask","thread":null,"noActions":false}}
+
+id: 37
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2964120435726457272,"buildPath":":build-logic","path":":module-identity:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 38
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3918770660538844942,"buildPath":":build-logic","path":":documentation:generatePluginAdapters","className":"org.gradle.plugin.devel.internal.precompiled.GeneratePluginAdaptersTask","thread":null,"noActions":false}}
+
+id: 39
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5211164358251754614,"buildPath":":build-logic","path":":idea:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 40
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1367380855531215899,"buildPath":":build-logic","path":":profiling:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 41
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1185706683887235378,"buildPath":":build-logic","path":":root-build:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 42
+event: BuildEvent
+data: {"timestamp":1652836902676,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4356266542297063232,"buildPath":":build-logic","path":":binary-compatibility:generatePluginAdapters","className":"org.gradle.plugin.devel.internal.precompiled.GeneratePluginAdaptersTask","thread":null,"noActions":false}}
+
+id: 43
+event: BuildEvent
+data: {"timestamp":1652836902677,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7809597241192175705,"buildPath":":build-logic","path":":buildquality:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 44
+event: BuildEvent
+data: {"timestamp":1652836902677,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1668402320728442533,"buildPath":":build-logic","path":":documentation:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 45
+event: BuildEvent
+data: {"timestamp":1652836902677,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2859819310911440715,"buildPath":":build-logic","path":":dependency-modules:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 46
+event: BuildEvent
+data: {"timestamp":1652836902677,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1546434392540712628,"buildPath":":build-logic","path":":idea:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 47
+event: BuildEvent
+data: {"timestamp":1652836902677,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7267583068817361133,"buildPath":":build-logic","path":":profiling:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 48
+event: BuildEvent
+data: {"timestamp":1652836902678,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6352667846477003436,"buildPath":":build-logic","path":":integration-testing:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 49
+event: BuildEvent
+data: {"timestamp":1652836902678,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8050571173376479171,"buildPath":":build-logic","path":":module-identity:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 50
+event: BuildEvent
+data: {"timestamp":1652836902678,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1628488545001236240,"buildPath":":build-logic","path":":root-build:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 51
+event: BuildEvent
+data: {"timestamp":1652836902681,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4954612991438428055,"buildPath":":build-logic","path":":documentation:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 52
+event: BuildEvent
+data: {"timestamp":1652836902681,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6075865208890213412,"buildPath":":build-logic","path":":profiling:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 53
+event: BuildEvent
+data: {"timestamp":1652836902681,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7020623846913374603,"buildPath":":build-logic","path":":buildquality:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 54
+event: BuildEvent
+data: {"timestamp":1652836902681,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4773697313069831841,"buildPath":":build-logic","path":":module-identity:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 55
+event: BuildEvent
+data: {"timestamp":1652836902681,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3610491056853902269,"buildPath":":build-logic","path":":build-update-utils:generatePluginAdapters","className":"org.gradle.plugin.devel.internal.precompiled.GeneratePluginAdaptersTask","thread":null,"noActions":false}}
+
+id: 56
+event: BuildEvent
+data: {"timestamp":1652836902681,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4436199250553888953,"buildPath":":build-logic","path":":cleanup:generatePluginAdapters","className":"org.gradle.plugin.devel.internal.precompiled.GeneratePluginAdaptersTask","thread":null,"noActions":false}}
+
+id: 57
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1415502734217413472,"buildPath":":build-logic","path":":integration-testing:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 58
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6332459963394270982,"buildPath":":build-logic","path":":root-build:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 59
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1681997177613357958,"buildPath":":build-logic","path":":performance-testing:generatePluginAdapters","className":"org.gradle.plugin.devel.internal.precompiled.GeneratePluginAdaptersTask","thread":null,"noActions":false}}
+
+id: 60
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1424247620259432360,"buildPath":":build-logic","path":":binary-compatibility:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 61
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":837994281830030907,"buildPath":":build-logic","path":":build-update-utils:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 62
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1596191423752794565,"buildPath":":build-logic","path":":cleanup:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 63
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4564317752360266600,"buildPath":":build-logic","path":":dependency-modules:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 64
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1558602336584402949,"buildPath":":build-logic","path":":idea:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 65
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-864338156024660400,"buildPath":":build-logic","path":":buildquality:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 66
+event: BuildEvent
+data: {"timestamp":1652836902682,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":221208619814128518,"buildPath":":build-logic","path":":integration-testing:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 67
+event: BuildEvent
+data: {"timestamp":1652836902683,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2550740115805181314,"buildPath":":build-logic","path":":lifecycle:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 68
+event: BuildEvent
+data: {"timestamp":1652836902683,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7059798149059753192,"buildPath":":build-logic","path":":module-identity:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 69
+event: BuildEvent
+data: {"timestamp":1652836902683,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5922341409442755167,"buildPath":":build-logic","path":":dependency-modules:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 70
+event: BuildEvent
+data: {"timestamp":1652836902683,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-9163086075530246726,"buildPath":":build-logic","path":":cleanup:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 71
+event: BuildEvent
+data: {"timestamp":1652836902684,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6727602634477412487,"buildPath":":build-logic","path":":performance-testing:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 72
+event: BuildEvent
+data: {"timestamp":1652836902684,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7321981954995856265,"buildPath":":build-logic","path":":lifecycle:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 73
+event: BuildEvent
+data: {"timestamp":1652836902684,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4078912361664372177,"buildPath":":build-logic","path":":binary-compatibility:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 74
+event: BuildEvent
+data: {"timestamp":1652836902685,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7306258899103790199,"buildPath":":build-logic","path":":cleanup:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 75
+event: BuildEvent
+data: {"timestamp":1652836902686,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7043733314030942862,"buildPath":":build-logic","path":":lifecycle:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 76
+event: BuildEvent
+data: {"timestamp":1652836902686,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5336183546679485363,"buildPath":":build-logic","path":":build-update-utils:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 77
+event: BuildEvent
+data: {"timestamp":1652836902686,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1982879492045470278,"buildPath":":build-logic","path":":cleanup:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 78
+event: BuildEvent
+data: {"timestamp":1652836902686,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8150961289000573731,"buildPath":":build-logic","path":":performance-testing:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 79
+event: BuildEvent
+data: {"timestamp":1652836902687,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6422369107215772881,"buildPath":":build-logic","path":":build-update-utils:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 80
+event: BuildEvent
+data: {"timestamp":1652836902688,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6425647968741376900,"buildPath":":build-logic","path":":build-update-utils:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 81
+event: BuildEvent
+data: {"timestamp":1652836902708,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-891626501603943654,"buildPath":":build-logic","path":":basics:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 82
+event: BuildEvent
+data: {"timestamp":1652836902708,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5477550103705750752,"buildPath":":build-logic","path":":basics:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 83
+event: BuildEvent
+data: {"timestamp":1652836902711,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8309823262511143425,"buildPath":":build-logic","path":":basics:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 84
+event: BuildEvent
+data: {"timestamp":1652836902720,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7073907342666566120,"buildPath":":build-logic","path":":basics:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 85
+event: BuildEvent
+data: {"timestamp":1652836902720,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6803896118302752187,"buildPath":":build-logic","path":":basics:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 86
+event: BuildEvent
+data: {"timestamp":1652836902735,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7887690655196664424,"buildPath":":build-logic","path":":basics:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 87
+event: BuildEvent
+data: {"timestamp":1652836902735,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1038634970008297823,"buildPath":":build-logic","path":":basics:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 88
+event: BuildEvent
+data: {"timestamp":1652836902735,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3397569644713353050,"buildPath":":build-logic","path":":module-identity:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 89
+event: BuildEvent
+data: {"timestamp":1652836902736,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3254615896638595185,"buildPath":":build-logic","path":":idea:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 90
+event: BuildEvent
+data: {"timestamp":1652836902736,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7623128967533224314,"buildPath":":build-logic","path":":lifecycle:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 91
+event: BuildEvent
+data: {"timestamp":1652836902736,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8783100345858386940,"buildPath":":build-logic","path":":dependency-modules:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 92
+event: BuildEvent
+data: {"timestamp":1652836902736,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8193668097150532674,"buildPath":":build-logic","path":":basics:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 93
+event: BuildEvent
+data: {"timestamp":1652836902737,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2580199796919286240,"buildPath":":build-logic","path":":basics:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 94
+event: BuildEvent
+data: {"timestamp":1652836902737,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2102983945083963140,"buildPath":":build-logic","path":":basics:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 95
+event: BuildEvent
+data: {"timestamp":1652836902739,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8079974534978668480,"buildPath":":build-logic","path":":basics:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 96
+event: BuildEvent
+data: {"timestamp":1652836902740,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6944577755868263247,"buildPath":":build-logic","path":":lifecycle:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 97
+event: BuildEvent
+data: {"timestamp":1652836902741,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8189819106611821433,"buildPath":":build-logic","path":":module-identity:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 98
+event: BuildEvent
+data: {"timestamp":1652836902741,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6041240303190257062,"buildPath":":build-logic","path":":idea:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 99
+event: BuildEvent
+data: {"timestamp":1652836902741,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4643620043238560806,"buildPath":":build-logic","path":":dependency-modules:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 100
+event: BuildEvent
+data: {"timestamp":1652836902742,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5756239107362718073,"buildPath":":build-logic","path":":build-update-utils:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 101
+event: BuildEvent
+data: {"timestamp":1652836902745,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5449248157810059906,"buildPath":":build-logic","path":":lifecycle:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 102
+event: BuildEvent
+data: {"timestamp":1652836902745,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6680748285773687048,"buildPath":":build-logic","path":":dependency-modules:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 103
+event: BuildEvent
+data: {"timestamp":1652836902745,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2025912103052393128,"buildPath":":build-logic","path":":module-identity:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 104
+event: BuildEvent
+data: {"timestamp":1652836902746,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8357373364963199507,"buildPath":":build-logic","path":":build-update-utils:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 105
+event: BuildEvent
+data: {"timestamp":1652836902746,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":607163459265493507,"buildPath":":build-logic","path":":idea:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 106
+event: BuildEvent
+data: {"timestamp":1652836902749,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3638897035842250044,"buildPath":":build-logic","path":":build-update-utils:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 107
+event: BuildEvent
+data: {"timestamp":1652836902751,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5636391001593044512,"buildPath":":build-logic","path":":lifecycle:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 108
+event: BuildEvent
+data: {"timestamp":1652836902752,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4661356697594125674,"buildPath":":build-logic","path":":dependency-modules:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 109
+event: BuildEvent
+data: {"timestamp":1652836902752,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2288487846013974430,"buildPath":":build-logic","path":":idea:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 110
+event: BuildEvent
+data: {"timestamp":1652836902753,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5527397336264511321,"buildPath":":build-logic","path":":module-identity:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 111
+event: BuildEvent
+data: {"timestamp":1652836902754,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4648500165807413334,"buildPath":":build-logic","path":":build-update-utils:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 112
+event: BuildEvent
+data: {"timestamp":1652836902764,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1775814697953755256,"buildPath":":build-logic","path":":dependency-modules:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 113
+event: BuildEvent
+data: {"timestamp":1652836902764,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3149370364921086212,"buildPath":":build-logic","path":":idea:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 114
+event: BuildEvent
+data: {"timestamp":1652836902764,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5463538380199737322,"buildPath":":build-logic","path":":lifecycle:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 115
+event: BuildEvent
+data: {"timestamp":1652836902765,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6879594446190715489,"buildPath":":build-logic","path":":lifecycle:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 116
+event: BuildEvent
+data: {"timestamp":1652836902765,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1721649997974564809,"buildPath":":build-logic","path":":idea:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 117
+event: BuildEvent
+data: {"timestamp":1652836902765,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3187542916324304963,"buildPath":":build-logic","path":":dependency-modules:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 118
+event: BuildEvent
+data: {"timestamp":1652836902765,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1105588434596399321,"buildPath":":build-logic","path":":idea:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 119
+event: BuildEvent
+data: {"timestamp":1652836902765,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5578317144446132221,"buildPath":":build-logic","path":":lifecycle:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 120
+event: BuildEvent
+data: {"timestamp":1652836902765,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7229466272290329419,"buildPath":":build-logic","path":":dependency-modules:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 121
+event: BuildEvent
+data: {"timestamp":1652836902765,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7111541773173471628,"buildPath":":build-logic","path":":module-identity:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 122
+event: BuildEvent
+data: {"timestamp":1652836902766,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-216278738819656217,"buildPath":":build-logic","path":":build-update-utils:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 123
+event: BuildEvent
+data: {"timestamp":1652836902766,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8716813003053836830,"buildPath":":build-logic","path":":lifecycle:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 124
+event: BuildEvent
+data: {"timestamp":1652836902766,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3580643852821845410,"buildPath":":build-logic","path":":dependency-modules:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 125
+event: BuildEvent
+data: {"timestamp":1652836902766,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-784177121725534875,"buildPath":":build-logic","path":":idea:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 126
+event: BuildEvent
+data: {"timestamp":1652836902766,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1740883116105465652,"buildPath":":build-logic","path":":module-identity:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 127
+event: BuildEvent
+data: {"timestamp":1652836902766,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4427221346311149463,"buildPath":":build-logic","path":":module-identity:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 128
+event: BuildEvent
+data: {"timestamp":1652836902766,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7538072599714559196,"buildPath":":build-logic","path":":build-update-utils:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 129
+event: BuildEvent
+data: {"timestamp":1652836902767,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5594910951314292805,"buildPath":":build-logic","path":":build-update-utils:compileGroovyPlugins","className":"org.gradle.plugin.devel.internal.precompiled.CompileGroovyScriptPluginsTask","thread":null,"noActions":false}}
+
+id: 130
+event: BuildEvent
+data: {"timestamp":1652836902767,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8243283923415720147,"buildPath":":build-logic","path":":build-update-utils:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 131
+event: BuildEvent
+data: {"timestamp":1652836902767,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2161104466727172423,"buildPath":":build-logic","path":":build-update-utils:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 132
+event: BuildEvent
+data: {"timestamp":1652836902768,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":109790680893170277,"buildPath":":build-logic","path":":module-identity:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 133
+event: BuildEvent
+data: {"timestamp":1652836902769,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2707395050233235828,"buildPath":":build-logic","path":":build-update-utils:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 134
+event: BuildEvent
+data: {"timestamp":1652836902770,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4679855229265036088,"buildPath":":build-logic","path":":cleanup:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 135
+event: BuildEvent
+data: {"timestamp":1652836902770,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1997045637166417987,"buildPath":":build-logic","path":":binary-compatibility:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 136
+event: BuildEvent
+data: {"timestamp":1652836902771,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3687247336666922519,"buildPath":":build-logic","path":":documentation:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 137
+event: BuildEvent
+data: {"timestamp":1652836902771,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1111669399832736948,"buildPath":":build-logic","path":":documentation:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 138
+event: BuildEvent
+data: {"timestamp":1652836902772,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2558548108213364578,"buildPath":":build-logic","path":":documentation:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 139
+event: BuildEvent
+data: {"timestamp":1652836902772,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-803184477013200367,"buildPath":":build-logic","path":":cleanup:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 140
+event: BuildEvent
+data: {"timestamp":1652836902776,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1978508809975083553,"buildPath":":build-logic","path":":cleanup:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 141
+event: BuildEvent
+data: {"timestamp":1652836902786,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1327787381393112795,"buildPath":":build-logic","path":":binary-compatibility:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 142
+event: BuildEvent
+data: {"timestamp":1652836902789,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-58506343240937045,"buildPath":":build-logic","path":":cleanup:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 143
+event: BuildEvent
+data: {"timestamp":1652836902793,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1743315622899792238,"buildPath":":build-logic","path":":binary-compatibility:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 144
+event: BuildEvent
+data: {"timestamp":1652836902797,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-9125919475587709958,"buildPath":":build-logic","path":":profiling:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 145
+event: BuildEvent
+data: {"timestamp":1652836902797,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1453422736738117442,"buildPath":":build-logic","path":":documentation:compileGroovyPlugins","className":"org.gradle.plugin.devel.internal.precompiled.CompileGroovyScriptPluginsTask","thread":null,"noActions":false}}
+
+id: 146
+event: BuildEvent
+data: {"timestamp":1652836902797,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4371957336355669329,"buildPath":":build-logic","path":":documentation:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 147
+event: BuildEvent
+data: {"timestamp":1652836902798,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8472958942777860360,"buildPath":":build-logic","path":":documentation:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 148
+event: BuildEvent
+data: {"timestamp":1652836902800,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5190562546443743391,"buildPath":":build-logic","path":":documentation:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 149
+event: BuildEvent
+data: {"timestamp":1652836902802,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6091113279804245899,"buildPath":":build-logic","path":":cleanup:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 150
+event: BuildEvent
+data: {"timestamp":1652836902802,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1086777496560376171,"buildPath":":build-logic","path":":profiling:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 151
+event: BuildEvent
+data: {"timestamp":1652836902803,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8563604658251678337,"buildPath":":build-logic","path":":cleanup:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 152
+event: BuildEvent
+data: {"timestamp":1652836902803,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5046278201773402073,"buildPath":":build-logic","path":":cleanup:compileGroovyPlugins","className":"org.gradle.plugin.devel.internal.precompiled.CompileGroovyScriptPluginsTask","thread":null,"noActions":false}}
+
+id: 153
+event: BuildEvent
+data: {"timestamp":1652836902803,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4648432829338143546,"buildPath":":build-logic","path":":integration-testing:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 154
+event: BuildEvent
+data: {"timestamp":1652836902803,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8396341051372105633,"buildPath":":build-logic","path":":cleanup:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 155
+event: BuildEvent
+data: {"timestamp":1652836902804,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":118494611098827221,"buildPath":":build-logic","path":":cleanup:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 156
+event: BuildEvent
+data: {"timestamp":1652836902805,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3809624035912801777,"buildPath":":build-logic","path":":binary-compatibility:compileGroovyPlugins","className":"org.gradle.plugin.devel.internal.precompiled.CompileGroovyScriptPluginsTask","thread":null,"noActions":false}}
+
+id: 157
+event: BuildEvent
+data: {"timestamp":1652836902806,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6480329292207317648,"buildPath":":build-logic","path":":cleanup:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 158
+event: BuildEvent
+data: {"timestamp":1652836902808,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":686189559069707893,"buildPath":":build-logic","path":":profiling:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 159
+event: BuildEvent
+data: {"timestamp":1652836902808,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":9199866427632462515,"buildPath":":build-logic","path":":binary-compatibility:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 160
+event: BuildEvent
+data: {"timestamp":1652836902809,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3375441712062538229,"buildPath":":build-logic","path":":binary-compatibility:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 161
+event: BuildEvent
+data: {"timestamp":1652836902835,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7326825246757967071,"buildPath":":build-logic","path":":integration-testing:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 162
+event: BuildEvent
+data: {"timestamp":1652836902835,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":581310140513716487,"buildPath":":build-logic","path":":binary-compatibility:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 163
+event: BuildEvent
+data: {"timestamp":1652836902840,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7995619666973093268,"buildPath":":build-logic","path":":integration-testing:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 164
+event: BuildEvent
+data: {"timestamp":1652836902843,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2023169417780744370,"buildPath":":build-logic","path":":profiling:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 165
+event: BuildEvent
+data: {"timestamp":1652836902846,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5157984916973583793,"buildPath":":build-logic","path":":integration-testing:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 166
+event: BuildEvent
+data: {"timestamp":1652836902859,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7157755567851068012,"buildPath":":build-logic","path":":profiling:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 167
+event: BuildEvent
+data: {"timestamp":1652836902860,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2002449938064894817,"buildPath":":build-logic","path":":root-build:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 168
+event: BuildEvent
+data: {"timestamp":1652836902860,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8145729001213034824,"buildPath":":build-logic","path":":profiling:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 169
+event: BuildEvent
+data: {"timestamp":1652836902860,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6986450316903892986,"buildPath":":build-logic","path":":profiling:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 170
+event: BuildEvent
+data: {"timestamp":1652836902862,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8294479362872677040,"buildPath":":build-logic","path":":profiling:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 171
+event: BuildEvent
+data: {"timestamp":1652836902863,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8035506184075353232,"buildPath":":build-logic","path":":integration-testing:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 172
+event: BuildEvent
+data: {"timestamp":1652836902864,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1375989044532069799,"buildPath":":build-logic","path":":integration-testing:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 173
+event: BuildEvent
+data: {"timestamp":1652836902864,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2936755864284068809,"buildPath":":build-logic","path":":integration-testing:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 174
+event: BuildEvent
+data: {"timestamp":1652836902865,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6839038932669421195,"buildPath":":build-logic","path":":root-build:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 175
+event: BuildEvent
+data: {"timestamp":1652836902868,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4127890916772493629,"buildPath":":build-logic","path":":integration-testing:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 176
+event: BuildEvent
+data: {"timestamp":1652836902870,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8589522427379420845,"buildPath":":build-logic","path":":root-build:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 177
+event: BuildEvent
+data: {"timestamp":1652836902871,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2103908314864376475,"buildPath":":build-logic","path":":performance-testing:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 178
+event: BuildEvent
+data: {"timestamp":1652836902881,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1678645300950442945,"buildPath":":build-logic","path":":root-build:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 179
+event: BuildEvent
+data: {"timestamp":1652836902886,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5517626725010147405,"buildPath":":build-logic","path":":performance-testing:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 180
+event: BuildEvent
+data: {"timestamp":1652836902894,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4224653845833694097,"buildPath":":build-logic","path":":performance-testing:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 181
+event: BuildEvent
+data: {"timestamp":1652836902896,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7586633819034485477,"buildPath":":build-logic","path":":root-build:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 182
+event: BuildEvent
+data: {"timestamp":1652836902896,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3210846371106197375,"buildPath":":build-logic","path":":root-build:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 183
+event: BuildEvent
+data: {"timestamp":1652836902896,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6907936985727032713,"buildPath":":build-logic","path":":root-build:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 184
+event: BuildEvent
+data: {"timestamp":1652836902898,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8691922570703344862,"buildPath":":build-logic","path":":root-build:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 185
+event: BuildEvent
+data: {"timestamp":1652836902901,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2278859063333593058,"buildPath":":build-logic","path":":performance-testing:compileGroovyPlugins","className":"org.gradle.plugin.devel.internal.precompiled.CompileGroovyScriptPluginsTask","thread":null,"noActions":false}}
+
+id: 186
+event: BuildEvent
+data: {"timestamp":1652836902901,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4183981509904501790,"buildPath":":build-logic","path":":buildquality:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 187
+event: BuildEvent
+data: {"timestamp":1652836902904,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1138311347695867268,"buildPath":":build-logic","path":":performance-testing:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 188
+event: BuildEvent
+data: {"timestamp":1652836902905,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5912642836769470638,"buildPath":":build-logic","path":":performance-testing:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 189
+event: BuildEvent
+data: {"timestamp":1652836902907,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4979246584824987400,"buildPath":":build-logic","path":":performance-testing:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 190
+event: BuildEvent
+data: {"timestamp":1652836902910,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":699935044658469945,"buildPath":":build-logic","path":":buildquality:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 191
+event: BuildEvent
+data: {"timestamp":1652836902919,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":207011071312569806,"buildPath":":build-logic","path":":buildquality:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 192
+event: BuildEvent
+data: {"timestamp":1652836902936,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4438257789966795158,"buildPath":":build-logic","path":":buildquality:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 193
+event: BuildEvent
+data: {"timestamp":1652836902959,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8089079194086864094,"buildPath":":build-logic","path":":buildquality:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 194
+event: BuildEvent
+data: {"timestamp":1652836902960,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7636397464309629158,"buildPath":":build-logic","path":":buildquality:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 195
+event: BuildEvent
+data: {"timestamp":1652836902960,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-485179509396339516,"buildPath":":build-logic","path":":buildquality:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 196
+event: BuildEvent
+data: {"timestamp":1652836902962,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7258328749754151418,"buildPath":":build-logic","path":":buildquality:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 197
+event: BuildEvent
+data: {"timestamp":1652836903150,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1359042588780098009,"buildPath":":build-logic","path":":jvm:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 198
+event: BuildEvent
+data: {"timestamp":1652836903150,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3501052508544626523,"buildPath":":build-logic","path":":uber-plugins:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 199
+event: BuildEvent
+data: {"timestamp":1652836903150,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2296256124205855448,"buildPath":":build-logic","path":":publishing:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 200
+event: BuildEvent
+data: {"timestamp":1652836903151,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-769164239156607149,"buildPath":":build-logic","path":":uber-plugins:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 201
+event: BuildEvent
+data: {"timestamp":1652836903151,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6536525438340287962,"buildPath":":build-logic","path":":uber-plugins:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 202
+event: BuildEvent
+data: {"timestamp":1652836903153,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3128670298214920323,"buildPath":":build-logic","path":":uber-plugins:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 203
+event: BuildEvent
+data: {"timestamp":1652836903156,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":839861812778961611,"buildPath":":build-logic","path":":publishing:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 204
+event: BuildEvent
+data: {"timestamp":1652836903157,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4664616230033688512,"buildPath":":build-logic","path":":publishing:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 205
+event: BuildEvent
+data: {"timestamp":1652836903158,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5834931260281235805,"buildPath":":build-logic","path":":jvm:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 206
+event: BuildEvent
+data: {"timestamp":1652836903159,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1610223525994870239,"buildPath":":build-logic","path":":jvm:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 207
+event: BuildEvent
+data: {"timestamp":1652836903162,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7264090444691435135,"buildPath":":build-logic","path":":publishing:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 208
+event: BuildEvent
+data: {"timestamp":1652836903164,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2397807186626899100,"buildPath":":build-logic","path":":jvm:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 209
+event: BuildEvent
+data: {"timestamp":1652836903169,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5139097239666829790,"buildPath":":build-logic","path":":publishing:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 210
+event: BuildEvent
+data: {"timestamp":1652836903169,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7565674768538406238,"buildPath":":build-logic","path":":publishing:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 211
+event: BuildEvent
+data: {"timestamp":1652836903172,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8450610598128662754,"buildPath":":build-logic","path":":jvm:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 212
+event: BuildEvent
+data: {"timestamp":1652836903172,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2978419319248664553,"buildPath":":build-logic","path":":jvm:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 213
+event: BuildEvent
+data: {"timestamp":1652836903182,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1979190286497315523,"buildPath":":build-logic","path":":publishing:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 214
+event: BuildEvent
+data: {"timestamp":1652836903182,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6275471406621504727,"buildPath":":build-logic","path":":publishing:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 215
+event: BuildEvent
+data: {"timestamp":1652836903183,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7324468080096584585,"buildPath":":build-logic","path":":publishing:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 216
+event: BuildEvent
+data: {"timestamp":1652836903184,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7374287662719685731,"buildPath":":build-logic","path":":publishing:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 217
+event: BuildEvent
+data: {"timestamp":1652836903184,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7726594186026825662,"buildPath":":build-logic","path":":publishing:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 218
+event: BuildEvent
+data: {"timestamp":1652836903186,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2823763651062364387,"buildPath":":build-logic","path":":publishing:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 219
+event: BuildEvent
+data: {"timestamp":1652836903188,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3232563026099358347,"buildPath":":build-logic","path":":jvm:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 220
+event: BuildEvent
+data: {"timestamp":1652836903189,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2165398463456122770,"buildPath":":build-logic","path":":uber-plugins:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 221
+event: BuildEvent
+data: {"timestamp":1652836903189,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-9017931503514244656,"buildPath":":build-logic","path":":jvm:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 222
+event: BuildEvent
+data: {"timestamp":1652836903189,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5880402867264424839,"buildPath":":build-logic","path":":jvm:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 223
+event: BuildEvent
+data: {"timestamp":1652836903190,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7613396460240869984,"buildPath":":build-logic","path":":jvm:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 224
+event: BuildEvent
+data: {"timestamp":1652836903190,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2309339866336460479,"buildPath":":build-logic","path":":jvm:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 225
+event: BuildEvent
+data: {"timestamp":1652836903195,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4982249431610046064,"buildPath":":build-logic","path":":jvm:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 226
+event: BuildEvent
+data: {"timestamp":1652836903198,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6094984170686632562,"buildPath":":build-logic","path":":uber-plugins:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 227
+event: BuildEvent
+data: {"timestamp":1652836903207,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7917829055826154415,"buildPath":":build-logic","path":":uber-plugins:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 228
+event: BuildEvent
+data: {"timestamp":1652836903228,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4823956559725524000,"buildPath":":build-logic","path":":uber-plugins:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 229
+event: BuildEvent
+data: {"timestamp":1652836903263,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8518675471871588059,"buildPath":":build-logic","path":":uber-plugins:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 230
+event: BuildEvent
+data: {"timestamp":1652836903263,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4756179197958377459,"buildPath":":build-logic","path":":uber-plugins:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 231
+event: BuildEvent
+data: {"timestamp":1652836903263,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6960253442494231414,"buildPath":":build-logic","path":":uber-plugins:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 232
+event: BuildEvent
+data: {"timestamp":1652836903278,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7484432052291329033,"buildPath":":build-logic","path":":uber-plugins:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 233
+event: BuildEvent
+data: {"timestamp":1652836903340,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-194252074322065039,"buildPath":":build-logic","path":":packaging:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 234
+event: BuildEvent
+data: {"timestamp":1652836903346,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3838258057163129639,"buildPath":":build-logic","path":":packaging:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 235
+event: BuildEvent
+data: {"timestamp":1652836903347,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6641839612691876661,"buildPath":":build-logic","path":":packaging:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 236
+event: BuildEvent
+data: {"timestamp":1652836903352,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8205052978354087030,"buildPath":":build-logic","path":":packaging:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 237
+event: BuildEvent
+data: {"timestamp":1652836903364,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8111316131480861642,"buildPath":":build-logic","path":":packaging:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 238
+event: BuildEvent
+data: {"timestamp":1652836903364,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4059599785277983297,"buildPath":":build-logic","path":":packaging:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 239
+event: BuildEvent
+data: {"timestamp":1652836903380,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5701108339963595130,"buildPath":":build-logic","path":":packaging:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 240
+event: BuildEvent
+data: {"timestamp":1652836903381,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3152877120372088829,"buildPath":":build-logic","path":":packaging:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 241
+event: BuildEvent
+data: {"timestamp":1652836903381,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8687795994926598595,"buildPath":":build-logic","path":":packaging:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 242
+event: BuildEvent
+data: {"timestamp":1652836903382,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3007518404185678489,"buildPath":":build-logic","path":":packaging:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 243
+event: BuildEvent
+data: {"timestamp":1652836903382,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1067440433463320153,"buildPath":":build-logic","path":":packaging:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 244
+event: BuildEvent
+data: {"timestamp":1652836903384,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6531321565525557129,"buildPath":":build-logic","path":":packaging:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 245
+event: BuildEvent
+data: {"timestamp":1652836904099,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4642587690466491338,"buildPath":":build-logic","path":":kotlin-dsl:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 246
+event: BuildEvent
+data: {"timestamp":1652836904104,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2914416458369338561,"buildPath":":build-logic","path":":kotlin-dsl:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 247
+event: BuildEvent
+data: {"timestamp":1652836904105,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6066685329444763315,"buildPath":":build-logic","path":":kotlin-dsl:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 248
+event: BuildEvent
+data: {"timestamp":1652836904110,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7337089612519970633,"buildPath":":build-logic","path":":kotlin-dsl:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 249
+event: BuildEvent
+data: {"timestamp":1652836904119,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3094655134620843934,"buildPath":":build-logic","path":":kotlin-dsl:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 250
+event: BuildEvent
+data: {"timestamp":1652836904119,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3821457240955083466,"buildPath":":build-logic","path":":kotlin-dsl:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 251
+event: BuildEvent
+data: {"timestamp":1652836904166,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6968085550624645810,"buildPath":":build-logic","path":":kotlin-dsl:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 252
+event: BuildEvent
+data: {"timestamp":1652836904166,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1592804026599852407,"buildPath":":build-logic","path":":kotlin-dsl:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 253
+event: BuildEvent
+data: {"timestamp":1652836904167,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":675211946025535417,"buildPath":":build-logic","path":":kotlin-dsl:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 254
+event: BuildEvent
+data: {"timestamp":1652836904168,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4881187773009078809,"buildPath":":build-logic","path":":kotlin-dsl:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 255
+event: BuildEvent
+data: {"timestamp":1652836904168,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1864233987019967435,"buildPath":":build-logic","path":":kotlin-dsl:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 256
+event: BuildEvent
+data: {"timestamp":1652836904173,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3865840762808261433,"buildPath":":build-logic","path":":kotlin-dsl:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 257
+event: BuildEvent
+data: {"timestamp":1652836904578,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6817860916632394880,"buildPath":":build-logic","path":":build-init-samples:generateExternalPluginSpecBuilders","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateExternalPluginSpecBuilders","thread":null,"noActions":false}}
+
+id: 258
+event: BuildEvent
+data: {"timestamp":1652836904582,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6554286732284420909,"buildPath":":build-logic","path":":build-init-samples:extractPrecompiledScriptPluginPlugins","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.ExtractPrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 259
+event: BuildEvent
+data: {"timestamp":1652836904582,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4351773547434618149,"buildPath":":build-logic","path":":build-init-samples:compilePluginsBlocks","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.CompilePrecompiledScriptPluginPlugins","thread":null,"noActions":false}}
+
+id: 260
+event: BuildEvent
+data: {"timestamp":1652836904585,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7505366195584688622,"buildPath":":build-logic","path":":build-init-samples:generatePrecompiledScriptPluginAccessors","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GeneratePrecompiledScriptPluginAccessors","thread":null,"noActions":false}}
+
+id: 261
+event: BuildEvent
+data: {"timestamp":1652836904590,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6321459718009243626,"buildPath":":build-logic","path":":build-init-samples:generateScriptPluginAdapters","className":"org.gradle.kotlin.dsl.provider.plugins.precompiled.tasks.GenerateScriptPluginAdapters","thread":null,"noActions":false}}
+
+id: 262
+event: BuildEvent
+data: {"timestamp":1652836904590,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7328514201734308404,"buildPath":":build-logic","path":":build-init-samples:compileKotlin","className":"org.jetbrains.kotlin.gradle.tasks.KotlinCompile","thread":null,"noActions":false}}
+
+id: 263
+event: BuildEvent
+data: {"timestamp":1652836904601,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8194884269234257961,"buildPath":":build-logic","path":":build-init-samples:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 264
+event: BuildEvent
+data: {"timestamp":1652836904601,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5735981821843335758,"buildPath":":build-logic","path":":build-init-samples:pluginDescriptors","className":"org.gradle.plugin.devel.tasks.GeneratePluginDescriptors","thread":null,"noActions":false}}
+
+id: 265
+event: BuildEvent
+data: {"timestamp":1652836904601,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1487977736071124782,"buildPath":":build-logic","path":":build-init-samples:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 266
+event: BuildEvent
+data: {"timestamp":1652836904602,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3989700244898359838,"buildPath":":build-logic","path":":build-init-samples:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 267
+event: BuildEvent
+data: {"timestamp":1652836904602,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3130112193897130440,"buildPath":":build-logic","path":":build-init-samples:inspectClassesForKotlinIC","className":"org.jetbrains.kotlin.gradle.tasks.InspectClassesForMultiModuleIC","thread":null,"noActions":false}}
+
+id: 268
+event: BuildEvent
+data: {"timestamp":1652836904603,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2197445511947020802,"buildPath":":build-logic","path":":build-init-samples:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 269
+event: BuildEvent
+data: {"timestamp":1652836908177,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-805707752659142689,"buildPath":":","path":":native:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 270
+event: BuildEvent
+data: {"timestamp":1652836908177,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1254283011882913,"buildPath":":","path":":internal-testing:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 271
+event: BuildEvent
+data: {"timestamp":1652836908177,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4491965072765412547,"buildPath":":","path":":base-services:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 272
+event: BuildEvent
+data: {"timestamp":1652836908177,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6034956565495843699,"buildPath":":","path":":build-operations:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 273
+event: BuildEvent
+data: {"timestamp":1652836908177,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-9162378119918639726,"buildPath":":","path":":file-temp:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 274
+event: BuildEvent
+data: {"timestamp":1652836908177,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-915207775523732657,"buildPath":":","path":":worker-services:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 275
+event: BuildEvent
+data: {"timestamp":1652836908178,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1860276461473803452,"buildPath":":","path":":files:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 276
+event: BuildEvent
+data: {"timestamp":1652836908178,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1110418972607245300,"buildPath":":","path":":cli:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 277
+event: BuildEvent
+data: {"timestamp":1652836908178,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7506063178264925509,"buildPath":":","path":":hashing:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 278
+event: BuildEvent
+data: {"timestamp":1652836908178,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5305329558441900741,"buildPath":":","path":":base-annotations:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 279
+event: BuildEvent
+data: {"timestamp":1652836908179,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2758301076435011408,"buildPath":":","path":":base-services:createBuildReceipt","className":"gradlebuild.identity.tasks.BuildReceipt","thread":null,"noActions":false}}
+
+id: 280
+event: BuildEvent
+data: {"timestamp":1652836908180,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-123223887847127143,"buildPath":":","path":":cli:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 281
+event: BuildEvent
+data: {"timestamp":1652836908180,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8753454141997568486,"buildPath":":","path":":base-annotations:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 282
+event: BuildEvent
+data: {"timestamp":1652836908184,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2308418456529598638,"buildPath":":","path":":cli:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 283
+event: BuildEvent
+data: {"timestamp":1652836908184,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7804134204722643250,"buildPath":":","path":":base-annotations:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 284
+event: BuildEvent
+data: {"timestamp":1652836908184,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":638612746896905143,"buildPath":":","path":":cli:parameterNamesIndex","className":"gradlebuild.kotlin.tasks.ParameterNamesIndex","thread":null,"noActions":false}}
+
+id: 285
+event: BuildEvent
+data: {"timestamp":1652836908184,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7245898660744228871,"buildPath":":","path":":base-annotations:parameterNamesIndex","className":"gradlebuild.kotlin.tasks.ParameterNamesIndex","thread":null,"noActions":false}}
+
+id: 286
+event: BuildEvent
+data: {"timestamp":1652836908187,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":1284351869845560001,"buildPath":":","path":":base-annotations:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 287
+event: BuildEvent
+data: {"timestamp":1652836908187,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2655283082662843377,"buildPath":":","path":":cli:processResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 288
+event: BuildEvent
+data: {"timestamp":1652836908187,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6585479885349314845,"buildPath":":","path":":base-annotations:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 289
+event: BuildEvent
+data: {"timestamp":1652836908187,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2388162020210839484,"buildPath":":","path":":cli:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 290
+event: BuildEvent
+data: {"timestamp":1652836908187,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7183542134647027729,"buildPath":":","path":":cli:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 291
+event: BuildEvent
+data: {"timestamp":1652836908187,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1898893219932037137,"buildPath":":","path":":base-annotations:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 292
+event: BuildEvent
+data: {"timestamp":1652836908189,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4187472318315800179,"buildPath":":","path":":build-operations:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 293
+event: BuildEvent
+data: {"timestamp":1652836908189,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2690268226490114207,"buildPath":":","path":":hashing:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 294
+event: BuildEvent
+data: {"timestamp":1652836908189,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5642061193216470702,"buildPath":":","path":":worker-services:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 295
+event: BuildEvent
+data: {"timestamp":1652836908189,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2492713581990948092,"buildPath":":","path":":files:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 296
+event: BuildEvent
+data: {"timestamp":1652836908190,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5783434497165791657,"buildPath":":","path":":cli:processTestFixturesResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 297
+event: BuildEvent
+data: {"timestamp":1652836908190,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2435628699261894594,"buildPath":":","path":":cli:processTestResources","className":"org.gradle.language.jvm.tasks.ProcessResources","thread":null,"noActions":false}}
+
+id: 298
+event: BuildEvent
+data: {"timestamp":1652836908191,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2834895883833125819,"buildPath":":","path":":build-operations:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 299
+event: BuildEvent
+data: {"timestamp":1652836908191,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4657070148845342717,"buildPath":":","path":":hashing:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 300
+event: BuildEvent
+data: {"timestamp":1652836908191,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7278227160509277348,"buildPath":":","path":":worker-services:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 301
+event: BuildEvent
+data: {"timestamp":1652836908191,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1981571303915657042,"buildPath":":","path":":files:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 302
+event: BuildEvent
+data: {"timestamp":1652836908195,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2190136586947684926,"buildPath":":","path":":build-operations:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 303
+event: BuildEvent
+data: {"timestamp":1652836908196,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4191065172958340596,"buildPath":":","path":":hashing:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 304
+event: BuildEvent
+data: {"timestamp":1652836908196,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4317352708867628028,"buildPath":":","path":":worker-services:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 305
+event: BuildEvent
+data: {"timestamp":1652836908196,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2629560878476303998,"buildPath":":","path":":files:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 306
+event: BuildEvent
+data: {"timestamp":1652836908196,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":278453747077371703,"buildPath":":","path":":build-operations:parameterNamesIndex","className":"gradlebuild.kotlin.tasks.ParameterNamesIndex","thread":null,"noActions":false}}
+
+id: 307
+event: BuildEvent
+data: {"timestamp":1652836908196,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2525087137234783232,"buildPath":":","path":":worker-services:parameterNamesIndex","className":"gradlebuild.kotlin.tasks.ParameterNamesIndex","thread":null,"noActions":false}}
+
+id: 308
+event: BuildEvent
+data: {"timestamp":1652836908196,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7663316589595984740,"buildPath":":","path":":hashing:parameterNamesIndex","className":"gradlebuild.kotlin.tasks.ParameterNamesIndex","thread":null,"noActions":false}}
+
+id: 309
+event: BuildEvent
+data: {"timestamp":1652836908196,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":890278775936140553,"buildPath":":","path":":files:parameterNamesIndex","className":"gradlebuild.kotlin.tasks.ParameterNamesIndex","thread":null,"noActions":false}}
+
+id: 310
+event: BuildEvent
+data: {"timestamp":1652836908198,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-4731624666802252351,"buildPath":":","path":":worker-services:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 311
+event: BuildEvent
+data: {"timestamp":1652836908199,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-133506689973391454,"buildPath":":","path":":hashing:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 312
+event: BuildEvent
+data: {"timestamp":1652836908199,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-1794667565840535335,"buildPath":":","path":":build-operations:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 313
+event: BuildEvent
+data: {"timestamp":1652836908199,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8364636914997131115,"buildPath":":","path":":worker-services:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 314
+event: BuildEvent
+data: {"timestamp":1652836908199,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5766077000815772142,"buildPath":":","path":":build-operations:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 315
+event: BuildEvent
+data: {"timestamp":1652836908199,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4950605225226595955,"buildPath":":","path":":hashing:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 316
+event: BuildEvent
+data: {"timestamp":1652836908199,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":339780958914643966,"buildPath":":","path":":files:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 317
+event: BuildEvent
+data: {"timestamp":1652836908200,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5830498505964317484,"buildPath":":","path":":files:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 318
+event: BuildEvent
+data: {"timestamp":1652836908204,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3084084079823717295,"buildPath":":","path":":base-services:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 319
+event: BuildEvent
+data: {"timestamp":1652836908205,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2803807704165970211,"buildPath":":","path":":base-services:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 320
+event: BuildEvent
+data: {"timestamp":1652836908207,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-5414912560641118705,"buildPath":":","path":":base-services:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 321
+event: BuildEvent
+data: {"timestamp":1652836908208,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-7053188949316034577,"buildPath":":","path":":base-services:parameterNamesIndex","className":"gradlebuild.kotlin.tasks.ParameterNamesIndex","thread":null,"noActions":false}}
+
+id: 322
+event: BuildEvent
+data: {"timestamp":1652836908209,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6437853972385581296,"buildPath":":","path":":base-services:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 323
+event: BuildEvent
+data: {"timestamp":1652836908209,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2581246751523106496,"buildPath":":","path":":base-services:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 324
+event: BuildEvent
+data: {"timestamp":1652836908211,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2172365376202513991,"buildPath":":","path":":file-temp:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 325
+event: BuildEvent
+data: {"timestamp":1652836908212,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8631650055867650767,"buildPath":":","path":":file-temp:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 326
+event: BuildEvent
+data: {"timestamp":1652836908214,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-668093092318968637,"buildPath":":","path":":file-temp:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 327
+event: BuildEvent
+data: {"timestamp":1652836908214,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-3880706278818056038,"buildPath":":","path":":file-temp:parameterNamesIndex","className":"gradlebuild.kotlin.tasks.ParameterNamesIndex","thread":null,"noActions":false}}
+
+id: 328
+event: BuildEvent
+data: {"timestamp":1652836908215,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3140656366550013064,"buildPath":":","path":":file-temp:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 329
+event: BuildEvent
+data: {"timestamp":1652836908215,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-500449565154831085,"buildPath":":","path":":file-temp:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 330
+event: BuildEvent
+data: {"timestamp":1652836908217,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6979693383639337368,"buildPath":":","path":":native:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 331
+event: BuildEvent
+data: {"timestamp":1652836908220,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3092717369368205055,"buildPath":":","path":":native:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 332
+event: BuildEvent
+data: {"timestamp":1652836908222,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":8726625961611489180,"buildPath":":","path":":native:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 333
+event: BuildEvent
+data: {"timestamp":1652836908223,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":3112482581177720735,"buildPath":":","path":":native:parameterNamesIndex","className":"gradlebuild.kotlin.tasks.ParameterNamesIndex","thread":null,"noActions":false}}
+
+id: 334
+event: BuildEvent
+data: {"timestamp":1652836908224,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2521493911673338938,"buildPath":":","path":":native:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 335
+event: BuildEvent
+data: {"timestamp":1652836908224,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":6948866971457787553,"buildPath":":","path":":native:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 336
+event: BuildEvent
+data: {"timestamp":1652836908226,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7431396344641945346,"buildPath":":","path":":internal-testing:classpathManifest","className":"gradlebuild.basics.tasks.ClasspathManifest","thread":null,"noActions":false}}
+
+id: 337
+event: BuildEvent
+data: {"timestamp":1652836908230,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-149705258525566685,"buildPath":":","path":":internal-testing:compileJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 338
+event: BuildEvent
+data: {"timestamp":1652836908230,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":2694864569780200192,"buildPath":":","path":":internal-testing:compileGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 339
+event: BuildEvent
+data: {"timestamp":1652836908236,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8582309289148867125,"buildPath":":","path":":internal-testing:classes","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 340
+event: BuildEvent
+data: {"timestamp":1652836908236,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6911383994781514401,"buildPath":":","path":":internal-testing:jar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 341
+event: BuildEvent
+data: {"timestamp":1652836908239,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2785450060495229760,"buildPath":":","path":":cli:compileTestFixturesJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 342
+event: BuildEvent
+data: {"timestamp":1652836908240,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-8038503042117089998,"buildPath":":","path":":cli:compileTestFixturesGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 343
+event: BuildEvent
+data: {"timestamp":1652836908240,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-6302481309885376944,"buildPath":":","path":":cli:testFixturesClasses","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 344
+event: BuildEvent
+data: {"timestamp":1652836908240,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5252819095161202867,"buildPath":":","path":":cli:testFixturesJar","className":"org.gradle.api.tasks.bundling.Jar","thread":null,"noActions":false}}
+
+id: 345
+event: BuildEvent
+data: {"timestamp":1652836908243,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5863559463041246954,"buildPath":":","path":":cli:compileTestJava","className":"org.gradle.api.tasks.compile.JavaCompile","thread":null,"noActions":false}}
+
+id: 346
+event: BuildEvent
+data: {"timestamp":1652836908244,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4259906998154813667,"buildPath":":","path":":cli:compileTestGroovy","className":"org.gradle.api.tasks.compile.GroovyCompile","thread":null,"noActions":false}}
+
+id: 347
+event: BuildEvent
+data: {"timestamp":1652836908249,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":4206483596813804671,"buildPath":":","path":":cli:testClasses","className":"org.gradle.api.DefaultTask","thread":null,"noActions":false}}
+
+id: 348
+event: BuildEvent
+data: {"timestamp":1652836908250,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":-2492647099919408229,"buildPath":":","path":":cli:test","className":"org.gradle.api.tasks.testing.Test","thread":null,"noActions":false}}
+
+id: 349
+event: BuildEvent
+data: {"timestamp":1652836910140,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":8393339105493445335,"parent":null,"name":"Gradle Test Executor 20","className":null,"suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 350
+event: BuildEvent
+data: {"timestamp":1652836910151,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":6919043365279669935,"parent":null,"name":"Gradle Test Executor 21","className":null,"suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 351
+event: BuildEvent
+data: {"timestamp":1652836910156,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":4145192526684742443,"parent":null,"name":"Gradle Test Executor 19","className":null,"suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 352
+event: BuildEvent
+data: {"timestamp":1652836910161,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":7098369012763219385,"parent":null,"name":"Gradle Test Executor 18","className":null,"suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 353
+event: BuildEvent
+data: {"timestamp":1652836911702,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":4145192526684742443,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 354
+event: BuildEvent
+data: {"timestamp":1652836911706,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":7098369012763219385,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 355
+event: BuildEvent
+data: {"timestamp":1652836911708,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":-6943721756512290183,"parent":8393339105493445335,"name":"org.gradle.cli.NonFlakyTest","className":"org.gradle.cli.NonFlakyTest","suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 356
+event: BuildEvent
+data: {"timestamp":1652836911713,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":2665101409823002973,"parent":-6943721756512290183,"name":"reports no value","className":"org.gradle.cli.NonFlakyTest","suite":false,"testSelectionReasonOrdinal":null}}
+
+id: 357
+event: BuildEvent
+data: {"timestamp":1652836911716,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":4488075484054819318,"parent":6919043365279669935,"name":"org.gradle.cli.FlakyTest","className":"org.gradle.cli.FlakyTest","suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 358
+event: BuildEvent
+data: {"timestamp":1652836911717,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":3243783531395980088,"parent":4488075484054819318,"name":"parsesEmptyCommandLine","className":"org.gradle.cli.FlakyTest","suite":false,"testSelectionReasonOrdinal":null}}
+
+id: 359
+event: BuildEvent
+data: {"timestamp":1652836911754,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":2665101409823002973,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 360
+event: BuildEvent
+data: {"timestamp":1652836911754,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":-836819528251415471,"parent":-6943721756512290183,"name":"reports single value","className":"org.gradle.cli.NonFlakyTest","suite":false,"testSelectionReasonOrdinal":null}}
+
+id: 361
+event: BuildEvent
+data: {"timestamp":1652836911757,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":-836819528251415471,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 362
+event: BuildEvent
+data: {"timestamp":1652836911757,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":9107855047555624832,"parent":-6943721756512290183,"name":"reports multiple values","className":"org.gradle.cli.NonFlakyTest","suite":false,"testSelectionReasonOrdinal":null}}
+
+id: 363
+event: BuildEvent
+data: {"timestamp":1652836911760,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":9107855047555624832,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 364
+event: BuildEvent
+data: {"timestamp":1652836911760,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":-6943721756512290183,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 365
+event: BuildEvent
+data: {"timestamp":1652836911766,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":8393339105493445335,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 366
+event: BuildEvent
+data: {"timestamp":1652836911785,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":3243783531395980088,"failed":true,"skipped":false,"failureId":-8074100654662234182,"failure":null}}
+
+id: 367
+event: BuildEvent
+data: {"timestamp":1652836911786,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":4488075484054819318,"failed":true,"skipped":false,"failureId":null,"failure":null}}
+
+id: 368
+event: BuildEvent
+data: {"timestamp":1652836911786,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":6919043365279669935,"failed":true,"skipped":false,"failureId":null,"failure":null}}
+
+id: 369
+event: BuildEvent
+data: {"timestamp":1652836912463,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":364630559380085338,"parent":null,"name":"Gradle Test Executor 25","className":null,"suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 370
+event: BuildEvent
+data: {"timestamp":1652836912465,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":1081212946393634700,"parent":null,"name":"Gradle Test Executor 24","className":null,"suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 371
+event: BuildEvent
+data: {"timestamp":1652836912466,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":-3339106827018613857,"parent":null,"name":"Gradle Test Executor 23","className":null,"suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 372
+event: BuildEvent
+data: {"timestamp":1652836912472,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":-7070432114452081849,"parent":null,"name":"Gradle Test Executor 22","className":null,"suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 373
+event: BuildEvent
+data: {"timestamp":1652836914847,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":364630559380085338,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 374
+event: BuildEvent
+data: {"timestamp":1652836914854,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":-7070432114452081849,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 375
+event: BuildEvent
+data: {"timestamp":1652836914859,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":4488075484054819319,"parent":-3339106827018613857,"name":"org.gradle.cli.FlakyTest","className":"org.gradle.cli.FlakyTest","suite":true,"testSelectionReasonOrdinal":null}}
+
+id: 376
+event: BuildEvent
+data: {"timestamp":1652836914862,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestStarted"},"data":{"task":-2492647099919408229,"id":3243783531395980089,"parent":4488075484054819319,"name":"parsesEmptyCommandLine","className":"org.gradle.cli.FlakyTest","suite":false,"testSelectionReasonOrdinal":null}}
+
+id: 377
+event: BuildEvent
+data: {"timestamp":1652836914878,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":1081212946393634700,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 378
+event: BuildEvent
+data: {"timestamp":1652836914905,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":3243783531395980089,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 379
+event: BuildEvent
+data: {"timestamp":1652836914905,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":4488075484054819319,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
+id: 380
+event: BuildEvent
+data: {"timestamp":1652836914912,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":-2492647099919408229,"id":-3339106827018613857,"failed":false,"skipped":false,"failureId":null,"failure":null}}
+
