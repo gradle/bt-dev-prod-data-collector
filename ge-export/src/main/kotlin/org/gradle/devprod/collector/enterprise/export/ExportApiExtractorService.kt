@@ -18,12 +18,14 @@ import org.gradle.devprod.collector.enterprise.export.extractor.DaemonState
 import org.gradle.devprod.collector.enterprise.export.extractor.DaemonUnhealthy
 import org.gradle.devprod.collector.enterprise.export.extractor.ExecutedTestTasks
 import org.gradle.devprod.collector.enterprise.export.extractor.FirstTestTaskStart
+import org.gradle.devprod.collector.enterprise.export.extractor.FlakyTestClassExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.LongTestClassExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
 import org.gradle.devprod.collector.enterprise.export.extractor.Tags
 import org.gradle.devprod.collector.enterprise.export.model.Build
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.FLAKY_TEST_CLASS
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.LONG_TEST
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.records.KeyValueRecord
 import org.jooq.DSLContext
@@ -87,71 +89,92 @@ class ExportApiExtractorService(
                     .groupBy(BuildEvent::eventType)
 
             try {
-                val buildStarted = BuildStarted.extractFrom(events)
-                val buildFinished = BuildFinished.extractFrom(events)
-                val longRunningTestClasses: Map<String, Duration> =
-                    LongTestClassExtractor.extractFrom(events)
-                val buildTime = Duration.between(buildStarted, buildFinished)
-                val buildFailed = BuildFailure.extractFrom(events)
-                val rootProjectName =
-                    RootProjectNames.extractFrom(events).firstOrNull { !it.startsWith("build-logic") }
-                val firstTestTaskStart = FirstTestTaskStart.extractFrom(events)
-                val timeToFirstTestTask =
-                    firstTestTaskStart?.let { Duration.between(buildStarted, it.second) }
-                val agent = BuildAgent.extractFrom(events)
-                val tags = Tags.extractFrom(events)
-                val customValues = CustomValues.extractFrom(events)
-                val daemonBuildNumber = DaemonState.extractFrom(events)
-                val daemonUnhealthyReason = DaemonUnhealthy.extractFrom(events)
-                println(
-                    "Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}"
-                )
-                val buildCacheLoadFailure = BuildCacheLoadFailure.extractFrom(events)
-                val buildCacheStoreFailure = BuildCacheStoreFailure.extractFrom(events)
-                val executedTestTasks = ExecutedTestTasks.extractFrom(events)
                 create.transaction { configuration ->
                     val ctx = DSL.using(configuration)
-                    val record = ctx.newRecord(Tables.BUILD)
-                    record.buildId = build.buildId
-                    record.gradleVersion = build.toolVersion
-                    record.buildStart = OffsetDateTime.ofInstant(buildStarted, ZoneId.systemDefault())
-                    record.buildFinish = OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
-                    record.successful = !buildFailed
-                    record.timeToFirstTestTask = timeToFirstTestTask?.toMillis()
-                    record.pathToFirstTestTask = firstTestTaskStart?.first
-                    record.rootProject = rootProjectName
-                    record.username = agent.user
-                    record.host = agent.host
-                    record.daemonAge = daemonBuildNumber
-                    record.daemonUnhealthyReason = daemonUnhealthyReason
-                    record.tags = tags.toTypedArray()
-                    record.customValues =
-                        customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
-                    record.buildCacheLoadFailure = buildCacheLoadFailure
-                    record.buildCacheStoreFailure = buildCacheStoreFailure
-                    record.executedTestTasks = executedTestTasks.toTypedArray()
-                    record.store()
-
-                    if (longRunningTestClasses.isNotEmpty()) {
-                        ctx.batch(
-                            *longRunningTestClasses
-                                .map {
-                                    ctx.insertInto(
-                                        LONG_TEST,
-                                        LONG_TEST.BUILD_ID,
-                                        LONG_TEST.CLASS_NAME,
-                                        LONG_TEST.DURATION_MS
-                                    )
-                                        .values(build.buildId, it.key, it.value.toMillis())
-                                }
-                                .toTypedArray()
-                        )
-                            .execute()
-                    }
+                    ctx.insertIntoBuildTable(build, events)
+                    ctx.insertIntoLongRunningTestTable(build, events)
+                    ctx.insertIntoFlakyTestClassTable(build, events)
                 }
             } catch (e: Exception) {
                 throw IllegalStateException("Error processing $build, events: $events", e)
             }
+        }
+    }
+
+    private fun DSLContext.insertIntoBuildTable(build: Build, events: Map<String?, List<BuildEvent>>) {
+        val buildStarted = BuildStarted.extractFrom(events)
+        val buildFinished = BuildFinished.extractFrom(events)
+        val buildTime = Duration.between(buildStarted, buildFinished)
+        val buildFailed = BuildFailure.extractFrom(events)
+        val rootProjectName =
+            RootProjectNames.extractFrom(events).firstOrNull { !it.startsWith("build-logic") }
+        val firstTestTaskStart = FirstTestTaskStart.extractFrom(events)
+        val timeToFirstTestTask =
+            firstTestTaskStart?.let { Duration.between(buildStarted, it.second) }
+        val agent = BuildAgent.extractFrom(events)
+        val tags = Tags.extractFrom(events)
+        val customValues = CustomValues.extractFrom(events)
+        val daemonBuildNumber = DaemonState.extractFrom(events)
+        val daemonUnhealthyReason = DaemonUnhealthy.extractFrom(events)
+        println(
+            "Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}"
+        )
+        val buildCacheLoadFailure = BuildCacheLoadFailure.extractFrom(events)
+        val buildCacheStoreFailure = BuildCacheStoreFailure.extractFrom(events)
+        val executedTestTasks = ExecutedTestTasks.extractFrom(events)
+        val record = newRecord(Tables.BUILD)
+        record.buildId = build.buildId
+        record.gradleVersion = build.toolVersion
+        record.buildStart = OffsetDateTime.ofInstant(buildStarted, ZoneId.systemDefault())
+        record.buildFinish = OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
+        record.successful = !buildFailed
+        record.timeToFirstTestTask = timeToFirstTestTask?.toMillis()
+        record.pathToFirstTestTask = firstTestTaskStart?.first
+        record.rootProject = rootProjectName
+        record.username = agent.user
+        record.host = agent.host
+        record.daemonAge = daemonBuildNumber
+        record.daemonUnhealthyReason = daemonUnhealthyReason
+        record.tags = tags.toTypedArray()
+        record.customValues = customValues.map { KeyValueRecord(it.first, it.second) }.toTypedArray()
+        record.buildCacheLoadFailure = buildCacheLoadFailure
+        record.buildCacheStoreFailure = buildCacheStoreFailure
+        record.executedTestTasks = executedTestTasks.toTypedArray()
+        record.store()
+    }
+
+    private fun DSLContext.insertIntoLongRunningTestTable(build: Build, events: Map<String?, List<BuildEvent>>) {
+        val longRunningTestClasses: Map<String, Duration> = LongTestClassExtractor.extractFrom(events)
+        if (longRunningTestClasses.isNotEmpty()) {
+            batch(
+                *longRunningTestClasses
+                    .map {
+                        insertInto(
+                            LONG_TEST,
+                            LONG_TEST.BUILD_ID,
+                            LONG_TEST.CLASS_NAME,
+                            LONG_TEST.DURATION_MS
+                        ).values(build.buildId, it.key, it.value.toMillis())
+                    }
+                    .toTypedArray()
+            ).execute()
+        }
+    }
+
+    private fun DSLContext.insertIntoFlakyTestClassTable(build: Build, events: Map<String?, List<BuildEvent>>) {
+        val flakyTestClasses = FlakyTestClassExtractor.extractFrom(events)
+        if (flakyTestClasses.isNotEmpty()) {
+            batch(
+                *flakyTestClasses
+                    .map {
+                        insertInto(
+                            FLAKY_TEST_CLASS,
+                            FLAKY_TEST_CLASS.BUILD_ID,
+                            FLAKY_TEST_CLASS.FLAKY_TEST_FQCN
+                        ).values(build.buildId, it)
+                    }
+                    .toTypedArray()
+            ).execute()
         }
     }
 }
