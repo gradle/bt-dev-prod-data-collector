@@ -1,20 +1,17 @@
 package org.gradle.devprod.collector.enterprise.export
 
 import org.gradle.devprod.collector.DeveloperProductivityDataCollector
-import org.gradle.devprod.collector.api.LinkSharedHandler
 import org.gradle.devprod.collector.api.BuildScanSummaryService
+import org.gradle.devprod.collector.api.LinkSharedHandler
 import org.gradle.devprod.collector.model.Link
 import org.gradle.devprod.collector.model.LinkSharedEvent
 import org.gradle.devprod.collector.model.UrlVerificationEvent
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.eq
-import org.mockito.Mockito.any
-import org.mockito.Mockito.eq
-import org.mockito.Mockito.verify
+import org.mockito.kotlin.any
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.verify
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -25,7 +22,6 @@ import java.net.URI
     classes = [DeveloperProductivityDataCollector::class],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
-@Disabled
 class DeveloperProductivityDataCollectorTests(@Autowired val restTemplate: TestRestTemplate) {
 
     @MockBean lateinit var mockLinkSharedHandler: LinkSharedHandler
