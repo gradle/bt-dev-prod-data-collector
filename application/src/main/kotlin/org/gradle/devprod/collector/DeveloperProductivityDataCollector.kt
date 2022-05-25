@@ -8,6 +8,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.slack.api.model.event.LinkSharedEvent
 import org.gradle.devprod.collector.api.BuildScanLinkSharedHandler
 import org.gradle.devprod.collector.enterprise.export.GradleEnterpriseServer
+import org.gradle.devprod.collector.model.LinkSharedEventCallback
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -57,12 +58,6 @@ class DeveloperProductivityDataCollector(private val handler: BuildScanLinkShare
         }
     }
 }
-
-data class LinkSharedEventCallback(
-    val eventId: String,
-    val eventTime: Instant,
-    val event: LinkSharedEvent
-)
 
 fun main(args: Array<String>) {
     runApplication<DeveloperProductivityDataCollector>(*args)
