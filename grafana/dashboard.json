@@ -1,0 +1,339 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "iteration": 1653474727695,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "Knbq66Xnz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.5.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "Knbq66Xnz"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n    avg(case when status = 'executed_cacheable' then 1\n             else 0\n        end) * 100 as cache_miss,\n    NOW() as \"time\"\nFROM task_trends\nwhere task_path like '${taskNameCacheable:raw}'\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Cache Hit Ratio (${taskNameCacheable:raw})",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "Knbq66Xnz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "hidden",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.5.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "Knbq66Xnz"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select task_duration_ms, build_start as \"time\"\nfrom task_trends\nwhere status like '${status:raw}'\nand task_path like '${taskName:raw}'",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Task duration (${taskName:raw} with ${status:raw})",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": "%",
+        "current": {
+          "selected": true,
+          "text": "flank",
+          "value": "flank"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "Knbq66Xnz"
+        },
+        "definition": "select distinct project_id from task_trends",
+        "hide": 0,
+        "includeAll": true,
+        "multi": false,
+        "name": "project",
+        "options": [],
+        "query": "select distinct project_id from task_trends",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": "%",
+        "current": {
+          "selected": true,
+          "text": ":buildSrc:assemble",
+          "value": ":buildSrc:assemble"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "Knbq66Xnz"
+        },
+        "definition": "select distinct task_path from task_trends where project_id like '${project:raw}'",
+        "hide": 0,
+        "includeAll": true,
+        "multi": false,
+        "name": "taskName",
+        "options": [],
+        "query": "select distinct task_path from task_trends where project_id like '${project:raw}'",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": "%",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "Knbq66Xnz"
+        },
+        "definition": "select distinct status from task_trends where project_id like '${project:raw}' and task_path like '${taskName:raw}'",
+        "description": "",
+        "hide": 0,
+        "includeAll": true,
+        "multi": false,
+        "name": "status",
+        "options": [],
+        "query": "select distinct status from task_trends where project_id like '${project:raw}' and task_path like '${taskName:raw}'",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": "%",
+        "current": {
+          "selected": false,
+          "text": ":buildSrc:compileKotlin",
+          "value": ":buildSrc:compileKotlin"
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "Knbq66Xnz"
+        },
+        "definition": "select distinct task_path from task_trends where status = 'executed_cacheable' and project_id = '${project:raw}'",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "taskNameCacheable",
+        "options": [],
+        "query": "select distinct task_path from task_trends where status = 'executed_cacheable' and project_id = '${project:raw}'",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "2022-05-22T13:08:05.307Z",
+    "to": "2022-05-25T12:16:41.024Z"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Cross build statistics",
+  "uid": "_aYKMgrnk",
+  "version": 3,
+  "weekStart": ""
+}
