@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.stereotype.Service
 
-@Service
+//@Service
 class ShutdownService(private val applicationContext: ApplicationContext) {
 
     fun shutdown() {

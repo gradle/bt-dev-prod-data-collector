@@ -10,7 +10,7 @@ import java.time.OffsetDateTime
 
 const val BULK_SIZE = 10000
 
-@Component
+//@Component
 class DatabaseCleanupService(private val create: DSLContext) {
     @Async
     @Scheduled(fixedDelay = 6 * 60 * 60 * 1000)

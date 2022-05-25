@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-@Component
+//@Component
 class TeamcityExport(
     private val create: DSLContext,
     private val teamcityClientService: TeamcityClientService

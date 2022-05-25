@@ -38,7 +38,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-@Service
+//@Service
 class ExportApiExtractorService(
     private val exportApiClient: ExportApiClient,
     private val create: DSLContext,

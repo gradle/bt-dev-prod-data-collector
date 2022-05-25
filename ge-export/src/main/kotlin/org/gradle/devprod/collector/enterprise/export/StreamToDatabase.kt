@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.launchIn
 import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
-@Component
+//@Component
 class StreamToDatabase(private val exportApiExtractorService: ExportApiExtractorService) {
     @Bean
     fun streamToDatabaseJob(): Job =
