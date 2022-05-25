@@ -12,6 +12,7 @@ enum class BuildScanOutcome {
 }
 
 data class BuildScanSummary(
+    val url: String,
     val projectName: String,
     val startTime: Instant,
     val endTime: Instant,

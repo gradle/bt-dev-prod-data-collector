@@ -63,10 +63,11 @@ class DefaultBuildScanSummaryService(private val geClients: Map<String, ExportAp
         val typeToEvents: Map<String?, List<BuildEvent>> = events.groupBy { it.eventType }
 
         BuildScanSummary(
+            "https://$geServerHost/s/$buildScanId",
             RootProjectNames.extract(events).firstOrNull() ?: "",
-            BuildStarted.extract(events),
-            BuildFinished.extract(events),
-            if (BuildFailure.extract(events)) BuildScanOutcome.FAILURE else BuildScanOutcome.SUCCESS,
+            BuildStarted.extractFrom(typeToEvents),
+            BuildFinished.extractFrom(typeToEvents),
+            if (BuildFailure.extractFrom(typeToEvents)) BuildScanOutcome.FAILURE else BuildScanOutcome.SUCCESS,
             Tags.extractFrom(typeToEvents).toList(),
             BuildRequestedTasks.extractFrom(typeToEvents),
             TaskSummaryExtractor.extractFrom(typeToEvents),
