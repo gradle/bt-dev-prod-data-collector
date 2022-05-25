@@ -43,7 +43,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
         val summary = generalSummary.copy(outcome = BuildScanOutcome.SUCCESS)
         val contextBlock = contextBlock(renderer.render(summary, baseUri))
         val element = contextBlock.elements[0] as ImageElement
-        Assertions.assertEquals("http://localhost/success.png", element.imageUrl)
+        Assertions.assertEquals("http://localhost/success01.png", element.imageUrl)
         Assertions.assertEquals("success", element.altText)
     }
 
