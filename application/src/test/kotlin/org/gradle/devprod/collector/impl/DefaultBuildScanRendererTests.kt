@@ -17,7 +17,7 @@ import java.time.Instant
 import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
-@SpringBootTest
+@SpringBootTest(classes = [DefaultBuildScanRenderer::class])
 class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) {
 
     val generalSummary = BuildScanSummary(
@@ -27,8 +27,8 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
         outcome = BuildScanOutcome.SUCCESS,
         tags = listOf("LOCAL", "dirty", "feature-branch", "Mac OS X"),
         tasks = ":build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*",
-        taskSummary = TaskSummary(1841),
-        testSummary = TestSummary(214)
+        taskSummary = TaskSummary(mapOf()),
+        testSummary = TestSummary(totalCount = 214, failedCount = 1, successCount = 213, skippedCount = 0)
     )
 
     @Test
@@ -87,6 +87,8 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     fun contextBlock(result: UnfurlDetail) : ContextBlock {
         return result.blocks[0] as ContextBlock
     }
+
+    // TODO: cleanup
 
 //		{
 //			"type": "context",
