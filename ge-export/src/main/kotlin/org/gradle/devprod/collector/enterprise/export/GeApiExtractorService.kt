@@ -67,7 +67,7 @@ class GeApiExtractorService(
                                 TASK_TRENDS.TASK_DURATION_MS,
                                 TASK_TRENDS.STATUS
                             ).values(build.id, task.taskPath, task.duration.toInt(), task.avoidanceOutcome)
-                        })
+                        }).execute()
                     }
                 } catch (e: Exception) {
                     throw IllegalStateException("Error processing $build, performanceData: $performanceData", e)
