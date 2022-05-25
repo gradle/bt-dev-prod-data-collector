@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 private const val MAX_RECONNECT_COUNT = 2
 
-@Service
+//@Service
 class ExportApiClient(private val server: GradleEnterpriseServer) {
     private val client: WebClient = WebClient.builder().baseUrl("${server.url}/build-export")
         .codecs { it.defaultCodecs().maxInMemorySize(512 * 1024) }

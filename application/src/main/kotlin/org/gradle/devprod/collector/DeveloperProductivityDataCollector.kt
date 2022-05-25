@@ -1,6 +1,9 @@
 package org.gradle.devprod.collector
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.gradle.devprod.collector.enterprise.export.GradleEnterpriseServer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
@@ -28,10 +31,19 @@ class DeveloperProductivityDataCollector {
             builder.modulesToInstall(KotlinModule())
         }
 
+    private val objectMapper = ObjectMapper()
+        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+        .registerKotlinModule()
+
     @RequestMapping("/slack/build-scan-previews")
     @ResponseBody
     fun buildScanPreview(@RequestBody(required = false) body: String?, request: HttpServletRequest): String {
-        return "Method: ${request.method}, body: $body"
+        if (body?.contains("challenge") == true) {
+            // https://api.slack.com/events/url_verification
+            return objectMapper.readTree(body).get("challenge").asText()
+        } else {
+            return "Method: ${request.method}, body: $body"
+        }
     }
 }
 
