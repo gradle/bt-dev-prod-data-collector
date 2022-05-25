@@ -78,6 +78,17 @@ object RootProjectNames : SingleEventExtractor<List<String>>("ProjectStructure")
         }
 }
 
+object TaskSummaryExtractor : SingleEventExtractor<TaskSummary>("TaskFinished") {
+    override fun extract(events: Iterable<BuildEvent>): TaskSummary {
+        return TaskSummary(events
+            .filter { it.data?.stringProperty("outcome") != null }
+            .groupBy { it.data?.stringProperty("outcome") }
+            .mapKeys { TaskOutcome.valueOf(it.key!!.toUpperCase()) }
+            .mapValues { it.value.size }
+        )
+    }
+}
+
 object FirstTestTaskStart : SingleEventExtractor<Pair<String, Instant>?>("TaskStarted") {
     override fun extract(events: Iterable<BuildEvent>): Pair<String, Instant>? {
         val testTasksStarted =
@@ -115,6 +126,62 @@ object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFi
 
 data class TestCase(val taskPath: String, val name: String, val className: String)
 
+object TestSummaryExtractor : Extractor<TestSummary>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
+    override fun extractFrom(events: Map<String?, List<BuildEvent>>): TestSummary {
+        val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
+        var totalCount = 0
+        var successCount = 0
+        var failedCount = 0
+        var skippedCount = 0
+        events.getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList()).forEach {
+            val id = it.data?.longProperty("id")
+            val testCase = testIdToTestCase[id] ?: return@forEach
+            if (testCase.name == testCase.className) {
+                return@forEach
+            }
+            val failed = it.data?.booleanProperty("failed") ?: return@forEach
+            val skipped = it.data.booleanProperty("skipped") ?: return@forEach
+
+            when {
+                skipped -> skippedCount++
+                failed -> failedCount++
+                else -> successCount++
+            }
+            totalCount++
+        }
+        return TestSummary(totalCount, failedCount, successCount, skippedCount)
+    }
+}
+
+private fun getTestIdToTestCaseMap(typeToEvents: Map<String?, List<BuildEvent>>): Map<Long, TestCase> {
+    val idToTaskPath: Map<Long, String> = getIdToTaskPathMap(typeToEvents.getOrDefault("TaskStarted", emptyList()))
+    val testIdToTestCase: MutableMap<Long, TestCase> = mutableMapOf()
+    typeToEvents.getOrDefault("TestStarted", emptyList()).forEach {
+        val id = it.data?.longProperty("id")
+        val name = it.data?.stringProperty("name")
+        val className = it.data?.stringProperty("className")
+        val taskPath = it.data?.longProperty("task")?.let { idToTaskPath[it] }
+
+        if (id != null && name != null && className != null && taskPath != null) {
+            val testCase = TestCase(taskPath, name, className)
+            testIdToTestCase[id] = testCase
+        }
+    }
+    return testIdToTestCase
+}
+
+private fun getIdToTaskPathMap(events: List<BuildEvent>): Map<Long, String> {
+    val result: MutableMap<Long, String> = mutableMapOf()
+    events.forEach {
+        val id = it.data?.longProperty("id")
+        val path = it.data?.stringProperty("path")
+        if (id != null && path != null) {
+            result[id] = path
+        }
+    }
+    return result
+}
+
 /**
  * Extract flaky test classes from the build events.
  *
@@ -141,34 +208,14 @@ object FlakyTestClassExtractor : Extractor<Set<String>>(listOf("TestStarted", "T
 
         return flakyTestClasses
     }
+}
 
-    private fun getTestIdToTestCaseMap(typeToEvents: Map<String?, List<BuildEvent>>): Map<Long, TestCase> {
-        val idToTaskPath: Map<Long, String> = getIdToTaskPathMap(typeToEvents.getOrDefault("TaskStarted", emptyList()))
-        val testIdToTestCase: MutableMap<Long, TestCase> = mutableMapOf()
-        typeToEvents.getOrDefault("TestStarted", emptyList()).forEach {
-            val id = it.data?.longProperty("id")
-            val name = it.data?.stringProperty("name")
-            val className = it.data?.stringProperty("className")
-            val taskPath = it.data?.longProperty("task")?.let { idToTaskPath[it] }
-
-            if (id != null && name != null && className != null && taskPath != null) {
-                val testCase = TestCase(taskPath, name, className)
-                testIdToTestCase[id] = testCase
-            }
-        }
-        return testIdToTestCase
-    }
-
-    private fun getIdToTaskPathMap(events: List<BuildEvent>): Map<Long, String> {
-        val result: MutableMap<Long, String> = mutableMapOf()
-        events.forEach {
-            val id = it.data?.longProperty("id")
-            val path = it.data?.stringProperty("path")
-            if (id != null && path != null) {
-                result[id] = path
-            }
-        }
-        return result
+// https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/gradle/BuildRequestedTasks_1_0.html
+object BuildRequestedTasks : SingleEventExtractor<String>("BuildRequestedTasks") {
+    override fun extract(events: Iterable<BuildEvent>): String {
+        val excludedTasks = events.first().data?.listStringProperty("excluded") ?: emptyList()
+        val requestedTasks = events.first().data?.listStringProperty("requested") ?: emptyList()
+        return requestedTasks.joinToString(" ") + excludedTasks.joinToString(" ") { "-x $it" }
     }
 }
 
@@ -209,6 +256,8 @@ object DaemonUnhealthy : SingleEventExtractor<String?>("DaemonUnhealthy") {
 data class Agent(val host: String?, val user: String?)
 
 private fun Any.booleanProperty(name: String): Boolean? = (this as Map<*, *>)[name] as Boolean?
+
+private fun Any.listStringProperty(name: String): List<String>? = (this as Map<*, *>)[name] as List<String>?
 
 private fun Any.stringProperty(name: String): String? = (this as Map<*, *>)[name] as String?
 

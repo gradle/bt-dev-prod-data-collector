@@ -5,10 +5,10 @@ import com.slack.api.model.block.ContextBlock
 import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.element.ImageElement
 import org.gradle.devprod.collector.api.BuildScanRenderer
+import org.gradle.devprod.collector.enterprise.export.extractor.TaskSummary
+import org.gradle.devprod.collector.enterprise.export.extractor.TestSummary
 import org.gradle.devprod.collector.model.BuildScanOutcome
 import org.gradle.devprod.collector.model.BuildScanSummary
-import org.gradle.devprod.collector.model.TaskSummary
-import org.gradle.devprod.collector.model.TestSummary
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
