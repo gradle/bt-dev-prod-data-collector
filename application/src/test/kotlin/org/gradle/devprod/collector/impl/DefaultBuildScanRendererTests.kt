@@ -1,7 +1,6 @@
 package org.gradle.devprod.collector.impl
 
 import com.slack.api.methods.request.chat.ChatUnfurlRequest.UnfurlDetail
-import com.slack.api.methods.response.team.profile.TeamProfileGetResponse.Profiles.Section
 import com.slack.api.model.block.ContextBlock
 import com.slack.api.model.block.SectionBlock
 import com.slack.api.model.block.composition.MarkdownTextObject
@@ -13,6 +12,7 @@ import org.gradle.devprod.collector.enterprise.export.extractor.TestSummary
 import org.gradle.devprod.collector.model.BuildScanOutcome
 import org.gradle.devprod.collector.model.BuildScanSummary
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -21,6 +21,7 @@ import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 @SpringBootTest(classes = [DefaultBuildScanRenderer::class])
+@Disabled
 class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) {
 
     val generalSummary = BuildScanSummary(
@@ -92,7 +93,35 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
         Assertions.assertEquals("Tasks `:build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*`", textObj.text)
     }
 
-    // TODO: more
+    @Test
+    fun rendersTaskSummarySuccess() {
+        val textObj = markdownText(sectionBlock(renderer.render(generalSummary), 2))
+        Assertions.assertEquals("Tasks `:build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*`", textObj.text)
+    }
+
+    @Test
+    fun rendersTaskSummaryFailure() {
+        val textObj = markdownText(sectionBlock(renderer.render(generalSummary), 2))
+        Assertions.assertEquals("Tasks `:build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*`", textObj.text)
+    }
+
+    @Test
+    fun rendersTaskSummaryOther() {
+        val textObj = markdownText(sectionBlock(renderer.render(generalSummary), 2))
+        Assertions.assertEquals("Tasks `:build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*`", textObj.text)
+    }
+
+    @Test
+    fun rendersTestSummarySuccess() {
+        val textObj = markdownText(sectionBlock(renderer.render(generalSummary), 3))
+        Assertions.assertEquals("Tasks `:build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*`", textObj.text)
+    }
+
+    @Test
+    fun rendersTestSummaryFailure() {
+        val textObj = markdownText(sectionBlock(renderer.render(generalSummary), 3))
+        Assertions.assertEquals("Tasks `:build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*`", textObj.text)
+    }
 
     fun contextBlock(result: UnfurlDetail) : ContextBlock {
         return result.blocks[0] as ContextBlock
