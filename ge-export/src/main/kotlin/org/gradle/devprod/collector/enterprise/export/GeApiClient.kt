@@ -3,6 +3,7 @@ package org.gradle.devprod.collector.enterprise.export
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.reactive.asFlow
 import org.gradle.devprod.collector.enterprise.export.model.api.Build
+import org.gradle.devprod.collector.enterprise.export.model.api.BuildCacheAttributes
 import org.gradle.devprod.collector.enterprise.export.model.api.BuildCachePerformance
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -22,7 +23,7 @@ class GeApiClient(private val server: GradleEnterpriseServer) {
 
     fun readBuilds(): Flow<Build> =
         client.get()
-            .uri("/builds?since=${System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000}&maxBuilds=${pageSize}")
+            .uri("/builds?since=${System.currentTimeMillis() - 72 * 60 * 60 * 1000}&maxBuilds=1000")
             .bearerAuth()
             .retrieve()
             .bodyToMono<List<Build>>()
@@ -55,5 +56,13 @@ class GeApiClient(private val server: GradleEnterpriseServer) {
             .bearerAuth()
             .retrieve()
             .bodyToFlux<BuildCachePerformance>()
+            .asFlow()
+
+    fun readBuildAttributes(build: Build) =
+        client.get()
+            .uri("/builds/${build.id}/gradle-attributes")
+            .bearerAuth()
+            .retrieve()
+            .bodyToMono<BuildCacheAttributes>()
             .asFlow()
 }

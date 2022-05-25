@@ -1,10 +1,6 @@
 package org.gradle.devprod.collector.enterprise.export
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toSet
+import kotlinx.coroutines.flow.*
 import org.gradle.devprod.collector.enterprise.export.model.api.Build
 import org.gradle.devprod.collector.enterprise.export.model.api.TaskExecution
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables
@@ -17,6 +13,7 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
+import kotlin.collections.forEach
 
 @Service
 class GeApiExtractorService(
@@ -30,6 +27,7 @@ class GeApiExtractorService(
         geApiClient
             .readBuilds()
             .onEach { println("Received at ${ZonedDateTime.now()}: $it") }
+            .filter { it.buildToolType == "gradle" }
             .map(this::persistToDatabase)
             .onCompletion { failure ->
                 failure?.let { logger.error("Failed streaming Gradle enterprise data", it) }
@@ -41,6 +39,8 @@ class GeApiExtractorService(
         if (existing == null) {
             val performanceData = geApiClient.readBuildCachePerfomanceData(build)
                 .toSet()
+            val buildAttributes = geApiClient.readBuildAttributes(build)
+                .single()
             performanceData.forEach { performance ->
                 println("Build time for ${build.id}: ${performance.buildTime}")
                 try {
@@ -50,7 +50,7 @@ class GeApiExtractorService(
                             val taskTrends = ctx.newRecord(Tables.TASK_TRENDS)
                             taskTrends.apply {
                                 buildId = build.id
-                                projectId = "Unknown"
+                                projectId = buildAttributes.rootProjectName
                                 taskPath = task.taskPath
                                 buildStart = OffsetDateTime.ofInstant(Instant.ofEpochMilli(build.availableAt), ZoneId.systemDefault())
                                 taskDurationMs = task.duration.toInt()
