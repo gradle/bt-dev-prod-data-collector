@@ -1,9 +1,15 @@
 package org.gradle.devprod.collector.enterprise.export
 
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.flow.toSet
 import org.gradle.devprod.collector.enterprise.export.model.api.Build
-import org.gradle.devprod.collector.enterprise.export.model.api.TaskExecution
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TASK_TRENDS
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.slf4j.Logger
@@ -13,7 +19,6 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
-import kotlin.collections.forEach
 
 @Service
 class GeApiExtractorService(
@@ -35,7 +40,7 @@ class GeApiExtractorService(
             }
 
     private suspend fun persistToDatabase(build: Build) {
-        val existing = create.fetchAny(Tables.TASK_TRENDS, Tables.TASK_TRENDS.BUILD_ID.eq(build.id))
+        val existing = create.fetchAny(Tables.BUILD_TRENDS, Tables.BUILD_TRENDS.BUILD_ID.eq(build.id))
         if (existing == null) {
             val performanceData = geApiClient.readBuildCachePerfomanceData(build)
                 .toSet()
@@ -45,19 +50,24 @@ class GeApiExtractorService(
                 println("Build time for ${build.id}: ${performance.buildTime}")
                 try {
                     create.transaction { configuration ->
-                        performance.taskExecution.forEach { task: TaskExecution ->
-                            val ctx = DSL.using(configuration)
-                            val taskTrends = ctx.newRecord(Tables.TASK_TRENDS)
-                            taskTrends.apply {
-                                buildId = build.id
-                                projectId = buildAttributes.rootProjectName
-                                taskPath = task.taskPath
-                                buildStart = OffsetDateTime.ofInstant(Instant.ofEpochMilli(build.availableAt), ZoneId.systemDefault())
-                                taskDurationMs = task.duration.toInt()
-                                status = task.avoidanceOutcome
-                            }
-                            taskTrends.store()
+                        val ctx = DSL.using(configuration)
+                        val buildTrend = ctx.newRecord(Tables.BUILD_TRENDS)
+                        buildTrend.apply {
+                            buildId = build.id
+                            buildStart = OffsetDateTime.ofInstant(Instant.ofEpochMilli(build.availableAt), ZoneId.systemDefault())
+                            projectId = buildAttributes.rootProjectName
+                            tags = buildAttributes.tags.toTypedArray()
                         }
+                        buildTrend.store()
+                        ctx.batch(performance.taskExecution.map { task ->
+                            ctx.insertInto(
+                                TASK_TRENDS,
+                                TASK_TRENDS.BUILD_ID,
+                                TASK_TRENDS.TASK_PATH,
+                                TASK_TRENDS.TASK_DURATION_MS,
+                                TASK_TRENDS.STATUS
+                            ).values(build.id, task.taskPath, task.duration.toInt(), task.avoidanceOutcome)
+                        })
                     }
                 } catch (e: Exception) {
                     throw IllegalStateException("Error processing $build, performanceData: $performanceData", e)

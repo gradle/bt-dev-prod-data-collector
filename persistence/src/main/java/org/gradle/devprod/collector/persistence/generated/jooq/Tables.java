@@ -5,6 +5,7 @@ package org.gradle.devprod.collector.persistence.generated.jooq;
 
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.BuildTrends;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TaskTrends;
@@ -21,6 +22,11 @@ public class Tables {
      * The table <code>public.build</code>.
      */
     public static final Build BUILD = Build.BUILD;
+
+    /**
+     * The table <code>public.build_trends</code>.
+     */
+    public static final BuildTrends BUILD_TRENDS = BuildTrends.BUILD_TRENDS;
 
     /**
      * The table <code>public.flaky_test_class</code>.

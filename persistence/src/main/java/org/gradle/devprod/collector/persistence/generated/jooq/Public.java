@@ -4,10 +4,8 @@
 package org.gradle.devprod.collector.persistence.generated.jooq;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.BuildTrends;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TaskTrends;
@@ -17,6 +15,9 @@ import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.UDT;
 import org.jooq.impl.SchemaImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -36,6 +37,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.build</code>.
      */
     public final Build BUILD = Build.BUILD;
+
+    /**
+     * The table <code>public.build_trends</code>.
+     */
+    public final BuildTrends BUILD_TRENDS = BuildTrends.BUILD_TRENDS;
 
     /**
      * The table <code>public.flaky_test_class</code>.
@@ -74,6 +80,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             Build.BUILD,
+            BuildTrends.BUILD_TRENDS,
             FlakyTestClass.FLAKY_TEST_CLASS,
             LongTest.LONG_TEST,
             TaskTrends.TASK_TRENDS,

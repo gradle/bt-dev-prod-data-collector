@@ -11,7 +11,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row6;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -21,7 +21,6 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
-import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,19 +52,9 @@ public class TaskTrends extends TableImpl<TaskTrendsRecord> {
     public final TableField<TaskTrendsRecord, String> BUILD_ID = createField(DSL.name("build_id"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     /**
-     * The column <code>public.task_trends.project_id</code>.
-     */
-    public final TableField<TaskTrendsRecord, String> PROJECT_ID = createField(DSL.name("project_id"), SQLDataType.VARCHAR.nullable(false), this, "");
-
-    /**
      * The column <code>public.task_trends.task_path</code>.
      */
     public final TableField<TaskTrendsRecord, String> TASK_PATH = createField(DSL.name("task_path"), SQLDataType.VARCHAR.nullable(false), this, "");
-
-    /**
-     * The column <code>public.task_trends.build_start</code>.
-     */
-    public final TableField<TaskTrendsRecord, OffsetDateTime> BUILD_START = createField(DSL.name("build_start"), SQLDataType.TIMESTAMPWITHTIMEZONE(6).nullable(false), this, "");
 
     /**
      * The column <code>public.task_trends.task_duration_ms</code>.
@@ -126,6 +115,20 @@ public class TaskTrends extends TableImpl<TaskTrendsRecord> {
     }
 
     @Override
+    public List<ForeignKey<TaskTrendsRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<TaskTrendsRecord, ?>>asList(Keys.TASK_TRENDS__TASK_TRENDS_BUILD__FK);
+    }
+
+    private transient BuildTrends _buildTrends;
+
+    public BuildTrends buildTrends() {
+        if (_buildTrends == null)
+            _buildTrends = new BuildTrends(this, Keys.TASK_TRENDS__TASK_TRENDS_BUILD__FK);
+
+        return _buildTrends;
+    }
+
+    @Override
     public TaskTrends as(String alias) {
         return new TaskTrends(DSL.name(alias), this);
     }
@@ -152,11 +155,11 @@ public class TaskTrends extends TableImpl<TaskTrendsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<String, String, String, OffsetDateTime, Integer, String> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row4<String, String, Integer, String> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }
