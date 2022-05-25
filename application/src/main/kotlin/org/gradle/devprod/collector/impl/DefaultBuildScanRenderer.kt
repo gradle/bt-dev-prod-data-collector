@@ -71,7 +71,7 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
 
     fun buildOutcomeImage(outcome: BuildScanOutcome, baseUri: URI): ImageElement {
         return when (outcome) {
-            BuildScanOutcome.SUCCESS -> buildImageElement("success.png", "success", baseUri)
+            BuildScanOutcome.SUCCESS -> buildImageElement("success01.png", "success", baseUri)
             BuildScanOutcome.FAILURE -> buildImageElement("failure.png", "failure", baseUri)
             BuildScanOutcome.UNKNOWN -> buildImageElement("unknown.png", "unknown", baseUri)
         }
