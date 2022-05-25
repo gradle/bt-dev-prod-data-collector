@@ -42,6 +42,7 @@ class DeveloperProductivityDataCollector {
             // https://api.slack.com/events/url_verification
             return objectMapper.readTree(body).get("challenge").asText()
         } else {
+            // TODO: parse data?
             return "Method: ${request.method}, body: $body"
         }
     }
