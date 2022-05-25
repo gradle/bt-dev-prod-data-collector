@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class DefaultBuildScanRenderPublisher : BuildScanRenderPublisher {
-    override fun publish(unfurlDetail: UnfurlDetail) {
+    override fun publish(channel: String, timeStamp: String, unfurledLinks: Map<String, UnfurlDetail>) {
         TODO("Not yet implemented")
     }
 }
