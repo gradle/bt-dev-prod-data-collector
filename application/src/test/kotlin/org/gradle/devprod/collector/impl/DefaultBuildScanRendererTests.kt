@@ -1,7 +1,10 @@
 package org.gradle.devprod.collector.impl
 
 import com.slack.api.methods.request.chat.ChatUnfurlRequest.UnfurlDetail
+import com.slack.api.methods.response.team.profile.TeamProfileGetResponse.Profiles.Section
 import com.slack.api.model.block.ContextBlock
+import com.slack.api.model.block.SectionBlock
+import com.slack.api.model.block.composition.MarkdownTextObject
 import com.slack.api.model.block.composition.PlainTextObject
 import com.slack.api.model.block.element.ImageElement
 import org.gradle.devprod.collector.api.BuildScanRenderer
@@ -82,10 +85,25 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
         Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[4] as PlainTextObject).text)
     }
 
+    @Test
+    fun rendersTasks() {
+        // TODO: consider truncating
+        val textObj = markdownText(sectionBlock(renderer.render(generalSummary), 1))
+        Assertions.assertEquals("Tasks `:build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*`", textObj.text)
+    }
+
     // TODO: more
 
     fun contextBlock(result: UnfurlDetail) : ContextBlock {
         return result.blocks[0] as ContextBlock
+    }
+
+    fun sectionBlock(result: UnfurlDetail, index: Int) : SectionBlock {
+        return result.blocks[index] as SectionBlock
+    }
+
+    fun markdownText(block: SectionBlock) : MarkdownTextObject {
+        return block.text as MarkdownTextObject
     }
 
     // TODO: cleanup
