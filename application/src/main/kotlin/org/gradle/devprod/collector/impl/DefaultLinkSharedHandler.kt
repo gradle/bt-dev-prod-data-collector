@@ -1,5 +1,6 @@
 package org.gradle.devprod.collector.impl
 
+import com.slack.api.methods.request.chat.ChatUnfurlRequest
 import org.gradle.devprod.collector.api.BuildScanRenderPublisher
 import org.gradle.devprod.collector.api.BuildScanRenderer
 import org.gradle.devprod.collector.api.BuildScanSummaryService
@@ -20,6 +21,10 @@ class DefaultLinkSharedHandler
     private val buildScanRenderPublisher: BuildScanRenderPublisher
 ) : LinkSharedHandler {
     override fun handleBuildScanLinksShared(linkSharedEvent: LinkSharedEvent) {
+        val unfurledLinks: MutableMap<String, ChatUnfurlRequest.UnfurlDetail> = mutableMapOf()
+        val channel = linkSharedEvent.channel!!
+        val timestamp = linkSharedEvent.messageTs!!
+
         linkSharedEvent.links.forEach {
             val path = it.url.path.toString()
             if (path.matches(summaryPathRegex)) {
@@ -28,10 +33,12 @@ class DefaultLinkSharedHandler
                 println("Build scan summary: $buildScanSummary")
                 val renderedSummary = buildScanRenderer.render(buildScanSummary)
                 println("Rendered scan summary: $renderedSummary")
-                buildScanRenderPublisher.publish(renderedSummary)
+                unfurledLinks[it.url.toString()] = renderedSummary
             } else {
                 println("Unsupported url: ${it.url}")
             }
         }
+
+        buildScanRenderPublisher.publish(channel, timestamp, unfurledLinks)
     }
 }
