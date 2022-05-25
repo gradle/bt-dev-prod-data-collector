@@ -35,13 +35,13 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         val executedTaskCount = successTaskCount + failedTaskCount
         var taskSummaryMessage = "$executedTaskCount tasks executed"
         if (failedTaskCount > 0) {
-            val failedTaskUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("timeline").queryParam("outcome", "FAILED").toUriString()
+            val failedTaskUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("/timeline").queryParam("outcome", "FAILED").toUriString()
             taskSummaryMessage += ", <${failedTaskUrl}|${failedTaskCount} failed tasks>"
         }
         val failedTestCount = buildScanSummary.testSummary.failedCount
         var testSummaryMessage = "${buildScanSummary.testSummary.totalCount} tests executed"
         if (failedTestCount > 0) {
-            val failedTestUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("tests/overview").queryParam("outcome", "failed").toUriString()
+            val failedTestUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("/tests/overview").queryParam("outcome", "failed").toUriString()
             testSummaryMessage += ", <${failedTestUrl}|${failedTestCount} tests failed>"
         }
         return UnfurlDetail.builder().blocks(listOf(
@@ -71,9 +71,9 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
 
     fun buildOutcomeImage(outcome: BuildScanOutcome, baseUri: URI): ImageElement {
         return when (outcome) {
-            BuildScanOutcome.SUCCESS -> buildImageElement("success.png", "success", baseUri)
-            BuildScanOutcome.FAILURE -> buildImageElement("failure.png", "failure", baseUri)
-            BuildScanOutcome.UNKNOWN -> buildImageElement("unknown.png", "unknown", baseUri)
+            BuildScanOutcome.SUCCESS -> buildImageElement("/success.png", "success", baseUri)
+            BuildScanOutcome.FAILURE -> buildImageElement("/failure.png", "failure", baseUri)
+            BuildScanOutcome.UNKNOWN -> buildImageElement("/unknown.png", "unknown", baseUri)
         }
     }
 

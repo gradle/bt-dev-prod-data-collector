@@ -111,7 +111,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
         // TODO: proper pluralization
         val summary = generalSummary.copy(taskSummary = TaskSummary(mapOf(Pair(TaskOutcome.SUCCESS, 2), Pair(TaskOutcome.FAILED, 1))))
         val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 2))
-        Assertions.assertEquals("3 tasks executed, <http://ge.example/s/abcdeftimeline?outcome=FAILED|1 failed tasks>", textObj.text)
+        Assertions.assertEquals("3 tasks executed, <http://ge.example/s/abcdef/timeline?outcome=FAILED|1 failed tasks>", textObj.text)
     }
 
     @Test
@@ -127,7 +127,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
         // TODO: proper pluralization
         val summary = generalSummary.copy(testSummary = TestSummary(totalCount = 214, failedCount = 1, successCount = 213, skippedCount = 0))
         val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 3))
-        Assertions.assertEquals("214 tests executed, <http://ge.example/s/abcdeftests/overview?outcome=failed|1 tests failed>", textObj.text)
+        Assertions.assertEquals("214 tests executed, <http://ge.example/s/abcdef/tests/overview?outcome=failed|1 tests failed>", textObj.text)
     }
 
     fun contextBlock(result: UnfurlDetail) : ContextBlock {
