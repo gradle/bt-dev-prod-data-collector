@@ -35,17 +35,14 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         val executedTaskCount = successTaskCount + failedTaskCount
         var taskSummaryMessage = "$executedTaskCount tasks executed"
         if (failedTaskCount > 0) {
-            // TODO: link
-            //val failedTaskUrl = UriComponentsBuilder.fromUri(buildScanSummary)
-            // TODO: escaping
-            //taskSummaryMessage += ", <${failedTaskUrl}|${failedTaskCount failed tasks}>"
-            taskSummaryMessage += ", $failedTaskCount failed tasks"
+            val failedTaskUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("timeline").queryParam("outcome", "FAILED").toUriString()
+            taskSummaryMessage += ", <${failedTaskUrl}|${failedTaskCount} failed tasks>"
         }
         val failedTestCount = buildScanSummary.testSummary.failedCount
         var testSummaryMessage = "${buildScanSummary.testSummary.totalCount} tests executed"
         if (failedTestCount > 0) {
-            // TODO: link
-            testSummaryMessage += ", ${failedTestCount} tests failed"
+            val failedTestUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("tests/overview").queryParam("outcome", "failed").toUriString()
+            testSummaryMessage += ", <${failedTestUrl}|${failedTestCount} tests failed>"
         }
         return UnfurlDetail.builder().blocks(listOf(
             ContextBlock.builder().elements(listOf(
