@@ -1,7 +1,6 @@
 package org.gradle.devprod.collector.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.slack.api.model.event.LinkSharedEvent
 import org.gradle.devprod.collector.enterprise.export.extractor.TaskSummary
 import org.gradle.devprod.collector.enterprise.export.extractor.TestSummary
 import java.net.URI

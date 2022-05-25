@@ -1,10 +1,10 @@
 package org.gradle.devprod.collector.impl
 
 import org.gradle.devprod.collector.api.BuildScanRenderer
+import org.gradle.devprod.collector.enterprise.export.extractor.TaskSummary
+import org.gradle.devprod.collector.enterprise.export.extractor.TestSummary
 import org.gradle.devprod.collector.model.BuildScanOutcome
 import org.gradle.devprod.collector.model.BuildScanSummary
-import org.gradle.devprod.collector.model.TaskSummary
-import org.gradle.devprod.collector.model.TestSummary
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -25,8 +25,8 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
             BuildScanOutcome.SUCCESS,
             listOf("LOCAL", "dirty", "feature-branch", "Mac OS X"),
             ":build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*",
-            TaskSummary(1841),
-            TestSummary(214)
+            TaskSummary(mapOf()),
+            TestSummary(totalCount = 214, failedCount = 1, successCount = 213, skippedCount = 0)
         )
         val result = renderer.render(summary)
         Assertions.assertEquals("TODO", result)

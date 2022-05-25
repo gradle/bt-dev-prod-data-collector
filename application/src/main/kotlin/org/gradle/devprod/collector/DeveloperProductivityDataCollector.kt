@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.slack.api.model.event.LinkSharedEvent
 import org.gradle.devprod.collector.api.BuildScanLinkSharedHandler
 import org.gradle.devprod.collector.enterprise.export.GradleEnterpriseServer
 import org.gradle.devprod.collector.model.LinkSharedEventCallback
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
-import java.time.Instant
 import javax.servlet.http.HttpServletRequest
 
 @SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])
