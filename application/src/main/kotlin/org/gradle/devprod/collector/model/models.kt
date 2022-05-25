@@ -43,14 +43,14 @@ data class LinkSharedEvent(
     val channel: String,
     val user: String,
     @JsonProperty("message_ts")
-    val messageTs: String,
+    val messageTs: String?,
     @JsonProperty("thread_ts")
-    val threadTs: String,
+    val threadTs: String?,
     val links: List<Link>,
     @JsonProperty("is_bot_user_member")
     val botUserMember: Boolean,
     @JsonProperty("unfurl_id")
-    val unfurlId: String,
+    val unfurlId: String?,
     val source: String
 )
 

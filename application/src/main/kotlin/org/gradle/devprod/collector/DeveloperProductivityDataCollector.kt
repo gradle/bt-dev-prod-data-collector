@@ -42,6 +42,7 @@ class DeveloperProductivityDataCollector(private val handler: LinkSharedHandler)
     @RequestMapping("/slack/build-scan-previews")
     @ResponseBody
     fun buildScanPreview(@RequestBody(required = false) body: String?, request: HttpServletRequest): String {
+        println("Body: $body")
         if (body?.contains("challenge") == true) {
             // https://api.slack.com/events/url_verification
             return objectMapper.readTree(body).get("challenge").asText()
