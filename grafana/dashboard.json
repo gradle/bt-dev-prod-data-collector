@@ -24,15 +24,15 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
-  "iteration": 1653474727789,
+  "id": 2,
+  "iteration": 1653484969293,
   "links": [],
   "liveNow": false,
   "panels": [
     {
       "datasource": {
         "type": "postgres",
-        "uid": "Knbq66Xnz"
+        "uid": "4AJUgR9nk"
       },
       "fieldConfig": {
         "defaults": {
@@ -40,19 +40,22 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "max": 1,
+          "min": 0,
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "red",
+                "color": "green",
                 "value": null
               },
               {
-                "color": "green",
-                "value": 80
+                "color": "red",
+                "value": 0.4
               }
             ]
-          }
+          },
+          "unit": "percentunit"
         },
         "overrides": []
       },
@@ -80,13 +83,13 @@
         {
           "datasource": {
             "type": "postgres",
-            "uid": "Knbq66Xnz"
+            "uid": "4AJUgR9nk"
           },
-          "format": "time_series",
+          "format": "table",
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n    avg(case when status = 'executed_cacheable' then 1\n             else 0\n        end) * 100 as cache_miss,\n    NOW() as \"time\"\nFROM task_trends\nwhere task_path like '${taskNameCacheable:raw}'\n",
+          "rawSql": "SELECT\n    avg(case when status = 'executed_cacheable' then 1\n             else 0\n        end) as cache_miss\nFROM task_trends\nwhere task_path like '${taskNameCacheable:raw}'\n",
           "refId": "A",
           "select": [
             [
@@ -108,13 +111,13 @@
           ]
         }
       ],
-      "title": "Cache Hit Ratio (${taskNameCacheable:raw})",
+      "title": "Cache Miss Ratio (${taskNameCacheable:raw})",
       "type": "gauge"
     },
     {
       "datasource": {
         "type": "postgres",
-        "uid": "Knbq66Xnz"
+        "uid": "4AJUgR9nk"
       },
       "fieldConfig": {
         "defaults": {
@@ -185,13 +188,13 @@
         {
           "datasource": {
             "type": "postgres",
-            "uid": "Knbq66Xnz"
+            "uid": "4AJUgR9nk"
           },
-          "format": "time_series",
+          "format": "table",
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n        avg(case when status = 'executed_cacheable' then 1\n          else 0\n        end) * 100 as cache_miss,\n        task_path,\n        NOW() as \"time\"\nFROM task_trends\nwhere project_id like '${project:raw}'\ngroup by task_path\nhaving avg(case when status = 'executed_cacheable' then 1\n                else 0\n    end) * 100 > 70",
+          "rawSql": "SELECT\n        avg(case when status = 'executed_cacheable' then 1\n          else 0\n        end) * 100 as cache_miss,\n        task_path\nFROM task_trends t join build_trends b on (b.build_id = t.build_id)\nwhere project_id like '${project:raw}'\nand 'CI' = any(tags)\ngroup by task_path\nhaving avg(case when status = 'executed_cacheable' then 1\n                else 0\n    end) * 100 > 70",
           "refId": "A",
           "select": [
             [
@@ -219,7 +222,7 @@
     {
       "datasource": {
         "type": "postgres",
-        "uid": "Knbq66Xnz"
+        "uid": "4AJUgR9nk"
       },
       "fieldConfig": {
         "defaults": {
@@ -294,13 +297,13 @@
         {
           "datasource": {
             "type": "postgres",
-            "uid": "Knbq66Xnz"
+            "uid": "4AJUgR9nk"
           },
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "select task_duration_ms, build_start as \"time\"\nfrom task_trends\nwhere status like '${status:raw}'\nand task_path like '${taskName:raw}'",
+          "rawSql": "select task_duration_ms, build_start as \"time\"\nfrom task_trends t join build_trends b on (b.build_id = t.build_id)\nwhere status like '${status:raw}'\nand task_path like '${taskName:raw}'",
           "refId": "A",
           "select": [
             [
@@ -336,20 +339,20 @@
         "allValue": "%",
         "current": {
           "selected": true,
-          "text": "android-cache-fix-gradle-plugin",
-          "value": "android-cache-fix-gradle-plugin"
+          "text": "gradle",
+          "value": "gradle"
         },
         "datasource": {
           "type": "postgres",
-          "uid": "Knbq66Xnz"
+          "uid": "4AJUgR9nk"
         },
-        "definition": "select distinct project_id from task_trends",
+        "definition": "select distinct project_id from build_trends",
         "hide": 0,
         "includeAll": true,
         "multi": false,
         "name": "project",
         "options": [],
-        "query": "select distinct project_id from task_trends",
+        "query": "select distinct project_id from build_trends",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -360,20 +363,20 @@
         "allValue": "%",
         "current": {
           "selected": true,
-          "text": ":buildSrc:compileGroovy",
-          "value": ":buildSrc:compileGroovy"
+          "text": ":architecture-test:checkBinaryCompatibility",
+          "value": ":architecture-test:checkBinaryCompatibility"
         },
         "datasource": {
           "type": "postgres",
-          "uid": "Knbq66Xnz"
+          "uid": "4AJUgR9nk"
         },
-        "definition": "select distinct task_path from task_trends where project_id like '${project:raw}'",
+        "definition": "select distinct task_path from task_trends t join build_trends b on (b.build_id = t.build_id) where project_id like '${project:raw}'",
         "hide": 0,
         "includeAll": true,
         "multi": false,
         "name": "taskName",
         "options": [],
-        "query": "select distinct task_path from task_trends where project_id like '${project:raw}'",
+        "query": "select distinct task_path from task_trends t join build_trends b on (b.build_id = t.build_id) where project_id like '${project:raw}'",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -389,16 +392,16 @@
         },
         "datasource": {
           "type": "postgres",
-          "uid": "Knbq66Xnz"
+          "uid": "4AJUgR9nk"
         },
-        "definition": "select distinct status from task_trends where project_id like '${project:raw}' and task_path like '${taskName:raw}'",
+        "definition": "select distinct status from task_trends t join build_trends b on (b.build_id = t.build_id) where project_id like '${project:raw}' and task_path like '${taskName:raw}'",
         "description": "",
         "hide": 0,
         "includeAll": true,
         "multi": false,
         "name": "status",
         "options": [],
-        "query": "select distinct status from task_trends where project_id like '${project:raw}' and task_path like '${taskName:raw}'",
+        "query": "select distinct status from task_trends t join build_trends b on (b.build_id = t.build_id) where project_id like '${project:raw}' and task_path like '${taskName:raw}'",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -409,20 +412,20 @@
         "allValue": "%",
         "current": {
           "selected": true,
-          "text": ":buildSrc:compileGroovy",
-          "value": ":buildSrc:compileGroovy"
+          "text": ":architecture-test:checkBinaryCompatibility",
+          "value": ":architecture-test:checkBinaryCompatibility"
         },
         "datasource": {
           "type": "postgres",
-          "uid": "Knbq66Xnz"
+          "uid": "4AJUgR9nk"
         },
-        "definition": "select distinct task_path from task_trends where status = 'executed_cacheable' and project_id = '${project:raw}'",
+        "definition": "select distinct task_path from task_trends t join build_trends b on (b.build_id = t.build_id) where status = 'executed_cacheable' and project_id = '${project:raw}'",
         "hide": 0,
         "includeAll": true,
         "multi": false,
         "name": "taskNameCacheable",
         "options": [],
-        "query": "select distinct task_path from task_trends where status = 'executed_cacheable' and project_id = '${project:raw}'",
+        "query": "select distinct task_path from task_trends t join build_trends b on (b.build_id = t.build_id) where status = 'executed_cacheable' and project_id = '${project:raw}'",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -432,13 +435,13 @@
     ]
   },
   "time": {
-    "from": "2022-05-22T13:08:05.307Z",
-    "to": "2022-05-25T12:16:41.024Z"
+    "from": "now-7d",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Cross build statistics",
   "uid": "_aYKMgrnk",
-  "version": 6,
+  "version": 7,
   "weekStart": ""
 }
