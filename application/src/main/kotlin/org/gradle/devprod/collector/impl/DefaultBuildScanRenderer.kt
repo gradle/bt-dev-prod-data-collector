@@ -6,6 +6,7 @@ import com.slack.api.model.block.SectionBlock
 import com.slack.api.model.block.composition.BlockCompositions
 import com.slack.api.model.block.element.ImageElement
 import org.gradle.devprod.collector.api.BuildScanRenderer
+import org.gradle.devprod.collector.enterprise.export.extractor.TaskOutcome
 import org.gradle.devprod.collector.model.BuildScanOutcome
 import org.gradle.devprod.collector.model.BuildScanSummary
 import org.springframework.stereotype.Service
@@ -29,6 +30,23 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z")
         val formattedStart = dateTimeFormatter.format(buildScanSummary.startTime.atZone(utc))
         val duration = Duration.between(buildScanSummary.startTime, buildScanSummary.endTime).toKotlinDuration()
+        val successTaskCount = buildScanSummary.taskSummary.outcomes[TaskOutcome.SUCCESS] ?: 0
+        val failedTaskCount = buildScanSummary.taskSummary.outcomes[TaskOutcome.FAILED] ?: 0
+        val executedTaskCount = successTaskCount + failedTaskCount
+        var taskSummaryMessage = "$executedTaskCount tasks executed"
+        if (failedTaskCount > 0) {
+            // TODO: link
+            //val failedTaskUrl = UriComponentsBuilder.fromUri(buildScanSummary)
+            // TODO: escaping
+            //taskSummaryMessage += ", <${failedTaskUrl}|${failedTaskCount failed tasks}>"
+            taskSummaryMessage += ", $failedTaskCount failed tasks"
+        }
+        val failedTestCount = buildScanSummary.testSummary.failedCount
+        var testSummaryMessage = "${buildScanSummary.testSummary.totalCount} tests executed"
+        if (failedTestCount > 0) {
+            // TODO: link
+            testSummaryMessage += ", ${failedTestCount} tests failed"
+        }
         return UnfurlDetail.builder().blocks(listOf(
             ContextBlock.builder().elements(listOf(
                 buildOutcomeImage(buildScanSummary.outcome, baseUri),
@@ -42,6 +60,14 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
             SectionBlock.builder()
                 // TODO: escaping
                 .text(BlockCompositions.markdownText("Tasks `${buildScanSummary.tasks}`"))
+                .build(),
+            SectionBlock.builder()
+                // TODO: escaping
+                .text(BlockCompositions.markdownText(taskSummaryMessage))
+                .build(),
+            SectionBlock.builder()
+                // TODO: escaping
+                .text(BlockCompositions.markdownText(testSummaryMessage))
                 .build()
         )).build()
     }
