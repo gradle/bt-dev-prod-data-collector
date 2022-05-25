@@ -9,6 +9,10 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseBody
+import javax.servlet.http.HttpServletRequest
 
 @SpringBootApplication
 @EnableScheduling
@@ -20,6 +24,13 @@ class DeveloperProductivityDataCollector {
         Jackson2ObjectMapperBuilderCustomizer { builder ->
             builder.modulesToInstall(KotlinModule())
         }
+
+    @RequestMapping("/slack/build-scan-previews")
+    @ResponseBody
+    fun buildScanPreview(@RequestBody body: String, request: HttpServletRequest): String {
+        println("Method: ${request.method}, body: $body")
+        return "OK"
+    }
 }
 
 fun main(args: Array<String>) {
