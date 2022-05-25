@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToFlux
+import org.springframework.web.reactive.function.client.bodyToMono
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @Service
 class GeApiClient(private val server: GradleEnterpriseServer) {
@@ -15,14 +18,30 @@ class GeApiClient(private val server: GradleEnterpriseServer) {
         .codecs { it.defaultCodecs().maxInMemorySize(2048 * 1024) }
         .build()
     private val logger = LoggerFactory.getLogger(javaClass)
+    private val pageSize = 1000
 
     fun readBuilds(): Flow<Build> =
         client.get()
-            .uri("/builds?since=${System.currentTimeMillis() - 72 * 60 * 60 * 1000}")
+            .uri("/builds?since=${System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000}&maxBuilds=${pageSize}")
             .bearerAuth()
             .retrieve()
-            .bodyToFlux<Build>()
+            .bodyToMono<List<Build>>()
+            .expand { lastResponse ->
+                if (lastResponse.size == pageSize) {
+                    readBuildsFrom(lastResponse.last().id)
+                } else {
+                    Mono.empty()
+                }
+            }
+            .flatMap { Flux.fromIterable(it) }
             .asFlow()
+
+    private fun readBuildsFrom(buildId: String) =
+        client.get()
+            .uri("/builds?sinceBuild=${buildId}&maxBuilds=${pageSize}")
+            .bearerAuth()
+            .retrieve()
+            .bodyToMono<List<Build>>()
 
         private fun WebClient.RequestHeadersSpec<*>.bearerAuth() =
             header(
