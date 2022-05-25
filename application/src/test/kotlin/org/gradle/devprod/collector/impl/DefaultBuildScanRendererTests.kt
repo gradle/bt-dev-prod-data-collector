@@ -92,7 +92,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     @Test
     fun rendersTags_whenThereAreNoTags() {
         val contextBlock = contextBlock(renderer.render(generalSummary.copy(tags = listOf()), baseUri))
-        Assertions.assertEquals("", (contextBlock.elements[4] as PlainTextObject).text)
+        Assertions.assertEquals("Tags: _none_", (contextBlock.elements[4] as PlainTextObject).text)
     }
 
     // TODO: different rendering for no tags

@@ -71,7 +71,7 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
 
     private fun renderTags(tags: List<String>): String {
         if (tags.isEmpty()) {
-            return "_none_";
+            return "Tags: _none_";
         } else {
             return "Tags: ${tags.stream().collect(Collectors.joining(" | "))}"
         }
