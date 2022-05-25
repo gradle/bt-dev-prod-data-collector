@@ -25,7 +25,7 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1653474727695,
+  "iteration": 1653474727789,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -110,6 +110,111 @@
       ],
       "title": "Cache Hit Ratio (${taskNameCacheable:raw})",
       "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "Knbq66Xnz"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1,
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 5,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "8.5.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "Knbq66Xnz"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n        avg(case when status = 'executed_cacheable' then 1\n          else 0\n        end) * 100 as cache_miss,\n        task_path,\n        NOW() as \"time\"\nFROM task_trends\nwhere project_id like '${project:raw}'\ngroup by task_path\nhaving avg(case when status = 'executed_cacheable' then 1\n                else 0\n    end) * 100 > 70",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Tasks with >70% Cache Misses",
+      "type": "barchart"
     },
     {
       "datasource": {
@@ -221,7 +326,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": false,
+  "refresh": "",
   "schemaVersion": 36,
   "style": "dark",
   "tags": [],
@@ -231,8 +336,8 @@
         "allValue": "%",
         "current": {
           "selected": true,
-          "text": "flank",
-          "value": "flank"
+          "text": "android-cache-fix-gradle-plugin",
+          "value": "android-cache-fix-gradle-plugin"
         },
         "datasource": {
           "type": "postgres",
@@ -255,8 +360,8 @@
         "allValue": "%",
         "current": {
           "selected": true,
-          "text": ":buildSrc:assemble",
-          "value": ":buildSrc:assemble"
+          "text": ":buildSrc:compileGroovy",
+          "value": ":buildSrc:compileGroovy"
         },
         "datasource": {
           "type": "postgres",
@@ -303,9 +408,9 @@
       {
         "allValue": "%",
         "current": {
-          "selected": false,
-          "text": ":buildSrc:compileKotlin",
-          "value": ":buildSrc:compileKotlin"
+          "selected": true,
+          "text": ":buildSrc:compileGroovy",
+          "value": ":buildSrc:compileGroovy"
         },
         "datasource": {
           "type": "postgres",
@@ -313,7 +418,7 @@
         },
         "definition": "select distinct task_path from task_trends where status = 'executed_cacheable' and project_id = '${project:raw}'",
         "hide": 0,
-        "includeAll": false,
+        "includeAll": true,
         "multi": false,
         "name": "taskNameCacheable",
         "options": [],
@@ -334,6 +439,6 @@
   "timezone": "",
   "title": "Cross build statistics",
   "uid": "_aYKMgrnk",
-  "version": 3,
+  "version": 6,
   "weekStart": ""
 }
