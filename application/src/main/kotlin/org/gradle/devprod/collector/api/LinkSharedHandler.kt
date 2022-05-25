@@ -7,5 +7,4 @@ interface LinkSharedHandler {
 
     @Async
     fun handleBuildScanLinksShared(linkSharedEvent: LinkSharedEvent)
-
 }

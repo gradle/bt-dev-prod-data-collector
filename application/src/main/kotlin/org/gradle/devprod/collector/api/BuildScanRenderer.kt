@@ -6,5 +6,5 @@ import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 interface BuildScanRenderer {
-    fun render(buildScanSummary: BuildScanSummary) : UnfurlDetail
+    fun render(buildScanSummary: BuildScanSummary): UnfurlDetail
 }

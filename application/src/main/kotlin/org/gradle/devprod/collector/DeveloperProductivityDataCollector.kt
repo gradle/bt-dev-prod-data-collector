@@ -46,7 +46,6 @@ class DeveloperProductivityDataCollector(private val handler: LinkSharedHandler)
         if (body?.contains("challenge") == true) {
             // https://api.slack.com/events/url_verification
             return objectMapper.readTree(body).get("challenge").asText()
-
         } else if (body?.contains("event_callback") == true) {
             val eventCallback = objectMapper.readValue<LinkSharedEventCallback>(body.toString())
             handler.handleBuildScanLinksShared(eventCallback.event)

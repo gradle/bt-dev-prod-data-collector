@@ -88,4 +88,59 @@ class DeveloperProductivityDataCollectorTests(@Autowired val restTemplate: TestR
             )
         )
     }
+
+    @Test
+    fun whenLinkSharedEventReceivedWithMissingProperties_thenInvokesLinkSharedHandler() {
+        val result = restTemplate.postForEntity(
+            "/slack/build-scan-previews",
+            """
+            {
+                "token": "XXYYZZ",
+                "team_id": "TXXXXXXXX",
+                "api_app_id": "AXXXXXXXXX",
+                "event": {
+                    "type": "link_shared",
+                    "is_bot_user_member": true,
+                    "user": "Uxxxxxxx",
+                    "message_ts": "123456789.9875",
+                    "unfurl_id": "C123456.123456789.987501.1b90fa1278528ce6e2f6c5c2bfa1abc9a41d57d02b29d173f40399c9ffdecf4b",
+                    "links": [
+                        {
+                            "domain": "e.grdev.net",
+                            "url": "https://e.grdev.net/s/thr7hw5vzjrwi"
+                        },
+                        {
+                            "domain": "ge.gradle.org",
+                            "url": "https://ge.gradle.org/s/ei75aul4e7dg4"
+                        }
+                    ]
+                },
+                "type": "event_callback",
+                "authed_users": [
+                    "UXXXXXXX1",
+                    "UXXXXXXX2"
+                ],
+                "event_id": "Ev08MFMKH6",
+                "event_time": 123456789
+            }                
+            """.trimIndent(),
+            String::class.java)
+
+        assertTrue(result.statusCode.is2xxSuccessful)
+        verify(mockLinkSharedHandler).handleBuildScanLinksShared(
+            LinkSharedEvent(
+                channel = null,
+                user = "Uxxxxxxx",
+                botUserMember = true,
+                messageTs = "123456789.9875",
+                unfurlId = "C123456.123456789.987501.1b90fa1278528ce6e2f6c5c2bfa1abc9a41d57d02b29d173f40399c9ffdecf4b",
+                threadTs = null,
+                source = null,
+                links = listOf(
+                    Link("e.grdev.net", URI("https://e.grdev.net/s/thr7hw5vzjrwi")),
+                    Link("ge.gradle.org", URI("https://ge.gradle.org/s/ei75aul4e7dg4")),
+                )
+            )
+        )
+    }
 }

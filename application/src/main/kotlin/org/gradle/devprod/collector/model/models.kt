@@ -40,7 +40,7 @@ data class UrlVerificationEvent(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class LinkSharedEvent(
-    val channel: String,
+    val channel: String?,
     val user: String,
     @JsonProperty("message_ts")
     val messageTs: String?,
@@ -50,8 +50,8 @@ data class LinkSharedEvent(
     @JsonProperty("is_bot_user_member")
     val botUserMember: Boolean,
     @JsonProperty("unfurl_id")
-    val unfurlId: String?,
-    val source: String
+    val unfurlId: String,
+    val source: String?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
