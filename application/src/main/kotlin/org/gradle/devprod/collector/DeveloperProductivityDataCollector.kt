@@ -3,7 +3,10 @@ package org.gradle.devprod.collector
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.slack.api.model.event.LinkSharedEvent
+import org.gradle.devprod.collector.api.BuildScanLinkSharedHandler
 import org.gradle.devprod.collector.enterprise.export.GradleEnterpriseServer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import java.time.Instant
 import javax.servlet.http.HttpServletRequest
 
 @SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])
@@ -24,7 +28,8 @@ import javax.servlet.http.HttpServletRequest
 @EnableAsync
 @EnableConfigurationProperties(GradleEnterpriseServer::class)
 @Controller
-class DeveloperProductivityDataCollector {
+class DeveloperProductivityDataCollector(private val handler: BuildScanLinkSharedHandler) {
+
     @Bean
     fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer =
         Jackson2ObjectMapperBuilderCustomizer { builder ->
@@ -41,12 +46,23 @@ class DeveloperProductivityDataCollector {
         if (body?.contains("challenge") == true) {
             // https://api.slack.com/events/url_verification
             return objectMapper.readTree(body).get("challenge").asText()
+
+        } else if (body?.contains("event_callback") == true) {
+            val eventCallback = objectMapper.readValue<LinkSharedEventCallback>(body.toString())
+            handler.handleBuildScanLinksShared(eventCallback.event)
+            return "OK"
         } else {
             // TODO: parse data?
             return "Method: ${request.method}, body: $body"
         }
     }
 }
+
+data class LinkSharedEventCallback(
+    val eventId: String,
+    val eventTime: Instant,
+    val event: LinkSharedEvent
+)
 
 fun main(args: Array<String>) {
     runApplication<DeveloperProductivityDataCollector>(*args)
