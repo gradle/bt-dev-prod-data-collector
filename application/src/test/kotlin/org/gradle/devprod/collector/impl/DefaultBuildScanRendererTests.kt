@@ -89,6 +89,12 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
         Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[4] as PlainTextObject).text)
     }
 
+    @Test
+    fun rendersTags_whenThereAreNoTags() {
+        val contextBlock = contextBlock(renderer.render(generalSummary.copy(tags = listOf()), baseUri))
+        Assertions.assertEquals("", (contextBlock.elements[4] as PlainTextObject).text)
+    }
+
     // TODO: different rendering for no tags
 
     @Test

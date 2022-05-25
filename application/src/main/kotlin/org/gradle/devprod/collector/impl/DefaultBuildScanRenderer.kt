@@ -52,7 +52,7 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
                 BlockCompositions.plainText("Start: $formattedStart"),
                 BlockCompositions.plainText("Duration: $duration"),
                 // TODO: escaping
-                BlockCompositions.plainText("Tags: ${buildScanSummary.tags.stream().collect(Collectors.joining(" | "))}")
+                BlockCompositions.plainText(renderTags(buildScanSummary.tags))
             )).build(),
             SectionBlock.builder()
                 // TODO: escaping
@@ -67,6 +67,14 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
                 .text(BlockCompositions.markdownText(testSummaryMessage))
                 .build()
         )).build()
+    }
+
+    private fun renderTags(tags: List<String>): String {
+        if (tags.isEmpty()) {
+            return "";
+        } else {
+            return "Tags: ${tags.stream().collect(Collectors.joining(" | "))}"
+        }
     }
 
     fun buildOutcomeImage(outcome: BuildScanOutcome, baseUri: URI): ImageElement {
