@@ -1,37 +1,92 @@
 package org.gradle.devprod.collector.impl
 
+import com.slack.api.methods.request.chat.ChatUnfurlRequest.UnfurlDetail
+import com.slack.api.model.block.ContextBlock
+import com.slack.api.model.block.composition.PlainTextObject
+import com.slack.api.model.block.element.ImageElement
 import org.gradle.devprod.collector.api.BuildScanRenderer
 import org.gradle.devprod.collector.model.BuildScanOutcome
 import org.gradle.devprod.collector.model.BuildScanSummary
 import org.gradle.devprod.collector.model.TaskSummary
 import org.gradle.devprod.collector.model.TestSummary
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.time.Instant
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 @SpringBootTest
-@Disabled
 class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) {
 
+    val generalSummary = BuildScanSummary(
+        projectName = "ge",
+        startTime = Instant.parse("2022-05-24T11:14:14Z"),
+        endTime = Instant.parse("2022-05-24T11:22:45Z"),
+        outcome = BuildScanOutcome.SUCCESS,
+        tags = listOf("LOCAL", "dirty", "feature-branch", "Mac OS X"),
+        tasks = ":build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*",
+        taskSummary = TaskSummary(1841),
+        testSummary = TestSummary(214)
+    )
+
     @Test
-    fun renders() {
-        val summary = BuildScanSummary(
-            "ge",
-            Instant.parse("2022-05-24T11:14:14Z"),
-            Instant.parse("2022-05-24T11:22:45Z"),
-            BuildScanOutcome.SUCCESS,
-            listOf("LOCAL", "dirty", "feature-branch", "Mac OS X"),
-            ":build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*",
-            TaskSummary(1841),
-            TestSummary(214)
-        )
-        val result = renderer.render(summary)
-        Assertions.assertEquals("TODO", result)
+    fun renderSuccessOutcome() {
+        val summary = generalSummary.copy(outcome = BuildScanOutcome.SUCCESS)
+        val contextBlock = contextBlock(renderer.render(summary))
+        val element = contextBlock.elements[0] as ImageElement
+        Assertions.assertEquals("http://localhost/success.png", element.imageUrl)
+        Assertions.assertEquals("success", element.altText)
     }
 
+    @Test
+    fun renderFailureOutcome() {
+        val summary = generalSummary.copy(outcome = BuildScanOutcome.FAILURE)
+        val contextBlock = contextBlock(renderer.render(summary))
+        val element = contextBlock.elements[0] as ImageElement
+        Assertions.assertEquals("http://localhost/failure.png", element.imageUrl)
+        Assertions.assertEquals("failure", element.altText)
+    }
+
+    @Test
+    fun renderUnknownOutcome() {
+        val summary = generalSummary.copy(outcome = BuildScanOutcome.UNKNOWN)
+        val contextBlock = contextBlock(renderer.render(summary))
+        val element = contextBlock.elements[0] as ImageElement
+        Assertions.assertEquals("http://localhost/unknown.png", element.imageUrl)
+        Assertions.assertEquals("unknown", element.altText)
+    }
+
+    @Test
+    fun renderProject() {
+        val contextBlock = contextBlock(renderer.render(generalSummary))
+        Assertions.assertEquals("Project: ge", (contextBlock.elements[1] as PlainTextObject).text)
+    }
+
+    @Test
+    fun rendersStartTime() {
+        val contextBlock = contextBlock(renderer.render(generalSummary))
+        Assertions.assertEquals("Start: 2022-05-24 11:14:14 UTC", (contextBlock.elements[2] as PlainTextObject).text)
+    }
+
+    @Test
+    fun rendersDuration() {
+        val contextBlock = contextBlock(renderer.render(generalSummary))
+        Assertions.assertEquals("Duration: 8m 31s", (contextBlock.elements[3] as PlainTextObject).text)
+    }
+
+    @Test
+    fun rendersTags() {
+        val contextBlock = contextBlock(renderer.render(generalSummary))
+        Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[4] as PlainTextObject).text)
+    }
+
+    // TODO: more
+
+    fun contextBlock(result: UnfurlDetail) : ContextBlock {
+        return result.blocks[0] as ContextBlock
+    }
 
 //		{
 //			"type": "context",
