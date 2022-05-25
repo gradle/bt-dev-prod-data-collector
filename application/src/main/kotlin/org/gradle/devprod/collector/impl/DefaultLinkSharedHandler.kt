@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class DefaultBuildScanLinkSharedHandler @Autowired constructor(private val buildScanSummaryService: BuildScanSummaryService) : LinkSharedHandler {
+class DefaultLinkSharedHandler @Autowired constructor(private val buildScanSummaryService: BuildScanSummaryService) : LinkSharedHandler {
     override fun handleBuildScanLinksShared(linkSharedEvent: LinkSharedEvent) {
         println("Handling event: $linkSharedEvent")
         linkSharedEvent.links.forEach {
@@ -15,5 +15,4 @@ class DefaultBuildScanLinkSharedHandler @Autowired constructor(private val build
             println(buildScanSummaryService.getSummary(it.domain, buildScanId))
         }
     }
-
 }

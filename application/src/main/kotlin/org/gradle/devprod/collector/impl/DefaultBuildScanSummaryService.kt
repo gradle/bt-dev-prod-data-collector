@@ -20,7 +20,6 @@ import org.gradle.devprod.collector.model.BuildScanSummary
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-
 /**
  * By convention, token for ge.gradle.org is stored in env variable "GE_GRADLE_ORG_EXPORT_API_TOKEN"
  */
@@ -32,11 +31,13 @@ private fun getExportApiTokenFor(geHost: String): String {
 @Service
 class DefaultBuildScanSummaryService(private val geClients: Map<String, ExportApiClient>) : BuildScanSummaryService {
     @Autowired
-    constructor() : this(listOf(
-        "ge.gradle.org",
-        "e.grdev.net",
-        "ge-unstable.grdev.net"
-    ).associateWith { ExportApiClient(GradleEnterpriseServer(it, getExportApiTokenFor(it))) })
+    constructor() : this(
+        listOf(
+            "ge.gradle.org",
+            "e.grdev.net",
+            "ge-unstable.grdev.net"
+        ).associateWith { ExportApiClient(GradleEnterpriseServer(it, getExportApiTokenFor(it))) }
+    )
 
     override fun getSummary(geServerHost: String, buildScanId: String): BuildScanSummary = runBlocking {
         val client = geClients[geServerHost] ?: throw IllegalArgumentException("Unsupported server: $geServerHost")
