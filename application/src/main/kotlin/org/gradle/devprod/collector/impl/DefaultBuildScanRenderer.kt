@@ -48,9 +48,9 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
             ContextBlock.builder().elements(listOf(
                 buildOutcomeImage(buildScanSummary.outcome, baseUri),
                 // TODO: escaping
-                BlockCompositions.plainText("Project: ${buildScanSummary.projectName}"),
-                BlockCompositions.plainText("Start: $formattedStart"),
-                BlockCompositions.plainText("Duration: $duration"),
+                BlockCompositions.plainText("Build for ${buildScanSummary.projectName}"),
+                BlockCompositions.plainText("started at $formattedStart"),
+                BlockCompositions.plainText("ran for $duration."),
                 // TODO: escaping
                 BlockCompositions.plainText(renderTags(buildScanSummary.tags))
             )).build(),
@@ -71,7 +71,7 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
 
     private fun renderTags(tags: List<String>): String {
         if (tags.isEmpty()) {
-            return "";
+            return "_none_";
         } else {
             return "Tags: ${tags.stream().collect(Collectors.joining(" | "))}"
         }
