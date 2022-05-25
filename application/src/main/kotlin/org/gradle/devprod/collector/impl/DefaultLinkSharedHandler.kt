@@ -8,6 +8,7 @@ import org.gradle.devprod.collector.api.LinkSharedHandler
 import org.gradle.devprod.collector.model.LinkSharedEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.net.URI
 import kotlin.time.ExperimentalTime
 
 internal val summaryPathRegex = "/s/\\w+".toRegex()
@@ -20,7 +21,7 @@ class DefaultLinkSharedHandler
     private val buildScanRenderer: BuildScanRenderer,
     private val buildScanRenderPublisher: BuildScanRenderPublisher
 ) : LinkSharedHandler {
-    override fun handleBuildScanLinksShared(linkSharedEvent: LinkSharedEvent) {
+    override fun handleBuildScanLinksShared(linkSharedEvent: LinkSharedEvent, baseUri: URI) {
         val unfurledLinks: MutableMap<String, ChatUnfurlRequest.UnfurlDetail> = mutableMapOf()
         val channel = linkSharedEvent.channel!!
         val timestamp = linkSharedEvent.messageTs!!
@@ -31,7 +32,7 @@ class DefaultLinkSharedHandler
                 val buildScanId = it.url.path.toString().substring("/s".length)
                 val buildScanSummary = buildScanSummaryService.getSummary(it.domain, buildScanId)
                 println("Build scan summary: $buildScanSummary")
-                val renderedSummary = buildScanRenderer.render(buildScanSummary)
+                val renderedSummary = buildScanRenderer.render(buildScanSummary, baseUri)
                 println("Rendered scan summary: $renderedSummary")
                 unfurledLinks[it.url.toString()] = renderedSummary
             } else {
