@@ -1,7 +1,7 @@
 package org.gradle.devprod.collector.enterprise.export
 
 import org.gradle.devprod.collector.DeveloperProductivityDataCollector
-import org.gradle.devprod.collector.api.BuildScanLinkSharedHandler
+import org.gradle.devprod.collector.api.LinkSharedHandler
 import org.gradle.devprod.collector.api.BuildScanSummaryService
 import org.gradle.devprod.collector.model.Link
 import org.gradle.devprod.collector.model.LinkSharedEvent
@@ -22,7 +22,7 @@ import java.net.URI
 )
 class DeveloperProductivityDataCollectorTests(@Autowired val restTemplate: TestRestTemplate) {
 
-    @MockBean lateinit var mockBuildScanLinkSharedHandler: BuildScanLinkSharedHandler
+    @MockBean lateinit var mockLinkSharedHandler: LinkSharedHandler
     @MockBean lateinit var mockBuildScanSummaryService: BuildScanSummaryService
 
     @Test
@@ -72,7 +72,7 @@ class DeveloperProductivityDataCollectorTests(@Autowired val restTemplate: TestR
             String::class.java)
 
         assertTrue(result.statusCode.is2xxSuccessful)
-        verify(mockBuildScanLinkSharedHandler).handleBuildScanLinksShared(
+        verify(mockLinkSharedHandler).handleBuildScanLinksShared(
             LinkSharedEvent(
                 channel ="Cxxxxxx",
                 user = "Uxxxxxxx",
