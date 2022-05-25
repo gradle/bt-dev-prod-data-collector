@@ -1,5 +1,6 @@
 package org.gradle.devprod.collector.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.gradle.devprod.collector.enterprise.export.extractor.TaskSummary
 import org.gradle.devprod.collector.enterprise.export.extractor.TestSummary
@@ -21,6 +22,7 @@ data class BuildScanSummary(
     val testSummary: TestSummary
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class LinkSharedEventCallback(
     @JsonProperty("event_id")
     val eventId: String,
@@ -29,12 +31,14 @@ data class LinkSharedEventCallback(
     val event: LinkSharedEvent
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class UrlVerificationEvent(
     val token: String,
     val challenge: String,
     val type: String
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class LinkSharedEvent(
     val channel: String,
     val user: String,
@@ -50,6 +54,7 @@ data class LinkSharedEvent(
     val source: String
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class Link(
     val domain: String,
     val url: URI
