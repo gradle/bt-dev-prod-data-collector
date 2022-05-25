@@ -25,7 +25,7 @@
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
   "id": 2,
-  "iteration": 1653487103245,
+  "iteration": 1653487193761,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -327,6 +327,94 @@
       ],
       "title": "Task duration (${taskName:raw} with ${status:raw})",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "4AJUgR9nk"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 8
+      },
+      "id": 7,
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "8.5.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "4AJUgR9nk"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  avg(case when status = 'executed_cacheable' then 1\n       else 0\n  end) as cache_miss,\n  task_path\nFROM build_trends build, task_trends tasks\nwhere $__timeFilter(build.build_start)\nand build.build_id = tasks.build_id\nand project_id = ${project}\nand 'CI' = any(tags)\ngroup by tasks.task_path\nhaving count(*) > 5\nand avg(case when status = 'executed_cacheable' then 1\n       else 0\n  end) > 0.1\norder by 1 desc\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "task_duration_ms"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "task_trends",
+          "timeColumn": "build_start",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Cache miss hall of shame",
+      "type": "table"
     }
   ],
   "refresh": "",
@@ -338,9 +426,9 @@
       {
         "allValue": "%",
         "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "selected": true,
+          "text": "gradle",
+          "value": "gradle"
         },
         "datasource": {
           "type": "postgres",
@@ -363,8 +451,8 @@
         "allValue": "%",
         "current": {
           "selected": false,
-          "text": ":buildSrc:compileGroovy",
-          "value": ":buildSrc:compileGroovy"
+          "text": "All",
+          "value": "$__all"
         },
         "datasource": {
           "type": "postgres",
@@ -435,13 +523,13 @@
     ]
   },
   "time": {
-    "from": "2022-05-22T13:08:05.307Z",
-    "to": "2022-05-25T12:16:41.024Z"
+    "from": "now-7d",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Cross build statistics",
   "uid": "_aYKMgrnk",
-  "version": 20,
+  "version": 21,
   "weekStart": ""
 }
