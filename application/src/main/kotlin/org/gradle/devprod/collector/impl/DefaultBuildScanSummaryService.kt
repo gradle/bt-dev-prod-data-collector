@@ -12,13 +12,14 @@ import org.gradle.devprod.collector.enterprise.export.extractor.BuildStarted
 import org.gradle.devprod.collector.enterprise.export.extractor.ExecutedTestTasks
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
 import org.gradle.devprod.collector.enterprise.export.extractor.Tags
+import org.gradle.devprod.collector.enterprise.export.extractor.TaskSummaryExtractor
+import org.gradle.devprod.collector.enterprise.export.extractor.TestSummaryExtractor
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.gradle.devprod.collector.model.BuildScanOutcome
 import org.gradle.devprod.collector.model.BuildScanSummary
-import org.gradle.devprod.collector.model.TaskSummary
-import org.gradle.devprod.collector.model.TestSummary
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+
 
 /**
  * By convention, token for ge.gradle.org is stored in env variable "GE_GRADLE_ORG_EXPORT_API_TOKEN"
@@ -48,7 +49,9 @@ class DefaultBuildScanSummaryService(private val geClients: Map<String, ExportAp
                 Tags,
                 RootProjectNames,
                 BuildRequestedTasks,
-                ExecutedTestTasks
+                ExecutedTestTasks,
+                TestSummaryExtractor,
+                TaskSummaryExtractor
             )
         val eventTypes = extractors.flatMap { it.eventTypes }.distinct()
         val events: List<BuildEvent> = client.getEvents(buildScanId, eventTypes)
@@ -65,8 +68,8 @@ class DefaultBuildScanSummaryService(private val geClients: Map<String, ExportAp
             if (BuildFailure.extract(events)) BuildScanOutcome.FAILURE else BuildScanOutcome.SUCCESS,
             Tags.extractFrom(typeToEvents).toList(),
             BuildRequestedTasks.extractFrom(typeToEvents),
-            TaskSummary(0),
-            TestSummary(0)
+            TaskSummaryExtractor.extractFrom(typeToEvents),
+            TestSummaryExtractor.extractFrom(typeToEvents)
         )
     }
 }

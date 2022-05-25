@@ -1,13 +1,12 @@
 package org.gradle.devprod.collector.model
 
+import org.gradle.devprod.collector.enterprise.export.extractor.TaskSummary
+import org.gradle.devprod.collector.enterprise.export.extractor.TestSummary
 import java.time.Instant
 
 enum class BuildScanOutcome {
     SUCCESS, FAILURE, UNKNOWN
 }
-
-data class TaskSummary(val totalTasks: Int)
-data class TestSummary(val totalTests: Int)
 
 data class BuildScanSummary(
     val projectName: String,
