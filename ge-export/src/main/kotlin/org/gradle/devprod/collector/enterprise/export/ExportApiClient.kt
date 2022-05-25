@@ -6,6 +6,7 @@ import kotlinx.coroutines.reactive.asFlow
 import org.gradle.devprod.collector.enterprise.export.model.Build
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.slf4j.LoggerFactory
+import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.http.codec.ServerSentEvent
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -20,7 +21,8 @@ private const val MAX_RECONNECT_COUNT = 2
 
 //@Service
 class ExportApiClient(private val server: GradleEnterpriseServer) {
-    private val client: WebClient = WebClient.builder().baseUrl("${server.url}/build-export")
+    private val client: WebClient = WebClient.builder()
+        .baseUrl("${server.url}/build-export")
         .codecs { it.defaultCodecs().maxInMemorySize(512 * 1024) }
         .build()
     private val lastStreamEventId = AtomicReference("")
@@ -65,10 +67,11 @@ class ExportApiClient(private val server: GradleEnterpriseServer) {
         return this
     }
 
-    fun getEvents(build: Build, events: List<String>): Flow<ServerSentEvent<BuildEvent>> =
+    fun getEvents(build: Build, events: List<String>): Flow<ServerSentEvent<BuildEvent>> = getEvents(build.buildId, events)
+    fun getEvents(buildId: String, events: List<String>): Flow<ServerSentEvent<BuildEvent>> =
         client
             .get()
-            .uri("/v2/build/${build.buildId}/events?eventTypes=${events.joinToString(",")}")
+            .uri("/v2/build/$buildId/events?eventTypes=${events.joinToString(",")}")
             .bearerAuth()
             .retrieve()
             .bodyToFlow()

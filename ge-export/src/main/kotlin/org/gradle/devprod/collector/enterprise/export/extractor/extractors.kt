@@ -172,6 +172,15 @@ object FlakyTestClassExtractor : Extractor<Set<String>>(listOf("TestStarted", "T
     }
 }
 
+// https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/gradle/BuildRequestedTasks_1_0.html
+object BuildRequestedTasks : SingleEventExtractor<String>("BuildRequestedTasks") {
+    override fun extract(events: Iterable<BuildEvent>): String {
+        val excludedTasks = events.first().data?.listStringProperty("excluded") ?: emptyList()
+        val requestedTasks = events.first().data?.listStringProperty("requested") ?: emptyList()
+        return requestedTasks.joinToString(" ") + excludedTasks.joinToString(" ") { "-x $it" }
+    }
+}
+
 object Tags : SingleEventExtractor<Set<String>>("UserTag") {
     override fun extract(events: Iterable<BuildEvent>): Set<String> =
         events.map { it.data?.stringProperty("tag")!! }.toSet()
@@ -209,6 +218,8 @@ object DaemonUnhealthy : SingleEventExtractor<String?>("DaemonUnhealthy") {
 data class Agent(val host: String?, val user: String?)
 
 private fun Any.booleanProperty(name: String): Boolean? = (this as Map<*, *>)[name] as Boolean?
+
+private fun Any.listStringProperty(name: String): List<String>? = (this as Map<*, *>)[name] as List<String>?
 
 private fun Any.stringProperty(name: String): String? = (this as Map<*, *>)[name] as String?
 
