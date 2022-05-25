@@ -175,7 +175,7 @@ public class Build extends TableImpl<BuildRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.BUILD_FINISH_IDX, Indexes.BUILD_START_IDX);
+        return Arrays.<Index>asList(Indexes.BUILD_START_IDX);
     }
 
     @Override

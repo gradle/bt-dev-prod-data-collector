@@ -10,6 +10,7 @@ import java.util.List;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.TaskTrends;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue;
 import org.jooq.Catalog;
@@ -47,6 +48,11 @@ public class Public extends SchemaImpl {
     public final LongTest LONG_TEST = LongTest.LONG_TEST;
 
     /**
+     * The table <code>public.task_trends</code>.
+     */
+    public final TaskTrends TASK_TRENDS = TaskTrends.TASK_TRENDS;
+
+    /**
      * The table <code>public.teamcity_build</code>.
      */
     public final TeamcityBuild TEAMCITY_BUILD = TeamcityBuild.TEAMCITY_BUILD;
@@ -70,6 +76,7 @@ public class Public extends SchemaImpl {
             Build.BUILD,
             FlakyTestClass.FLAKY_TEST_CLASS,
             LongTest.LONG_TEST,
+            TaskTrends.TASK_TRENDS,
             TeamcityBuild.TEAMCITY_BUILD);
     }
 

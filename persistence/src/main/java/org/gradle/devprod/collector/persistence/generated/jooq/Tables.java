@@ -7,6 +7,7 @@ package org.gradle.devprod.collector.persistence.generated.jooq;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.TaskTrends;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 
 
@@ -30,6 +31,11 @@ public class Tables {
      * The table <code>public.long_test</code>.
      */
     public static final LongTest LONG_TEST = LongTest.LONG_TEST;
+
+    /**
+     * The table <code>public.task_trends</code>.
+     */
+    public static final TaskTrends TASK_TRENDS = TaskTrends.TASK_TRENDS;
 
     /**
      * The table <code>public.teamcity_build</code>.

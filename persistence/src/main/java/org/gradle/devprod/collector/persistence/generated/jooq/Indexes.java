@@ -21,6 +21,5 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
-    public static final Index BUILD_FINISH_IDX = Internal.createIndex(DSL.name("build_finish_idx"), Build.BUILD, new OrderField[] { Build.BUILD.BUILD_FINISH }, false);
     public static final Index BUILD_START_IDX = Internal.createIndex(DSL.name("build_start_idx"), Build.BUILD, new OrderField[] { Build.BUILD.BUILD_START }, false);
 }
