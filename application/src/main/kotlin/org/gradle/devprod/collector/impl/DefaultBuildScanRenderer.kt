@@ -48,11 +48,12 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
             ContextBlock.builder().elements(listOf(
                 buildOutcomeImage(buildScanSummary.outcome, baseUri),
                 // TODO: escaping
-                BlockCompositions.plainText(buildScanSummary.projectName),
-                BlockCompositions.plainText(formattedStart),
-                BlockCompositions.plainText(duration.toString()),
-                // TODO: escaping
+                BlockCompositions.plainText("Project: ${buildScanSummary.projectName}"),
                 BlockCompositions.markdownText(renderTags(buildScanSummary.tags))
+            )).build(),
+            ContextBlock.builder().elements(listOf(
+                BlockCompositions.plainText("Start: ${formattedStart}"),
+                BlockCompositions.plainText("Duration: ${duration}"),
             )).build(),
             SectionBlock.builder()
                 // TODO: escaping

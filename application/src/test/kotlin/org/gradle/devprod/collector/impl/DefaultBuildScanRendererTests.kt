@@ -13,6 +13,7 @@ import org.gradle.devprod.collector.enterprise.export.extractor.TestSummary
 import org.gradle.devprod.collector.model.BuildScanOutcome
 import org.gradle.devprod.collector.model.BuildScanSummary
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -22,6 +23,7 @@ import kotlin.time.ExperimentalTime
 
 @ExperimentalTime
 @SpringBootTest(classes = [DefaultBuildScanRenderer::class])
+@Disabled
 class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) {
 
     val baseUri = URI("http://localhost")
