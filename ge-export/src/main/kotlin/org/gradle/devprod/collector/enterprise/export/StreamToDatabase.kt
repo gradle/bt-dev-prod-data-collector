@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.stereotype.Component
 
 @Component
-class StreamToDatabase(private val exportApiExtractorService: ExportApiExtractorService) {
+class StreamToDatabase(private val geApiExtractorService: GeApiExtractorService) {
     @Bean
     fun streamToDatabaseJob(): Job =
-        exportApiExtractorService.streamToDatabase().launchIn(CoroutineScope(Dispatchers.IO))
+        geApiExtractorService.streamToDatabase().launchIn(CoroutineScope(Dispatchers.IO))
 }

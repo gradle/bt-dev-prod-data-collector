@@ -4,22 +4,26 @@
 package org.gradle.devprod.collector.persistence.generated.jooq.tables;
 
 
-import java.time.LocalDateTime;
-
+import org.gradle.devprod.collector.persistence.generated.jooq.Keys;
 import org.gradle.devprod.collector.persistence.generated.jooq.Public;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.TaskTrendsRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row7;
+import org.jooq.Row6;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -61,7 +65,7 @@ public class TaskTrends extends TableImpl<TaskTrendsRecord> {
     /**
      * The column <code>public.task_trends.build_start</code>.
      */
-    public final TableField<TaskTrendsRecord, LocalDateTime> BUILD_START = createField(DSL.name("build_start"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
+    public final TableField<TaskTrendsRecord, OffsetDateTime> BUILD_START = createField(DSL.name("build_start"), SQLDataType.TIMESTAMPWITHTIMEZONE(6).nullable(false), this, "");
 
     /**
      * The column <code>public.task_trends.task_duration_ms</code>.
@@ -72,11 +76,6 @@ public class TaskTrends extends TableImpl<TaskTrendsRecord> {
      * The column <code>public.task_trends.status</code>.
      */
     public final TableField<TaskTrendsRecord, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR, this, "");
-
-    /**
-     * The column <code>public.task_trends.cacheable</code>.
-     */
-    public final TableField<TaskTrendsRecord, Boolean> CACHEABLE = createField(DSL.name("cacheable"), SQLDataType.BOOLEAN, this, "");
 
     private TaskTrends(Name alias, Table<TaskTrendsRecord> aliased) {
         this(alias, aliased, null);
@@ -117,6 +116,16 @@ public class TaskTrends extends TableImpl<TaskTrendsRecord> {
     }
 
     @Override
+    public UniqueKey<TaskTrendsRecord> getPrimaryKey() {
+        return Keys.TASK_TRENDS_PK;
+    }
+
+    @Override
+    public List<UniqueKey<TaskTrendsRecord>> getKeys() {
+        return Arrays.<UniqueKey<TaskTrendsRecord>>asList(Keys.TASK_TRENDS_PK);
+    }
+
+    @Override
     public TaskTrends as(String alias) {
         return new TaskTrends(DSL.name(alias), this);
     }
@@ -143,11 +152,11 @@ public class TaskTrends extends TableImpl<TaskTrendsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row7 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row7<String, String, String, LocalDateTime, Integer, String, Boolean> fieldsRow() {
-        return (Row7) super.fieldsRow();
+    public Row6<String, String, String, OffsetDateTime, Integer, String> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 }

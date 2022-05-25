@@ -4,8 +4,6 @@ import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_B
 import org.jetbrains.teamcity.rest.BuildStatus
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
-import org.springframework.scheduling.annotation.Async
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -15,8 +13,8 @@ class TeamcityExport(
     private val create: DSLContext,
     private val teamcityClientService: TeamcityClientService
 ) {
-    @Async
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
+//    @Async
+//    @Scheduled(fixedDelay = 10 * 60 * 1000)
     fun loadTriggerBuilds() {
         println("Loading trigger builds from Teamcity")
         teamcityClientService.loadTriggerBuilds().store()
@@ -51,8 +49,8 @@ class TeamcityExport(
         }
     }
 
-    @Async
-    @Scheduled(fixedDelay = 60 * 60 * 1000)
+//    @Async
+//    @Scheduled(fixedDelay = 60 * 60 * 1000)
     fun loadFailedBuilds() {
         println("Loading failed builds from Teamcity")
         val latestFailedBuild =
