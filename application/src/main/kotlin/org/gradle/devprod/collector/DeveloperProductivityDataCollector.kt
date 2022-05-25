@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import javax.servlet.http.HttpServletRequest
 
 @SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])
@@ -48,7 +49,7 @@ class DeveloperProductivityDataCollector(private val handler: LinkSharedHandler)
             return objectMapper.readTree(body).get("challenge").asText()
         } else if (body?.contains("event_callback") == true) {
             val eventCallback = objectMapper.readValue<LinkSharedEventCallback>(body.toString())
-            handler.handleBuildScanLinksShared(eventCallback.event)
+            handler.handleBuildScanLinksShared(eventCallback.event, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUri())
             return "OK"
         } else {
             // TODO: parse data?

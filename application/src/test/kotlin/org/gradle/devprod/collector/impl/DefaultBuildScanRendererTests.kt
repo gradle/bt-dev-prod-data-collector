@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.net.URI
 import java.time.Instant
 import kotlin.time.ExperimentalTime
 
@@ -23,6 +24,8 @@ import kotlin.time.ExperimentalTime
 @SpringBootTest(classes = [DefaultBuildScanRenderer::class])
 @Disabled
 class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) {
+
+    val baseUri = URI("http://localhost")
 
     val generalSummary = BuildScanSummary(
         projectName = "ge",
@@ -38,7 +41,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     @Test
     fun renderSuccessOutcome() {
         val summary = generalSummary.copy(outcome = BuildScanOutcome.SUCCESS)
-        val contextBlock = contextBlock(renderer.render(summary))
+        val contextBlock = contextBlock(renderer.render(summary, baseUri))
         val element = contextBlock.elements[0] as ImageElement
         Assertions.assertEquals("http://localhost/success.png", element.imageUrl)
         Assertions.assertEquals("success", element.altText)
@@ -47,7 +50,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     @Test
     fun renderFailureOutcome() {
         val summary = generalSummary.copy(outcome = BuildScanOutcome.FAILURE)
-        val contextBlock = contextBlock(renderer.render(summary))
+        val contextBlock = contextBlock(renderer.render(summary, baseUri))
         val element = contextBlock.elements[0] as ImageElement
         Assertions.assertEquals("http://localhost/failure.png", element.imageUrl)
         Assertions.assertEquals("failure", element.altText)
@@ -56,7 +59,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     @Test
     fun renderUnknownOutcome() {
         val summary = generalSummary.copy(outcome = BuildScanOutcome.UNKNOWN)
-        val contextBlock = contextBlock(renderer.render(summary))
+        val contextBlock = contextBlock(renderer.render(summary, baseUri))
         val element = contextBlock.elements[0] as ImageElement
         Assertions.assertEquals("http://localhost/unknown.png", element.imageUrl)
         Assertions.assertEquals("unknown", element.altText)
@@ -64,25 +67,25 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
 
     @Test
     fun renderProject() {
-        val contextBlock = contextBlock(renderer.render(generalSummary))
+        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
         Assertions.assertEquals("Project: ge", (contextBlock.elements[1] as PlainTextObject).text)
     }
 
     @Test
     fun rendersStartTime() {
-        val contextBlock = contextBlock(renderer.render(generalSummary))
+        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
         Assertions.assertEquals("Start: 2022-05-24 11:14:14 UTC", (contextBlock.elements[2] as PlainTextObject).text)
     }
 
     @Test
     fun rendersDuration() {
-        val contextBlock = contextBlock(renderer.render(generalSummary))
+        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
         Assertions.assertEquals("Duration: 8m 31s", (contextBlock.elements[3] as PlainTextObject).text)
     }
 
     @Test
     fun rendersTags() {
-        val contextBlock = contextBlock(renderer.render(generalSummary))
+        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
         Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[4] as PlainTextObject).text)
     }
 
