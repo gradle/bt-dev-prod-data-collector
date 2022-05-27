@@ -41,7 +41,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     @Test
     fun renderSuccessOutcome() {
         val summary = generalSummary.copy(outcome = BuildScanOutcome.SUCCESS)
-        val contextBlock = contextBlock(renderer.render(summary, baseUri))
+        val contextBlock = contextBlock(renderer.render(summary, baseUri), 0)
         val element = contextBlock.elements[0] as ImageElement
         Assertions.assertEquals("http://localhost/success01.png", element.imageUrl)
         Assertions.assertEquals("success", element.altText)
@@ -50,7 +50,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     @Test
     fun renderFailureOutcome() {
         val summary = generalSummary.copy(outcome = BuildScanOutcome.FAILURE)
-        val contextBlock = contextBlock(renderer.render(summary, baseUri))
+        val contextBlock = contextBlock(renderer.render(summary, baseUri), 0)
         val element = contextBlock.elements[0] as ImageElement
         Assertions.assertEquals("http://localhost/failure.png", element.imageUrl)
         Assertions.assertEquals("failure", element.altText)
@@ -59,7 +59,7 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     @Test
     fun renderUnknownOutcome() {
         val summary = generalSummary.copy(outcome = BuildScanOutcome.UNKNOWN)
-        val contextBlock = contextBlock(renderer.render(summary, baseUri))
+        val contextBlock = contextBlock(renderer.render(summary, baseUri), 0)
         val element = contextBlock.elements[0] as ImageElement
         Assertions.assertEquals("http://localhost/unknown.png", element.imageUrl)
         Assertions.assertEquals("unknown", element.altText)
@@ -67,62 +67,62 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
 
     @Test
     fun renderProject() {
-        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Project: ge", (contextBlock.elements[1] as PlainTextObject).text)
+        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri), 0)
+        Assertions.assertEquals("ge", (contextBlock.elements[1] as PlainTextObject).text)
     }
 
     @Test
     fun rendersStartTime() {
-        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Start: 2022-05-24 11:14:14 UTC", (contextBlock.elements[2] as PlainTextObject).text)
+        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri), 1)
+        Assertions.assertEquals("Start: 2022-05-24 11:14:14 UTC", (contextBlock.elements[0] as PlainTextObject).text)
     }
 
     @Test
     fun rendersDuration() {
-        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Duration: 8m 31s", (contextBlock.elements[3] as PlainTextObject).text)
+        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri), 1)
+        Assertions.assertEquals("Duration: 8m 31s", (contextBlock.elements[1] as PlainTextObject).text)
     }
 
     @Test
     fun rendersTagsPresent() {
-        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[4] as PlainTextObject).text)
+        val contextBlock = contextBlock(renderer.render(generalSummary, baseUri), 0)
+        Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[2] as MarkdownTextObject).text)
     }
 
     @Test
     fun rendersTagsAbsent() {
-        val contextBlock = contextBlock(renderer.render(generalSummary.copy(tags = listOf()), baseUri))
-        Assertions.assertEquals("Tags: _none_", (contextBlock.elements[4] as MarkdownTextObject).text)
+        val contextBlock = contextBlock(renderer.render(generalSummary.copy(tags = listOf()), baseUri), 0)
+        Assertions.assertEquals("Tags: _none_", (contextBlock.elements[2] as MarkdownTextObject).text)
     }
 
     @Test
     fun rendersTasks() {
         // TODO: consider truncating
-        val textObj = markdownText(sectionBlock(renderer.render(generalSummary, baseUri), 1))
+        val textObj = markdownText(sectionBlock(renderer.render(generalSummary, baseUri), 2))
         Assertions.assertEquals("Tasks `:build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*`", textObj.text)
     }
 
     @Test
     fun rendersTaskSummarySuccess() {
         // TODO: proper pluralization
-        val summary = generalSummary.copy(taskSummary = TaskSummary(mapOf(Pair(TaskOutcome.SUCCESS, 2))))
-        val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 2))
-        Assertions.assertEquals("2 tasks executed", textObj.text)
+        val summary = generalSummary.copy(taskSummary = TaskSummary(mapOf(Pair(TaskOutcome.SUCCESS, 3))))
+        val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 3))
+        Assertions.assertEquals("3 tasks executed", textObj.text)
     }
 
     @Test
     fun rendersTaskSummaryFailure() {
         // TODO: proper pluralization
-        val summary = generalSummary.copy(taskSummary = TaskSummary(mapOf(Pair(TaskOutcome.SUCCESS, 2), Pair(TaskOutcome.FAILED, 1))))
-        val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 2))
-        Assertions.assertEquals("3 tasks executed, <http://ge.example/s/abcdef/timeline?outcome=FAILED|1 failed tasks>", textObj.text)
+        val summary = generalSummary.copy(taskSummary = TaskSummary(mapOf(Pair(TaskOutcome.SUCCESS, 3), Pair(TaskOutcome.FAILED, 1))))
+        val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 3))
+        Assertions.assertEquals("4 tasks executed, <http://ge.example/s/abcdef/timeline?outcome=FAILED|1 failed tasks>", textObj.text)
     }
 
     @Test
     fun rendersTestSummarySuccess() {
         // TODO: proper pluralization
         val summary = generalSummary.copy(testSummary = TestSummary(totalCount = 214, failedCount = 0, successCount = 214, skippedCount = 0))
-        val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 3))
+        val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 4))
         Assertions.assertEquals("214 tests executed", textObj.text)
     }
 
@@ -130,12 +130,12 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     fun rendersTestSummaryFailure() {
         // TODO: proper pluralization
         val summary = generalSummary.copy(testSummary = TestSummary(totalCount = 214, failedCount = 1, successCount = 213, skippedCount = 0))
-        val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 3))
+        val textObj = markdownText(sectionBlock(renderer.render(summary, baseUri), 4))
         Assertions.assertEquals("214 tests executed, <http://ge.example/s/abcdef/tests/overview?outcome=failed|1 tests failed>", textObj.text)
     }
 
-    fun contextBlock(result: UnfurlDetail) : ContextBlock {
-        return result.blocks[0] as ContextBlock
+    fun contextBlock(result: UnfurlDetail, index: Int) : ContextBlock {
+        return result.blocks[index] as ContextBlock
     }
 
     fun sectionBlock(result: UnfurlDetail, index: Int) : SectionBlock {
