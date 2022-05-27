@@ -68,31 +68,31 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     @Test
     fun renderProject() {
         val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Build for ge", (contextBlock.elements[1] as PlainTextObject).text)
+        Assertions.assertEquals("Project: ge", (contextBlock.elements[1] as PlainTextObject).text)
     }
 
     @Test
     fun rendersStartTime() {
         val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("started at 2022-05-24 11:14:14 UTC", (contextBlock.elements[2] as PlainTextObject).text)
+        Assertions.assertEquals("Start: 2022-05-24 11:14:14 UTC", (contextBlock.elements[2] as PlainTextObject).text)
     }
 
     @Test
     fun rendersDuration() {
         val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("ran for 8m 31s.", (contextBlock.elements[3] as PlainTextObject).text)
+        Assertions.assertEquals("Duration: 8m 31s", (contextBlock.elements[3] as PlainTextObject).text)
     }
 
     @Test
     fun rendersTagsPresent() {
         val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[4] as MarkdownTextObject).text)
+        Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[4] as PlainTextObject).text)
     }
 
     @Test
     fun rendersTagsAbsent() {
         val contextBlock = contextBlock(renderer.render(generalSummary.copy(tags = listOf()), baseUri))
-        Assertions.assertEquals("_none_", (contextBlock.elements[4] as MarkdownTextObject).text)
+        Assertions.assertEquals("Tags: _none_", (contextBlock.elements[4] as MarkdownTextObject).text)
     }
 
     @Test

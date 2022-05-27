@@ -44,10 +44,12 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         return UnfurlDetail.builder().blocks(listOf(
             ContextBlock.builder().elements(listOf(
                 buildOutcomeImage(buildScanSummary.outcome, baseUri),
-                BlockCompositions.plainText("Build for ${escapeText(buildScanSummary.projectName)}"),
-                BlockCompositions.plainText("started at $formattedStart"),
-                BlockCompositions.plainText("ran for $duration."),
+                BlockCompositions.plainText(escapeText(buildScanSummary.projectName)),
                 BlockCompositions.markdownText(renderTags(buildScanSummary.tags))
+            )).build(),
+            ContextBlock.builder().elements(listOf(
+                BlockCompositions.plainText("Start: $formattedStart"),
+                BlockCompositions.plainText("Duration: $duration"),
             )).build(),
             SectionBlock.builder()
                 .text(BlockCompositions.markdownText("Tasks `${escapeText(buildScanSummary.tasks)}`"))
@@ -63,7 +65,7 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
 
     private fun renderTags(tags: List<String>): String {
         if (tags.isEmpty()) {
-            return "_none_";
+            return "Tags: _none_";
         } else {
             return "Tags: ${tags.stream().map(this::escapeText).collect(Collectors.joining(" | "))}"
         }
