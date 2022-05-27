@@ -80,11 +80,12 @@ object RootProjectNames : SingleEventExtractor<List<String>>("ProjectStructure")
 
 object TaskSummaryExtractor : SingleEventExtractor<TaskSummary>("TaskFinished") {
     override fun extract(events: Iterable<BuildEvent>): TaskSummary {
-        return TaskSummary(events
-            .filter { it.data?.stringProperty("outcome") != null }
-            .groupBy { it.data?.stringProperty("outcome") }
-            .mapKeys { TaskOutcome.valueOf(it.key!!.toUpperCase()) }
-            .mapValues { it.value.size }
+        return TaskSummary(
+            events
+                .filter { it.data?.stringProperty("outcome") != null }
+                .groupBy { it.data?.stringProperty("outcome") }
+                .mapKeys { TaskOutcome.valueOf(it.key!!.toUpperCase()) }
+                .mapValues { it.value.size }
         )
     }
 }

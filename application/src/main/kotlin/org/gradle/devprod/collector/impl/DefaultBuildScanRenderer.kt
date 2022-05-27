@@ -33,39 +33,45 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         var taskSummaryMessage = "$executedTaskCount tasks executed"
         if (failedTaskCount > 0) {
             val failedTaskUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("/timeline").queryParam("outcome", "FAILED").toUriString()
-            taskSummaryMessage += ", <${failedTaskUrl}|${failedTaskCount} failed tasks>"
+            taskSummaryMessage += ", <$failedTaskUrl|$failedTaskCount failed tasks>"
         }
         val failedTestCount = buildScanSummary.testSummary.failedCount
         var testSummaryMessage = "${buildScanSummary.testSummary.totalCount} tests executed"
         if (failedTestCount > 0) {
             val failedTestUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("/tests/overview").queryParam("outcome", "failed").toUriString()
-            testSummaryMessage += ", <${failedTestUrl}|${failedTestCount} tests failed>"
+            testSummaryMessage += ", <$failedTestUrl|$failedTestCount tests failed>"
         }
-        return UnfurlDetail.builder().blocks(listOf(
-            ContextBlock.builder().elements(listOf(
-                buildOutcomeImage(buildScanSummary.outcome, baseUri),
-                BlockCompositions.plainText(escapeText(buildScanSummary.projectName)),
-                BlockCompositions.markdownText(renderTags(buildScanSummary.tags))
-            )).build(),
-            ContextBlock.builder().elements(listOf(
-                BlockCompositions.plainText("Start: $formattedStart"),
-                BlockCompositions.plainText("Duration: $duration"),
-            )).build(),
-            SectionBlock.builder()
-                .text(BlockCompositions.markdownText("Tasks `${escapeText(buildScanSummary.tasks)}`"))
-                .build(),
-            SectionBlock.builder()
-                .text(BlockCompositions.markdownText(taskSummaryMessage))
-                .build(),
-            SectionBlock.builder()
-                .text(BlockCompositions.markdownText(testSummaryMessage))
-                .build()
-        )).build()
+        return UnfurlDetail.builder().blocks(
+            listOf(
+                ContextBlock.builder().elements(
+                    listOf(
+                        buildOutcomeImage(buildScanSummary.outcome, baseUri),
+                        BlockCompositions.plainText(escapeText(buildScanSummary.projectName)),
+                        BlockCompositions.markdownText(renderTags(buildScanSummary.tags))
+                    )
+                ).build(),
+                ContextBlock.builder().elements(
+                    listOf(
+                        BlockCompositions.plainText("Start: $formattedStart"),
+                        BlockCompositions.plainText("Duration: $duration"),
+                    )
+                ).build(),
+                SectionBlock.builder()
+                    .text(BlockCompositions.markdownText("Tasks `${escapeText(buildScanSummary.tasks)}`"))
+                    .build(),
+                SectionBlock.builder()
+                    .text(BlockCompositions.markdownText(taskSummaryMessage))
+                    .build(),
+                SectionBlock.builder()
+                    .text(BlockCompositions.markdownText(testSummaryMessage))
+                    .build()
+            )
+        ).build()
     }
 
     private fun renderTags(tags: List<String>): String {
         if (tags.isEmpty()) {
-            return "Tags: _none_";
+            return "Tags: _none_"
         } else {
             return "Tags: ${tags.stream().map(this::escapeText).collect(Collectors.joining(" | "))}"
         }
@@ -79,7 +85,7 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         }
     }
 
-    fun buildImageElement(fileName: String, altText: String, baseUri: URI) : ImageElement {
+    fun buildImageElement(fileName: String, altText: String, baseUri: URI): ImageElement {
         return ImageElement.builder()
             .imageUrl(UriComponentsBuilder.fromUri(baseUri).path(fileName).toUriString())
             .altText(altText)
@@ -96,6 +102,6 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         return text
             .replace("&", "&amp;")
             .replace("<", "&lt;")
-            .replace(">", "&gt;");
+            .replace(">", "&gt;")
     }
 }

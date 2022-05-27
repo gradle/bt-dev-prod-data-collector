@@ -6,11 +6,10 @@ import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
-import org.springframework.stereotype.Component
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-//@Component
+// @Component
 class TeamcityExport(
     private val create: DSLContext,
     private val teamcityClientService: TeamcityClientService
