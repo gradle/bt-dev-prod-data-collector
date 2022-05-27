@@ -68,34 +68,32 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     @Test
     fun renderProject() {
         val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Project: ge", (contextBlock.elements[1] as PlainTextObject).text)
+        Assertions.assertEquals("Build for ge", (contextBlock.elements[1] as PlainTextObject).text)
     }
 
     @Test
     fun rendersStartTime() {
         val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Start: 2022-05-24 11:14:14 UTC", (contextBlock.elements[2] as PlainTextObject).text)
+        Assertions.assertEquals("started at 2022-05-24 11:14:14 UTC", (contextBlock.elements[2] as PlainTextObject).text)
     }
 
     @Test
     fun rendersDuration() {
         val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Duration: 8m 31s", (contextBlock.elements[3] as PlainTextObject).text)
+        Assertions.assertEquals("ran for 8m 31s.", (contextBlock.elements[3] as PlainTextObject).text)
     }
 
     @Test
-    fun rendersTags() {
+    fun rendersTagsPresent() {
         val contextBlock = contextBlock(renderer.render(generalSummary, baseUri))
-        Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[4] as PlainTextObject).text)
+        Assertions.assertEquals("Tags: LOCAL | dirty | feature-branch | Mac OS X", (contextBlock.elements[4] as MarkdownTextObject).text)
     }
 
     @Test
-    fun rendersTags_whenThereAreNoTags() {
+    fun rendersTagsAbsent() {
         val contextBlock = contextBlock(renderer.render(generalSummary.copy(tags = listOf()), baseUri))
-        Assertions.assertEquals("", (contextBlock.elements[4] as PlainTextObject).text)
+        Assertions.assertEquals("_none_", (contextBlock.elements[4] as MarkdownTextObject).text)
     }
-
-    // TODO: different rendering for no tags
 
     @Test
     fun rendersTasks() {
@@ -147,54 +145,4 @@ class DefaultBuildScanRendererTests(@Autowired val renderer: BuildScanRenderer) 
     fun markdownText(block: SectionBlock) : MarkdownTextObject {
         return block.text as MarkdownTextObject
     }
-
-    // TODO: cleanup
-
-//		{
-//			"type": "context",
-//			"elements": [
-//				{
-//					"type": "image",
-//					"image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Eo_circle_green_checkmark.svg/240px-Eo_circle_green_checkmark.svg.png",
-//					"alt_text": "success"
-//				},
-//				{
-//					"type": "plain_text",
-//					"text": "Project: ge"
-//				},
-//				{
-//					"type": "plain_text",
-//					"text": "Start: 2022-05-25 9:14:14 AM CEST"
-//				},
-//				{
-//					"type": "plain_text",
-//					"text": "Duration: 8 min 31 sec"
-//				},
-//				{
-//					"type": "mrkdwn",
-//					"text": "Tags: LOCAL | dirty | feature-branch | Mac OS X"
-//				}
-//			]
-//		},
-//		{
-//			"type": "section",
-//			"text": {
-//				"type": "mrkdwn",
-//				"text": "Tasks `:build-agent-gradle-test-func:test --tests com.gradle.scan.plugin.test.func.data.usercode.*`"
-//			}
-//		},
-//		{
-//			"type": "section",
-//			"text": {
-//				"type": "mrkdwn",
-//				"text": "1841 tasks executed in 340 projects, <https://e.grdev.net/s/p7laz2e6qf4bc/timeline?outcome=FAILED|1 failed task> in 47m 57s, with 471 avoided tasks saving 22m 7.679s"
-//			}
-//		},
-//		{
-//			"type": "section",
-//			"text": {
-//				"type": "mrkdwn",
-//				"text": "214 tests executed in 44m 11s, <https://e.grdev.net/s/p7laz2e6qf4bc/tests/overview?outcome=failed|12 failed>, <https://e.grdev.net/s/p7laz2e6qf4bc/tests/overview?outcome=flaky|4 flaky>"
-//			}
-//		}
 }

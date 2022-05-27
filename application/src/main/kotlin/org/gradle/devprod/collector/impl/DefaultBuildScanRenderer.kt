@@ -22,9 +22,6 @@ import kotlin.time.toKotlinDuration
 @ExperimentalTime
 @Service
 class DefaultBuildScanRenderer : BuildScanRenderer {
-
-    // TODO: see https://api.slack.com/reference/surfaces/formatting#escaping for escaping rules
-
     override fun render(buildScanSummary: BuildScanSummary, baseUri: URI): UnfurlDetail {
         val utc = ZoneId.of("UTC")
         val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z")
@@ -47,23 +44,18 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         return UnfurlDetail.builder().blocks(listOf(
             ContextBlock.builder().elements(listOf(
                 buildOutcomeImage(buildScanSummary.outcome, baseUri),
-                // TODO: escaping
-                BlockCompositions.plainText("Build for ${buildScanSummary.projectName}"),
+                BlockCompositions.plainText("Build for ${escapeText(buildScanSummary.projectName)}"),
                 BlockCompositions.plainText("started at $formattedStart"),
                 BlockCompositions.plainText("ran for $duration."),
-                // TODO: escaping
-                BlockCompositions.plainText(renderTags(buildScanSummary.tags))
+                BlockCompositions.markdownText(renderTags(buildScanSummary.tags))
             )).build(),
             SectionBlock.builder()
-                // TODO: escaping
-                .text(BlockCompositions.markdownText("Tasks `${buildScanSummary.tasks}`"))
+                .text(BlockCompositions.markdownText("Tasks `${escapeText(buildScanSummary.tasks)}`"))
                 .build(),
             SectionBlock.builder()
-                // TODO: escaping
                 .text(BlockCompositions.markdownText(taskSummaryMessage))
                 .build(),
             SectionBlock.builder()
-                // TODO: escaping
                 .text(BlockCompositions.markdownText(testSummaryMessage))
                 .build()
         )).build()
@@ -73,7 +65,7 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         if (tags.isEmpty()) {
             return "_none_";
         } else {
-            return "Tags: ${tags.stream().collect(Collectors.joining(" | "))}"
+            return "Tags: ${tags.stream().map(this::escapeText).collect(Collectors.joining(" | "))}"
         }
     }
 
@@ -90,5 +82,18 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
             .imageUrl(UriComponentsBuilder.fromUri(baseUri).path(fileName).toUriString())
             .altText(altText)
             .build()
+    }
+
+    /**
+     * Replace any Slack-special markdown characters in the text with the appropriate escape codes.
+     *
+     * @return the escaped text
+     * @see <a href="https://api.slack.com/reference/surfaces/formatting#escaping">Escaping text</a>
+     */
+    fun escapeText(text: String): String {
+        return text
+            .replace("&", "&amp;")
+            .replace("<", "&lt;")
+            .replace(">", "&gt;");
     }
 }
