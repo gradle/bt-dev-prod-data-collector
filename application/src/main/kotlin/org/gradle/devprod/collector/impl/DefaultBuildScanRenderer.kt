@@ -27,20 +27,8 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
         val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z")
         val formattedStart = dateTimeFormatter.format(buildScanSummary.startTime.atZone(utc))
         val duration = Duration.between(buildScanSummary.startTime, buildScanSummary.endTime).toKotlinDuration()
-        val successTaskCount = buildScanSummary.taskSummary.outcomes[TaskOutcome.SUCCESS] ?: 0
-        val failedTaskCount = buildScanSummary.taskSummary.outcomes[TaskOutcome.FAILED] ?: 0
-        val executedTaskCount = successTaskCount + failedTaskCount
-        var taskSummaryMessage = "$executedTaskCount tasks executed"
-        if (failedTaskCount > 0) {
-            val failedTaskUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("/timeline").queryParam("outcome", "FAILED").toUriString()
-            taskSummaryMessage += ", <$failedTaskUrl|$failedTaskCount failed tasks>"
-        }
-        val failedTestCount = buildScanSummary.testSummary.failedCount
-        var testSummaryMessage = "${buildScanSummary.testSummary.totalCount} tests executed"
-        if (failedTestCount > 0) {
-            val failedTestUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("/tests/overview").queryParam("outcome", "failed").toUriString()
-            testSummaryMessage += ", <$failedTestUrl|$failedTestCount tests failed>"
-        }
+        val taskSummaryMessage = renderTaskSummary(buildScanSummary)
+        val testSummaryMessage = renderTestSummary(buildScanSummary)
         return UnfurlDetail.builder().blocks(
             listOf(
                 ContextBlock.builder().elements(
@@ -70,11 +58,34 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
     }
 
     private fun renderTags(tags: List<String>): String {
-        if (tags.isEmpty()) {
-            return "Tags: _none_"
+        return if (tags.isEmpty()) {
+            "Tags: _none_"
         } else {
-            return "Tags: ${tags.stream().map(this::escapeText).collect(Collectors.joining(" | "))}"
+            "Tags: ${tags.stream().map(this::escapeText).collect(Collectors.joining(" | "))}"
         }
+    }
+
+    private fun renderTaskSummary(buildScanSummary: BuildScanSummary): String {
+        val successTaskCount = buildScanSummary.taskSummary.outcomes[TaskOutcome.SUCCESS] ?: 0
+        val failedTaskCount = buildScanSummary.taskSummary.outcomes[TaskOutcome.FAILED] ?: 0
+        val executedTaskCount = successTaskCount + failedTaskCount
+        var message = "${pluralize(executedTaskCount, "task", "tasks")} executed"
+        if (failedTaskCount > 0) {
+            val failedTaskUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("/timeline").queryParam("outcome", "FAILED").toUriString()
+            message += ", <$failedTaskUrl|${pluralize(failedTaskCount, "failed task", "failed tasks")}>"
+        }
+        return message
+    }
+
+    private fun renderTestSummary(buildScanSummary: BuildScanSummary): String {
+        val failedTestCount = buildScanSummary.testSummary.failedCount
+        val totalTestCount = buildScanSummary.testSummary.totalCount
+        var message = "${pluralize(totalTestCount, "test", "tests")} executed"
+        if (failedTestCount > 0) {
+            val failedTestUrl = UriComponentsBuilder.fromHttpUrl(buildScanSummary.url).path("/tests/overview").queryParam("outcome", "failed").toUriString()
+            message += ", <$failedTestUrl|${pluralize(failedTestCount, "test", "tests")} failed>"
+        }
+        return message
     }
 
     fun buildOutcomeImage(outcome: BuildScanOutcome, baseUri: URI): ImageElement {
@@ -103,5 +114,10 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
             .replace("&", "&amp;")
             .replace("<", "&lt;")
             .replace(">", "&gt;")
+    }
+
+    fun pluralize(num: Int, singular: String, plural: String): String {
+        val description = if (num == 1) singular else plural
+        return "$num $description"
     }
 }
