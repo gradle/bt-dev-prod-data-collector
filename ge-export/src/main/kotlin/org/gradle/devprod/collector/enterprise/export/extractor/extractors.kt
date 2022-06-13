@@ -163,7 +163,7 @@ private fun getTestIdToTestCaseMap(typeToEvents: Map<String?, List<BuildEvent>>)
         val className = it.data?.stringProperty("className")
         val taskPath = it.data?.longProperty("task")?.let { idToTaskPath[it] }
 
-        if (id != null && name != null && className != null && taskPath != null) {
+        if (id != null && name != null && className != null && taskPath != null && name != className) {
             val testCase = TestCase(taskPath, name, className)
             testIdToTestCase[id] = testCase
         }
@@ -198,11 +198,12 @@ object FlakyTestClassExtractor : Extractor<Set<String>>(listOf("TestStarted", "T
         events.getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList()).forEach {
             val id = it.data?.longProperty("id")
             val failed = it.data?.booleanProperty("failed") ?: return@forEach
+            val skipped = it.data.booleanProperty("skipped")
             val testCase = testIdToTestCase[id] ?: return@forEach
             val existingResult = testCaseToFailedResult[testCase]
             if (existingResult == null) {
                 testCaseToFailedResult[testCase] = failed
-            } else if (existingResult != failed) {
+            } else if (existingResult != failed && skipped != true) {
                 flakyTestClasses.add(testCase.className)
             }
         }

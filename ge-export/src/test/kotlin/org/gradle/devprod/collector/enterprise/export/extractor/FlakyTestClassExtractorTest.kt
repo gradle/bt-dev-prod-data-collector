@@ -10,4 +10,11 @@ class FlakyTestClassExtractorTest {
         val flakyTestClasses = FlakyTestClassExtractor.extractFrom(events.groupBy { it.eventType })
         Assertions.assertEquals(setOf("org.gradle.cli.FlakyTest"), flakyTestClasses)
     }
+
+    @Test
+    fun `a failed first skipped later test case is not recognized as flaky`() {
+        val events = parse("/g2yl5n377k3as.txt")
+        val flakyTestClasses = FlakyTestClassExtractor.extractFrom(events.groupBy { it.eventType })
+        Assertions.assertTrue(flakyTestClasses.isEmpty())
+    }
 }
