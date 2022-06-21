@@ -10,7 +10,6 @@ import org.gradle.devprod.collector.enterprise.export.GradleEnterpriseServer
 import org.gradle.devprod.collector.model.LinkSharedEventCallback
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
@@ -23,13 +22,12 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 import javax.servlet.http.HttpServletRequest
 
-@SpringBootApplication(exclude = [DataSourceAutoConfiguration::class])
+@SpringBootApplication
 @EnableScheduling
 @EnableAsync
 @EnableConfigurationProperties(GradleEnterpriseServer::class)
 @Controller
 class DeveloperProductivityDataCollector(private val handler: LinkSharedHandler) {
-
     @Bean
     fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer =
         Jackson2ObjectMapperBuilderCustomizer { builder ->
@@ -43,7 +41,6 @@ class DeveloperProductivityDataCollector(private val handler: LinkSharedHandler)
     @RequestMapping("/slack/build-scan-previews")
     @ResponseBody
     fun buildScanPreview(@RequestBody(required = false) body: String?, request: HttpServletRequest): String {
-        println("Body: $body")
         if (body?.contains("challenge") == true) {
             // https://api.slack.com/events/url_verification
             return objectMapper.readTree(body).get("challenge").asText()

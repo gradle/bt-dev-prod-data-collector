@@ -7,6 +7,7 @@ import org.gradle.devprod.collector.enterprise.export.model.Build
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.slf4j.LoggerFactory
 import org.springframework.http.codec.ServerSentEvent
+import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToFlow
 import org.springframework.web.reactive.function.client.bodyToFlux
@@ -17,7 +18,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 private const val MAX_RECONNECT_COUNT = 2
 
-// @Service
+@Service
 class ExportApiClient(private val server: GradleEnterpriseServer) {
     private val client: WebClient = WebClient.builder()
         .baseUrl("${server.url}/build-export")

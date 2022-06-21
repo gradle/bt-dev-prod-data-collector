@@ -5,11 +5,12 @@ import org.gradle.devprod.collector.persistence.generated.jooq.Tables.LONG_TEST
 import org.jooq.DSLContext
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Component
 import java.time.OffsetDateTime
 
 const val BULK_SIZE = 10000
 
-// @Component
+@Component
 class DatabaseCleanupService(private val create: DSLContext) {
     @Async
     @Scheduled(fixedDelay = 6 * 60 * 60 * 1000)

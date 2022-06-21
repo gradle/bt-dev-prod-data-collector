@@ -8,6 +8,7 @@ import org.gradle.devprod.collector.model.LinkSharedEvent
 import org.gradle.devprod.collector.model.UrlVerificationEvent
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
@@ -22,6 +23,7 @@ import java.net.URI
     classes = [DeveloperProductivityDataCollector::class],
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
 )
+@Disabled
 class DeveloperProductivityDataCollectorTests(@Autowired val restTemplate: TestRestTemplate) {
 
     @MockBean lateinit var mockLinkSharedHandler: LinkSharedHandler
@@ -69,7 +71,7 @@ class DeveloperProductivityDataCollectorTests(@Autowired val restTemplate: TestR
                 ],
                 "event_id": "Ev08MFMKH6",
                 "event_time": 123456789
-            }                
+            }
             """.trimIndent(),
             String::class.java)
 
@@ -125,7 +127,7 @@ class DeveloperProductivityDataCollectorTests(@Autowired val restTemplate: TestR
                 ],
                 "event_id": "Ev08MFMKH6",
                 "event_time": 123456789
-            }                
+            }
             """.trimIndent(),
             String::class.java)
 
