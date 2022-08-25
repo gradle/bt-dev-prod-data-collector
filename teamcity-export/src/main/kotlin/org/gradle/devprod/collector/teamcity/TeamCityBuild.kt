@@ -23,7 +23,7 @@ fun Build.toTeamCityBuild(): TeamCityBuild? {
         .firstOrNull {
             val vcsRootId = it.vcsRootInstance.vcsRootId.stringId
             vcsRootId.startsWith("GradleBuildToo") ||
-                vcsRootId == "Gradle_Branches_GradlePersonalBranches" ||
+                vcsRootId == "GradleRelease" ||
                 vcsRootId == "GradleMaster"
         }
     // For builds which have been cancelled early, there won't be any VCS root. We'll ignore those.
