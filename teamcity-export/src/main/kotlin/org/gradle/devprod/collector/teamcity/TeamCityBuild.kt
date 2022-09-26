@@ -1,7 +1,11 @@
 package org.gradle.devprod.collector.teamcity
 
 import org.jetbrains.teamcity.rest.Build
+import java.time.Instant
 import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 data class TeamCityBuild(
     val id: String,
@@ -15,7 +19,8 @@ data class TeamCityBuild(
     val buildConfigurationId: String,
     val statusText: String?,
     val composite: Boolean,
-    val buildScanUrls: List<String> = emptyList()
+    val buildScanUrls: List<String> = emptyList(),
+    val buildHostName: String?
 )
 
 fun Build.toTeamCityBuild(): TeamCityBuild? {
@@ -42,7 +47,38 @@ fun Build.toTeamCityBuild(): TeamCityBuild? {
             state.name,
             buildConfigurationId.stringId,
             statusText,
-            composite == true
+            composite == true,
+            buildHostName = agent?.name
         )
     }
+}
+
+fun TeamCityResponse.BuildBean.toTeamCityBuild(buildScans: List<String>) =
+    TeamCityBuild(
+        id.toString(),
+        branchName,
+        status,
+        revisions.revision.first().version,
+        parseRFC822(queuedDate),
+        parseRFC822(startDate),
+        parseRFC822(finishDate),
+        state,
+        buildType.id,
+        statusText,
+        isComposite,
+        buildScanUrls = buildScans,
+        buildHostName = agent.name
+    )
+
+private val rfc822: DateTimeFormatter =
+    DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss").withZone(ZoneId.systemDefault())
+
+fun formatRFC822(instant: Instant): String {
+    return rfc822.format(instant) + "%2B0000"
+}
+
+fun parseRFC822(datelike: String): OffsetDateTime {
+    return ZonedDateTime.parse(datelike, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssZ"))
+        .toInstant()
+        .atOffset(OffsetDateTime.now().offset)
 }

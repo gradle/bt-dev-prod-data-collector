@@ -63,7 +63,8 @@ class TeamcityClientService(
                 emptyList<TeamCityResponse.BuildBean>().iterator()
             generateSequence {
                 if (buildIterator.hasNext()) {
-                    buildIterator.next().toTeamCityBuild()
+                    val build = buildIterator.next()
+                    build.toTeamCityBuild(loadBuildScans(build.id))
                 } else if (nextPageUrl == null) {
                     null
                 } else {
@@ -71,29 +72,14 @@ class TeamcityClientService(
                     nextPageUrl = nextPage.nextHref
                     buildIterator = nextPage.build.iterator()
                     if (buildIterator.hasNext()) {
-                        buildIterator.next().toTeamCityBuild()
+                        val build = buildIterator.next()
+                        build.toTeamCityBuild(loadBuildScans(build.id))
                     } else {
                         null
                     }
                 }
             }
         }
-
-    private fun TeamCityResponse.BuildBean.toTeamCityBuild() =
-        TeamCityBuild(
-            id.toString(),
-            branchName,
-            status,
-            revisions.revision.first().version,
-            parseRFC822(queuedDate),
-            parseRFC822(startDate),
-            parseRFC822(finishDate),
-            state,
-            buildType.id,
-            statusText,
-            isComposite,
-            loadBuildScans()
-        )
 
     private fun loadingFailedBuildsUrl(
         pipeline: String,
@@ -154,17 +140,4 @@ class TeamcityClientService(
             val relativePath = if (url.startsWith("/")) url else "/$url"
             URI.create("https://builds.gradle.org$relativePath")
         }
-
-    private val rfc822: DateTimeFormatter =
-        DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss").withZone(ZoneId.systemDefault())
-
-    private fun formatRFC822(instant: Instant): String {
-        return rfc822.format(instant) + "%2B0000"
-    }
-
-    private fun parseRFC822(datelike: String): OffsetDateTime {
-        return ZonedDateTime.parse(datelike, DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssZ"))
-            .toInstant()
-            .atOffset(OffsetDateTime.now().offset)
-    }
 }
