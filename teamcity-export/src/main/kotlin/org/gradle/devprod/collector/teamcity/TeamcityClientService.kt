@@ -13,10 +13,6 @@ import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
 import java.net.URI
 import java.time.Instant
-import java.time.OffsetDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @Service
@@ -29,36 +25,25 @@ class TeamcityClientService(
 
     private val client: WebClient = WebClient.create()
 
-    private val pipelines = listOf("Master", "Release")
-
-    private fun buildConfigurationsFor(pipeline: String): List<String> =
-        listOf(
-            "Gradle_${pipeline}_Check_Stage_QuickFeedbackLinuxOnly_Trigger",
-            "Gradle_${pipeline}_Check_Stage_QuickFeedback_Trigger",
-            "Gradle_${pipeline}_Check_Stage_PullRequestFeedback_Trigger",
-            "Gradle_${pipeline}_Check_Stage_ReadyforNightly_Trigger",
-            "Gradle_${pipeline}_Check_Stage_ReadyforRelease_Trigger"
-        )
-
-    fun loadTriggerBuilds(): Sequence<TeamCityBuild> =
-        pipelines.flatMap { pipeline -> buildConfigurationsFor(pipeline) }.asSequence().flatMap {
-            buildConfiguration ->
-            teamCityInstance
-                .builds()
-                .fromConfiguration(BuildConfigurationId(buildConfiguration))
-                .includeCanceled()
-                .includeFailed()
-                .withAllBranches()
-                .since(Instant.now().minus(5, ChronoUnit.DAYS))
-                .all()
-                .mapNotNull { it.toTeamCityBuild() }
-        }
+    fun loadTriggerBuilds(pipelines: List<String>, projectListProvider: (String) -> List<String>): Sequence<TeamCityBuild> =
+        pipelines.flatMap { pipeline -> projectListProvider(pipeline) }
+            .asSequence().flatMap { buildConfigurationId ->
+                teamCityInstance
+                    .builds()
+                    .fromConfiguration(BuildConfigurationId(buildConfigurationId))
+                    .includeCanceled()
+                    .includeFailed()
+                    .withAllBranches()
+                    .since(Instant.now().minus(5, ChronoUnit.DAYS))
+                    .all()
+                    .mapNotNull { it.toTeamCityBuild() }
+            }
 
     // The rest client has no "affectProject(id:Gradle_Master_Check)" buildLocator
-    fun loadFailedBuilds(since: Instant): Sequence<TeamCityBuild> =
+    fun loadFailedBuilds(since: Instant, pipelines: List<String>, affectedBuildProvider: (String) -> String): Sequence<TeamCityBuild> =
         pipelines.asSequence().flatMap { pipeline ->
             // We have ~200 failed builds per day
-            var nextPageUrl: String? = loadingFailedBuildsUrl(pipeline, since)
+            var nextPageUrl: String? = loadingFailedBuildsUrl(affectedBuildProvider(pipeline), since)
             var buildIterator: Iterator<TeamCityResponse.BuildBean> =
                 emptyList<TeamCityResponse.BuildBean>().iterator()
             generateSequence {
@@ -82,19 +67,18 @@ class TeamcityClientService(
         }
 
     private fun loadingFailedBuildsUrl(
-        pipeline: String,
+        affectedProject: String,
         start: Instant,
         pageSize: Int = 100
     ): String {
         val locators =
             mapOf(
-                "affectedProject" to "(id:Gradle_${pipeline}_Check)",
+                "affectedProject" to "(id:$affectedProject)",
                 "status" to "FAILURE",
                 "branch" to "default:any",
                 "composite" to "false",
                 "sinceDate" to formatRFC822(start)
-            )
-                .entries
+            ).entries
                 .joinToString(",") { "${it.key}:${it.value}" }
 
         val fields =
@@ -106,7 +90,7 @@ class TeamcityClientService(
     private fun WebClient.RequestHeadersSpec<*>.bearerAuth(): WebClient.RequestHeadersSpec<*> =
         header("Authorization", "Bearer $teamCityApiToken")
 
-    private fun TeamCityResponse.BuildBean.loadBuildScans(): List<String> {
+    private fun loadBuildScans(id: Int): List<String> {
         val response: Mono<String> =
             client
                 .get()

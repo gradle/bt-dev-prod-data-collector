@@ -1,10 +1,10 @@
 package org.gradle.devprod.collector.teamcity
 
-import org.jooq.DSLContext
-import org.springframework.stereotype.Component
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD
 import org.jetbrains.teamcity.rest.BuildStatus
+import org.jooq.DSLContext
 import org.jooq.impl.DSL
+import org.springframework.stereotype.Component
 import java.time.Instant
 
 @Component
@@ -37,7 +37,7 @@ class Repository(private val dslContext: DSLContext) {
         }
     }
 
-    fun latestFailedBuildTimestamp() : Instant? {
+    fun latestFailedBuildTimestamp(): Instant? {
         val latestFailedBuild = dslContext.select(TEAMCITY_BUILD.FINISHED)
             .from(TEAMCITY_BUILD)
             .where(
