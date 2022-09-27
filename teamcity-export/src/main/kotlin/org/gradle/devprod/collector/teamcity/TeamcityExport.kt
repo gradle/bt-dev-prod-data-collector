@@ -12,7 +12,7 @@ class TeamcityExport(
     private val teamcityClientService: TeamcityClientService
 ) {
 
-    private val pipelines = listOf("Master", "Release")
+    private val gbtPipelines = listOf("Master", "Release")
     private val gbtBuildConfigurations: (String) -> List<String> = {
         pipeline: String ->
         listOf(
@@ -28,6 +28,7 @@ class TeamcityExport(
         "Gradle_${pipeline}_Check"
     }
 
+    private val gePipelines = listOf("Main", "Release")
     private val geRootProjectAffectedBuild: (String) -> String = {
         pipeline: String ->
         "Enterprise_$pipeline"
@@ -37,30 +38,30 @@ class TeamcityExport(
     @Scheduled(fixedDelay = 10 * 60 * 1000)
     fun loadGbtTriggerBuilds() {
         println("Loading trigger builds from Teamcity")
-        teamcityClientService.loadTriggerBuilds(pipelines, gbtBuildConfigurations).forEach { build -> repo.storeBuild(build) }
+        teamcityClientService.loadTriggerBuilds(gbtPipelines, gbtBuildConfigurations).forEach { build -> repo.storeBuild(build) }
     }
 
     @Async
     @Scheduled(fixedDelay = 60 * 60 * 1000)
     fun loadGbtFailedBuilds() {
         println("Loading failed GBT builds from Teamcity")
-        val latestFailedBuildTimestamp = repo.latestFailedBuildTimestamp()
+        val latestFailedBuildTimestamp = repo.latestFailedBuildTimestamp("Gradle")
 
         val since = latestFailedBuildTimestamp?.minus(1, ChronoUnit.DAYS)
             ?: Instant.now().minus(5, ChronoUnit.DAYS)
 
-        teamcityClientService.loadFailedBuilds(since, pipelines, gbtRootProjectAffectedBuild).forEach { build -> repo.storeBuild(build) }
+        teamcityClientService.loadFailedBuilds(since, gbtPipelines, gbtRootProjectAffectedBuild).forEach { build -> repo.storeBuild(build) }
     }
 
     @Async
     @Scheduled(fixedDelay = 60 * 60 * 1000)
     fun loadGeFailedBuilds() {
         println("Loading failed GE builds from Teamcity")
-        val latestFailedBuildTimestamp = repo.latestFailedBuildTimestamp()
+        val latestFailedBuildTimestamp = repo.latestFailedBuildTimestamp("Enterprise")
 
         val since = latestFailedBuildTimestamp?.minus(1, ChronoUnit.DAYS)
             ?: Instant.now().minus(5, ChronoUnit.DAYS)
 
-        teamcityClientService.loadFailedBuilds(since, pipelines, geRootProjectAffectedBuild).forEach { build -> repo.storeBuild(build) }
+        teamcityClientService.loadFailedBuilds(since, gePipelines, geRootProjectAffectedBuild).forEach { build -> repo.storeBuild(build) }
     }
 }

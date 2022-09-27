@@ -20,7 +20,8 @@ data class TeamCityBuild(
     val statusText: String?,
     val composite: Boolean,
     val buildScanUrls: List<String> = emptyList(),
-    val buildHostName: String?
+    val buildHostName: String?,
+    val buildHostType: String?
 )
 
 fun Build.toTeamCityBuild(): TeamCityBuild? {
@@ -48,9 +49,22 @@ fun Build.toTeamCityBuild(): TeamCityBuild? {
             buildConfigurationId.stringId,
             statusText,
             composite == true,
-            buildHostName = agent?.name
+            buildHostName = agent?.name,
+            buildHostType = typeOfAgents(agent?.name)
         )
     }
+}
+
+private fun typeOfAgents(agentName: String?): String {
+    return agentName?.let {
+        when {
+            it.contains("ec2") -> "EC2"
+            it.contains("windows") -> "WIN"
+            it.contains("dev") -> "LINUX"
+            it.contains("mac") -> "MAC"
+            else -> "NA"
+        }
+    } ?: return "EMPTY"
 }
 
 fun TeamCityResponse.BuildBean.toTeamCityBuild(buildScans: List<String>) =
@@ -67,7 +81,8 @@ fun TeamCityResponse.BuildBean.toTeamCityBuild(buildScans: List<String>) =
         statusText,
         isComposite,
         buildScanUrls = buildScans,
-        buildHostName = agent.name
+        buildHostName = agent.name,
+        buildHostType = typeOfAgents(agent?.name)
     )
 
 private val rfc822: DateTimeFormatter =
