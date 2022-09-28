@@ -2,6 +2,7 @@ plugins {
     `data-collector-common`
     `java-library`
     id("nu.studer.jooq")
+    id("org.flywaydb.flyway") version "7.9.1"
 }
 
 dependencies {
@@ -14,6 +15,12 @@ dependencies {
 
     jooqGenerator(platform(project(":build-platform")))
     jooqGenerator("org.postgresql:postgresql")
+}
+
+flyway {
+    url = "jdbc:postgresql://localhost:5432/btdevprod"
+    user = "btdevprod"
+    password = "btdevprod"
 }
 
 jooq {
