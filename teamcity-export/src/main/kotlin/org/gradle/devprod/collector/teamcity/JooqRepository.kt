@@ -31,8 +31,8 @@ class JooqRepository(private val dslContext: DSLContext) : Repository {
                 record.gitCommitId = build.gitCommitId
                 record.composite = build.composite
                 record.buildscanUrls = build.buildScanUrls.toTypedArray()
-
-                // FIXME - how to store the new fileds?
+                record.buildHostName = build.buildHostName
+                record.buildHostType = build.buildHostType
 
                 record.store()
             }
