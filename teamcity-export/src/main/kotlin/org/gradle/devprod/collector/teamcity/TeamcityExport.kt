@@ -36,7 +36,7 @@ class TeamcityExport(
     }
 
     @Async
-    @Scheduled(initialDelay = 30 * 1000, fixedDelay = 60 * 60 * 1000)
+    @Scheduled(initialDelay = 30 * 60 * 1000, fixedDelay = 60 * 60 * 1000)
     fun loadGbtFailedBuilds() {
         println("Loading failed GBT builds from Teamcity")
         val latestFailedBuildTimestamp = repo.latestFailedBuildTimestamp("Gradle")
