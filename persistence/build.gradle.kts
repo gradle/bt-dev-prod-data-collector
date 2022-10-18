@@ -2,7 +2,7 @@ plugins {
     `data-collector-common`
     `java-library`
     id("nu.studer.jooq")
-    id("org.flywaydb.flyway") version "9.3.1"
+    id("org.flywaydb.flyway")
 }
 
 dependencies {
