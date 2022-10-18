@@ -11,7 +11,6 @@ class TeamcityExport(
     private val repo: Repository,
     private val teamcityClientService: TeamcityClientService
 ) {
-
     private val gbtPipelines = listOf("Master", "Release")
     private val gbtBuildConfigurations: (String) -> List<String> = {
         pipeline: String ->
@@ -29,14 +28,14 @@ class TeamcityExport(
     private val geRootProjectAffectedBuild: (String) -> String = { "Enterprise_$it" }
 
     @Async
-    @Scheduled(initialDelay = 0 * 1000, fixedDelay = 10 * 60 * 1000)
+    @Scheduled(initialDelay = 0, fixedDelay = 10 * 60 * 1000)
     fun loadGbtTriggerBuilds() {
         println("Loading trigger builds from Teamcity")
         teamcityClientService.loadTriggerBuilds(gbtPipelines, gbtBuildConfigurations).forEach { build -> repo.storeBuild(build) }
     }
 
     @Async
-    @Scheduled(initialDelay = 30 * 60 * 1000, fixedDelay = 60 * 60 * 1000)
+    @Scheduled(initialDelay = 5 * 60 * 1000, fixedDelay = 60 * 60 * 1000)
     fun loadGbtFailedBuilds() {
         println("Loading failed GBT builds from Teamcity")
         val latestFailedBuildTimestamp = repo.latestFailedBuildTimestamp("Gradle")
@@ -48,7 +47,7 @@ class TeamcityExport(
     }
 
     @Async
-    @Scheduled(initialDelay = 60 * 1000, fixedDelay = 60 * 60 * 1000)
+    @Scheduled(initialDelay = 10 * 60 * 1000, fixedDelay = 60 * 60 * 1000)
     fun loadGeFailedBuilds() {
         println("Loading failed GE builds from Teamcity")
         val latestFailedBuildTimestamp = repo.latestFailedBuildTimestamp("Enterprise")
