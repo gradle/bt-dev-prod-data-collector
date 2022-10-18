@@ -1,9 +1,5 @@
 package org.gradle.devprod.collector.teamcity
 
-import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD
-import org.jetbrains.teamcity.rest.BuildStatus
-import org.jooq.DSLContext
-import org.jooq.impl.DSL
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -12,66 +8,53 @@ import java.time.temporal.ChronoUnit
 
 @Component
 class TeamcityExport(
-    private val create: DSLContext,
+    private val repo: Repository,
     private val teamcityClientService: TeamcityClientService
 ) {
+    private val gbtPipelines = listOf("Master", "Release")
+    private val gbtBuildConfigurations: (String) -> List<String> = {
+        pipeline: String ->
+        listOf(
+            "Gradle_${pipeline}_Check_Stage_QuickFeedbackLinuxOnly_Trigger",
+            "Gradle_${pipeline}_Check_Stage_QuickFeedback_Trigger",
+            "Gradle_${pipeline}_Check_Stage_PullRequestFeedback_Trigger",
+            "Gradle_${pipeline}_Check_Stage_ReadyforNightly_Trigger",
+            "Gradle_${pipeline}_Check_Stage_ReadyforRelease_Trigger"
+        )
+    }
+    private val gbtRootProjectAffectedBuild: (String) -> String = { "Gradle_${it}_Check" }
+
+    private val gePipelines = listOf("Main", "Release")
+    private val geRootProjectAffectedBuild: (String) -> String = { "Enterprise_$it" }
+
     @Async
-    @Scheduled(fixedDelay = 10 * 60 * 1000)
-    fun loadTriggerBuilds() {
+    @Scheduled(initialDelay = 0, fixedDelay = 10 * 60 * 1000)
+    fun loadGbtTriggerBuilds() {
         println("Loading trigger builds from Teamcity")
-        teamcityClientService.loadTriggerBuilds().store()
-    }
-
-    private fun Sequence<TeamCityBuild>.store() {
-        forEach { build ->
-            val existing = create.fetchAny(TEAMCITY_BUILD, TEAMCITY_BUILD.BUILD_ID.eq(build.id))
-            if (existing == null) {
-                println(
-                    "Found build ${build.id} for branch ${build.branch} with status ${build.status}, queued at ${build.queuedDateTime}, buildscan: ${build.buildScanUrls}"
-                )
-                create.transaction { configuration ->
-                    val ctx = DSL.using(configuration)
-                    val record = ctx.newRecord(TEAMCITY_BUILD)
-                    record.buildId = build.id
-                    record.configuration = build.buildConfigurationId
-                    record.queued = build.queuedDateTime
-                    record.started = build.startDateTime
-                    record.finished = build.finishDateTime
-                    record.state = build.state
-                    record.status = build.status
-                    record.statusText = build.statusText
-                    record.branch = build.branch
-                    record.gitCommitId = build.gitCommitId
-                    record.composite = build.composite
-                    record.buildscanUrls = build.buildScanUrls.toTypedArray()
-
-                    record.store()
-                }
-            }
-        }
+        teamcityClientService.loadTriggerBuilds(gbtPipelines, gbtBuildConfigurations).forEach { build -> repo.storeBuild(build) }
     }
 
     @Async
-    @Scheduled(fixedDelay = 60 * 60 * 1000)
-    fun loadFailedBuilds() {
-        println("Loading failed builds from Teamcity")
-        val latestFailedBuild =
-            create
-                .select(TEAMCITY_BUILD.FINISHED)
-                .from(TEAMCITY_BUILD)
-                .where(
-                    TEAMCITY_BUILD
-                        .COMPOSITE
-                        .eq(false)
-                        .and(TEAMCITY_BUILD.STATUS.notEqual(BuildStatus.SUCCESS.name))
-                )
-                .orderBy(TEAMCITY_BUILD.FINISHED.desc())
-                .fetchAny()
+    @Scheduled(initialDelay = 5 * 60 * 1000, fixedDelay = 60 * 60 * 1000)
+    fun loadGbtFailedBuilds() {
+        println("Loading failed GBT builds from Teamcity")
+        val latestFailedBuildTimestamp = repo.latestFailedBuildTimestamp("Gradle")
 
-        val since =
-            if (latestFailedBuild == null) Instant.now().minus(5, ChronoUnit.DAYS)
-            else TEAMCITY_BUILD.FINISHED.get(latestFailedBuild)!!.toInstant().minus(1, ChronoUnit.DAYS)
+        val since = latestFailedBuildTimestamp?.minus(1, ChronoUnit.DAYS)
+            ?: Instant.now().minus(5, ChronoUnit.DAYS)
 
-        teamcityClientService.loadFailedBuilds(since).store()
+        teamcityClientService.loadFailedBuilds(since, gbtPipelines, gbtRootProjectAffectedBuild).forEach { build -> repo.storeBuild(build) }
+    }
+
+    @Async
+    @Scheduled(initialDelay = 10 * 60 * 1000, fixedDelay = 60 * 60 * 1000)
+    fun loadGeFailedBuilds() {
+        println("Loading failed GE builds from Teamcity")
+        val latestFailedBuildTimestamp = repo.latestFailedBuildTimestamp("Enterprise")
+
+        val since = latestFailedBuildTimestamp?.minus(1, ChronoUnit.DAYS)
+            ?: Instant.now().minus(5, ChronoUnit.DAYS)
+
+        teamcityClientService.loadFailedBuilds(since, gePipelines, geRootProjectAffectedBuild).forEach { build -> repo.storeBuild(build) }
     }
 }

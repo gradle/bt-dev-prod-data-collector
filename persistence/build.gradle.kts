@@ -2,6 +2,7 @@ plugins {
     `data-collector-common`
     `java-library`
     id("nu.studer.jooq")
+    id("org.flywaydb.flyway")
 }
 
 dependencies {
@@ -15,6 +16,22 @@ dependencies {
     jooqGenerator(platform(project(":build-platform")))
     jooqGenerator("org.postgresql:postgresql")
 }
+// You need to run the image before running the flyway and jooq generation.
+// Mind the port - make sure other postgres is not running on your host
+// Run:
+// docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=btdevprod -e POSTGRES_USER=btdevprod -e POSTGRES_DB=btdevprod postgres
+// ./gradlew persistence:flywayMigrate --info
+// ./gradlew persistence:generateJooq --info
+val localDbPort = 5432
+val localDbUrl = "jdbc:postgresql://localhost:$localDbPort/btdevprod"
+val localDbUsername = "btdevprod"
+val localDbUserPassword = "btdevprod"
+
+flyway {
+    url = localDbUrl
+    user = localDbUsername
+    password = localDbUserPassword
+}
 
 jooq {
     configurations {
@@ -23,9 +40,9 @@ jooq {
             jooqConfiguration.apply {
                 jdbc.apply {
                     driver = "org.postgresql.Driver"
-                    url = "jdbc:postgresql://localhost:5432/btdevprod"
-                    user = "btdevprod"
-                    password = "btdevprod"
+                    url = localDbUrl
+                    user = localDbUsername
+                    password = localDbUserPassword
                 }
                 generator.apply {
                     name = "org.jooq.codegen.DefaultGenerator"
