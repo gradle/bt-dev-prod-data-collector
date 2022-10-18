@@ -17,7 +17,7 @@ dependencies {
     jooqGenerator("org.postgresql:postgresql")
 }
 // You need to run the image before running the flyway and jooq generation.
-// Mind the port - make sue other postgres is not running on your host
+// Mind the port - make sure other postgres is not running on your host
 // Run:
 // docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=btdevprod -e POSTGRES_USER=btdevprod -e POSTGRES_DB=btdevprod postgres
 // ./gradlew persistence:flywayMigrate --info
