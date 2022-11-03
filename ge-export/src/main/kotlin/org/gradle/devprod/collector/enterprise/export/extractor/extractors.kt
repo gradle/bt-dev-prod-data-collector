@@ -162,8 +162,9 @@ private fun getTestIdToTestCaseMap(typeToEvents: Map<String?, List<BuildEvent>>)
         val name = it.data?.stringProperty("name")
         val className = it.data?.stringProperty("className")
         val taskPath = it.data?.longProperty("task")?.let { idToTaskPath[it] }
+        val suite = it.data?.booleanProperty("suite") ?: false
 
-        if (id != null && name != null && className != null && taskPath != null && name != className) {
+        if (!suite && id != null && name != null && className != null && taskPath != null && name != className) {
             val testCase = TestCase(taskPath, name, className)
             testIdToTestCase[id] = testCase
         }
