@@ -2,6 +2,8 @@ package org.gradle.devprod.collector.enterprise.export.extractor;
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 
 class FlakyTestClassExtractorTest {
     @Test
@@ -11,9 +13,15 @@ class FlakyTestClassExtractorTest {
         Assertions.assertEquals(setOf("org.gradle.cli.FlakyTest"), flakyTestClasses)
     }
 
-    @Test
-    fun `a failed first skipped later test case is not recognized as flaky`() {
-        val events = parse("/g2yl5n377k3as.txt")
+    @ParameterizedTest(name = "{1}")
+    @CsvSource(
+        value = [
+            "/g2yl5n377k3as.txt, a failed first skipped later test case is not recognized as flaky",
+            "/5pheg3dpbrclo.txt, take suite into consideration"
+        ]
+    )
+    fun `regression test`(eventsResourceName: String, reason: String) {
+        val events = parse(eventsResourceName)
         val flakyTestClasses = FlakyTestClassExtractor.extractFrom(events.groupBy { it.eventType })
         Assertions.assertTrue(flakyTestClasses.isEmpty())
     }
