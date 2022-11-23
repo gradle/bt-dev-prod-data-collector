@@ -22,6 +22,7 @@ import org.gradle.devprod.collector.enterprise.export.extractor.FlakyTestClassEx
 import org.gradle.devprod.collector.enterprise.export.extractor.LongTestClassExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
 import org.gradle.devprod.collector.enterprise.export.extractor.Tags
+import org.gradle.devprod.collector.enterprise.export.extractor.UnexpectedCachingDisableReasonsExtractor
 import org.gradle.devprod.collector.enterprise.export.model.Build
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables
@@ -77,7 +78,8 @@ class ExportApiExtractorService(
                     BuildAgent,
                     DaemonState,
                     DaemonUnhealthy,
-                    ExecutedTestTasks
+                    ExecutedTestTasks,
+                    UnexpectedCachingDisableReasonsExtractor
                 )
             val eventTypes = extractors.flatMap { it.eventTypes }.distinct()
             val events: Map<String?, List<BuildEvent>> =
@@ -116,6 +118,7 @@ class ExportApiExtractorService(
         val customValues = CustomValues.extractFrom(events)
         val daemonBuildNumber = DaemonState.extractFrom(events)
         val daemonUnhealthyReason = DaemonUnhealthy.extractFrom(events)
+        val unexpectedCachingDisableReasons = UnexpectedCachingDisableReasonsExtractor.extractFrom(events)
         println(
             "Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}"
         )
@@ -140,6 +143,7 @@ class ExportApiExtractorService(
         record.buildCacheLoadFailure = buildCacheLoadFailure
         record.buildCacheStoreFailure = buildCacheStoreFailure
         record.executedTestTasks = executedTestTasks.toTypedArray()
+        record.unexpectedCachingDisabledReasons = unexpectedCachingDisableReasons.toTypedArray()
         record.store()
     }
 

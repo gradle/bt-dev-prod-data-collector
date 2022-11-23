@@ -256,6 +256,16 @@ object DaemonUnhealthy : SingleEventExtractor<String?>("DaemonUnhealthy") {
     }
 }
 
+// https://docs.gradle.com/enterprise/event-model-javadoc/com/gradle/scan/eventmodel/gradle/TaskFinished_1_6.html#cachingDisabledReason
+object UnexpectedCachingDisableReasonsExtractor : SingleEventExtractor<List<String>>("TaskFinished") {
+    override fun extract(events: Iterable<BuildEvent>): List<String> {
+        return events
+            .mapNotNull { it.data?.stringProperty("cachingDisabledReasonCategory") }
+            .filter { it == "OVERLAPPING_OUTPUTS" }
+            .distinct()
+    }
+}
+
 data class Agent(val host: String?, val user: String?)
 
 private fun Any.booleanProperty(name: String): Boolean? = (this as Map<*, *>)[name] as Boolean?

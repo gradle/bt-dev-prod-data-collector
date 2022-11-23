@@ -18,7 +18,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row17;
+import org.jooq.Row18;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -135,6 +135,11 @@ public class Build extends TableImpl<BuildRecord> {
      */
     public final TableField<BuildRecord, String[]> EXECUTED_TEST_TASKS = createField(DSL.name("executed_test_tasks"), SQLDataType.VARCHAR(255).getArrayDataType(), this, "");
 
+    /**
+     * The column <code>public.build.unexpected_caching_disabled_reasons</code>.
+     */
+    public final TableField<BuildRecord, String[]> UNEXPECTED_CACHING_DISABLED_REASONS = createField(DSL.name("unexpected_caching_disabled_reasons"), SQLDataType.VARCHAR(255).getArrayDataType(), this, "");
+
     private Build(Name alias, Table<BuildRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -215,11 +220,11 @@ public class Build extends TableImpl<BuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row17 type methods
+    // Row18 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row17<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[], Boolean, Boolean, Boolean, String[]> fieldsRow() {
-        return (Row17) super.fieldsRow();
+    public Row18<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[], Boolean, Boolean, Boolean, String[], String[]> fieldsRow() {
+        return (Row18) super.fieldsRow();
     }
 }

@@ -1,0 +1,12 @@
+id: ngapnu6jwslkk
+event: Build
+data: {"buildId":"ngapnu6jwslkk","toolType":"gradle","toolVersion":"7.2","agentVersion":"3.11.4","timestamp":1669184334219}
+
+id: 0
+event: BuildEvent
+data: {"timestamp":1669184327625,"type":{"majorVersion":1,"minorVersion":6,"eventType":"TaskFinished"},"data":{"id":-4134688017807288574,"path":":first","outcome":"from_cache","skipMessage":null,"cacheable":true,"cachingDisabledReasonCategory":null,"cachingDisabledExplanation":null,"originBuildInvocationId":"ntsdbhivkjbyza7u4lx3mjlcy4","originExecutionTime":10,"actionable":true,"upToDateMessages":["Output property 'outputDir' file /Users/zhb/Projects/gradle/subprojects/core/build/tmp/test files/Overlapping.Test/wlx6x/build/overlap has been removed.","Output property 'outputDir' file /Users/zhb/Projects/gradle/subprojects/core/build/tmp/test files/Overlapping.Test/wlx6x/build/overlap/first.txt has been removed."],"cachingDisabledReason":null}}
+
+id: 1
+event: BuildEvent
+data: {"timestamp":1669184327633,"type":{"majorVersion":1,"minorVersion":6,"eventType":"TaskFinished"},"data":{"id":-8844947698542735535,"path":":second","outcome":"success","skipMessage":null,"cacheable":false,"cachingDisabledReasonCategory":"OVERLAPPING_OUTPUTS","cachingDisabledExplanation":"Gradle does not know how file 'build/overlap/first.txt' was created (output property 'outputDir'). Task output caching requires exclusive access to output paths to guarantee correctness (i.e. multiple tasks are not allowed to produce output in the same location).","originBuildInvocationId":null,"originExecutionTime":null,"actionable":true,"upToDateMessages":["Output property 'outputDir' file /Users/zhb/Projects/gradle/subprojects/core/build/tmp/test files/Overlapping.Test/wlx6x/build/overlap/second.txt has been removed."],"cachingDisabledReason":null}}
+
