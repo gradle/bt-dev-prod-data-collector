@@ -35,7 +35,7 @@ class DefaultBuildScanSummaryService(private val geClients: Map<String, ExportAp
         listOf(
             "ge.gradle.org",
             "e.grdev.net",
-            "ge-unstable.grdev.net"
+            "ge-helm-standalone-unstable.grdev.net"
         ).associateWith { ExportApiClient(GradleEnterpriseServer(it, getExportApiTokenFor(it))) }
     )
 
