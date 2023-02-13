@@ -14,14 +14,16 @@ import reactor.core.publisher.Mono
 import java.net.URI
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.concurrent.TimeUnit
 
 @Service
 class TeamcityClientService(
     @Value("${'$'}{teamcity.api.token}") private val teamCityApiToken: String,
     private val objectMapper: ObjectMapper
 ) {
-    private val teamCityInstance: TeamCityInstance =
-        TeamCityInstanceFactory.guestAuth("https://builds.gradle.org")
+    private val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory
+        .guestAuth("https://builds.gradle.org")
+        .withTimeout(5, TimeUnit.MINUTES)
 
     private val client: WebClient = WebClient.create()
 
