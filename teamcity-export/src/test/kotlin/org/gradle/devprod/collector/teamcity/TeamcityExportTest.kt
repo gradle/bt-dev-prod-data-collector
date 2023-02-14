@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit
 class TeamcityExportTest {
 
     @Test
-    @Disabled("This is a manual test that requires a live tc token")
+//    @Disabled("This is a manual test that requires a live tc token")
     fun `can download GE builds`() {
 
         val loggingRepo = object: Repository {
@@ -24,11 +24,10 @@ class TeamcityExportTest {
 
         }
         val objectMapper = ObjectMapper()
-        val tcService = TeamcityClientService(teamCityApiToken = "", objectMapper)
+        val tcService = TeamcityClientService(teamCityApiToken = System.getenv("TC_TOKEN"), objectMapper)
         val exporter = TeamcityExport(loggingRepo, tcService)
 
-        exporter.loadGeFailedBuilds()
-
+        exporter.loadGbtTriggerBuilds()
     }
 
 }
