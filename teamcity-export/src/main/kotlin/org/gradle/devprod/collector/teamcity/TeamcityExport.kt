@@ -3,6 +3,7 @@ package org.gradle.devprod.collector.teamcity
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import java.lang.Exception
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -31,7 +32,12 @@ class TeamcityExport(
     @Scheduled(initialDelay = 0, fixedDelay = 10 * 60 * 1000)
     fun loadGbtTriggerBuilds() {
         println("Loading trigger builds from Teamcity")
-        teamcityClientService.loadTriggerBuilds(gbtPipelines, gbtBuildConfigurations).forEach { build -> repo.storeBuild(build) }
+        try {
+            teamcityClientService.loadTriggerBuilds(gbtPipelines, gbtBuildConfigurations).forEach { build -> repo.storeBuild(build) }
+        } catch (ex: Exception) {
+            println("Error meanwhile loading GBT triggered builds")
+            ex.printStackTrace()
+        }
     }
 
     @Async
