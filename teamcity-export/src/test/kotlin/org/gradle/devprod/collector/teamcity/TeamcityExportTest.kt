@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit
 class TeamcityExportTest {
 
     @Test
-//    @Disabled("This is a manual test that requires a live tc token")
+    @Disabled("This is a manual test that requires a live tc token")
     fun `can download GE builds`() {
 
         val loggingRepo = object: Repository {
