@@ -96,18 +96,22 @@ class ExportApiExtractorService(
         }
     }
 
-    private suspend fun getEventsByBuild(buildId: Build, eventTypes: List<String>): Map<String?, List<BuildEvent>> {
-        return try {
-            exportApiClient
-                .getEvents(buildId, eventTypes)
-                .toSet()
-                .mapNotNull { it.data() }
-                .toList()
-                .groupBy(BuildEvent::eventType)
-        } catch (e: Exception) {
-            logger.error("Error getting events for $buildId", e)
-            emptyMap()
+    private suspend fun getEventsByBuild(buildId: Build, eventTypes: List<String>, retries: Int = 3): Map<String?, List<BuildEvent>> {
+        var retryVar = retries
+        var lastException: Exception? = null
+        while (retryVar-- > 0) {
+            try {
+                return exportApiClient
+                    .getEvents(buildId, eventTypes)
+                    .toSet()
+                    .mapNotNull { it.data() }
+                    .toList()
+                    .groupBy(BuildEvent::eventType)
+            } catch (e: Exception) {
+                lastException = e
+            }
         }
+        throw lastException!!
     }
 
     private fun DSLContext.insertIntoBuildTable(build: Build, events: Map<String?, List<BuildEvent>>) {
