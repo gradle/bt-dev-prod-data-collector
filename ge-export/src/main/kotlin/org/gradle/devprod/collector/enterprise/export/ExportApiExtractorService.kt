@@ -81,14 +81,7 @@ class ExportApiExtractorService(
                     ExecutedTestTasks,
                     UnexpectedCachingDisableReasonsExtractor
                 )
-            val eventTypes = extractors.flatMap { it.eventTypes }.distinct()
-            val events: Map<String?, List<BuildEvent>> =
-                exportApiClient
-                    .getEvents(build, eventTypes)
-                    .toSet()
-                    .mapNotNull { it.data() }
-                    .toList()
-                    .groupBy(BuildEvent::eventType)
+            val events: Map<String?, List<BuildEvent>> = getEventsByBuild(build, extractors.flatMap { it.eventTypes }.distinct())
 
             try {
                 create.transaction { configuration ->
@@ -100,6 +93,20 @@ class ExportApiExtractorService(
             } catch (e: Exception) {
                 throw IllegalStateException("Error processing $build, events: $events", e)
             }
+        }
+    }
+
+    private suspend fun getEventsByBuild(buildId: Build, eventTypes: List<String>): Map<String?, List<BuildEvent>> {
+        return try {
+            exportApiClient
+                .getEvents(buildId, eventTypes)
+                .toSet()
+                .mapNotNull { it.data() }
+                .toList()
+                .groupBy(BuildEvent::eventType)
+        } catch (e: Exception) {
+            logger.error("Error getting events for $buildId", e)
+            emptyMap()
         }
     }
 
