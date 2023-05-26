@@ -119,11 +119,13 @@ class TeamcityClientService(
             .block()
             .let { objectMapper.readValue(it, TeamCityResponse::class.java) }
 
-    private fun createTeamcityUri(url: String): URI =
-        if (url.startsWith("http")) {
-            URI.create(url)
+    private fun createTeamcityUri(url: String): URI {
+        val newUrl = url.replace("lookupLimit:10000", "lookupLimit:1000")
+        return if (newUrl.startsWith("http")) {
+            URI.create(newUrl)
         } else {
-            val relativePath = if (url.startsWith("/")) url else "/$url"
+            val relativePath = if (newUrl.startsWith("/")) newUrl else "/$newUrl"
             URI.create("https://builds.gradle.org$relativePath")
         }
+    }
 }
