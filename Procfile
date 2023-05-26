@@ -1,1 +1,1 @@
-web: java -Xmx160M -XX:MaxMetaspaceSize=128M -jar application/build/libs/application-*.jar
+web: java -XX:+UseContainerSupport -jar application/build/libs/application-*.jar
