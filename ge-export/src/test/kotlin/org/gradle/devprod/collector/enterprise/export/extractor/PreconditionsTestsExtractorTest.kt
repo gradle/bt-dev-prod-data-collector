@@ -16,7 +16,6 @@ class PreconditionsTestsExtractorTest {
         val preconditionTests = PreconditionTestsExtractor.extractFrom(events.groupBy { it.eventType })
 
         assertTrue(preconditionTests.isNotEmpty())
-
         preconditionTests.forEach(::println)
     }
 

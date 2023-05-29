@@ -280,29 +280,81 @@ object UnexpectedCachingDisableReasonsExtractor : SingleEventExtractor<List<Stri
  * or
  * `org.gradle.test.predicate.LocalPreconditionProbingTests` classes
  */
-object PreconditionTestsExtractor : Extractor<List<PreconditionTest>>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
+object PreconditionTestsExtractor :
+    Extractor<List<PreconditionTest>>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): List<PreconditionTest> {
         // Build the lookup map to lookup TestStarted events
         val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
 
         return events.getOrDefault("TestFinished", emptyList()).map {
-            val id = it.data?.longProperty("id")
-            val failed = it.data?.booleanProperty("failed")
-            val skipped = it.data?.booleanProperty("skipped")
-
-            val testCase = testIdToTestCase.get(id)
-            if (testCase != null && failed != null && skipped != null) {
-                PreconditionTest(testCase.className, testCase.name, failed, skipped)
-            } else {
-                null
+            if (it.data == null) {
+                return@map null
             }
+
+            val id = it.data.longProperty("id")
+            // Will be null, when the test is a top-level test.
+            val testCase = testIdToTestCase[id] ?: return@map null
+            val failed = it.data.booleanProperty("failed") ?: return@map null
+            val skipped = it.data.booleanProperty("skipped") ?: return@map null
+
+            val preconditions: MutableList<String> = mutableListOf()
+            try {
+                preconditions.addAll(
+                    extractPreconditionNames(testCase.name).sorted()
+                )
+            } catch (ex: IllegalArgumentException) {
+                return@map null
+            }
+
+            PreconditionTest(
+                testCase.className,
+                preconditions,
+                failed,
+                skipped
+            )
         }.filterNotNull()
+    }
+
+    /**
+     * Extracts from the test name the list of preconditions used.
+     *
+     * It assumes that the test name is in the format:
+     *  - Has an opening '[' and a closing ']' bracket.
+     *  - The preconditions are separated by a comma.
+     *
+     * @throws IllegalArgumentException if the test name does not start with '['.
+     * @throws IllegalArgumentException if the test name does not end with ']'.
+     * @throws IllegalArgumentException if the test name does not contain any preconditions.
+     */
+    fun extractPreconditionNames(name: String): List<String> {
+        if (!name.startsWith("[")) {
+            throw IllegalArgumentException("Test name '$name' does not start with '['")
+        }
+        if (!name.endsWith("]")) {
+            throw IllegalArgumentException("Test name '$name' does not end with ']'")
+        }
+
+        val preconditions = name
+            .substring(1, name.length - 1)
+            .split(",")
+            .map {
+                it.trim()
+            }
+            .filter {
+                it.isNotEmpty()
+            }
+
+        if (preconditions.isEmpty()) {
+            throw IllegalArgumentException("Test name '$name' doesn't contain any preconditions")
+        }
+
+        return preconditions
     }
 }
 
 data class PreconditionTest(
     val className: String,
-    val name: String,
+    val preconditions: List<String>,
     val failed: Boolean,
     val skipped: Boolean
 )
