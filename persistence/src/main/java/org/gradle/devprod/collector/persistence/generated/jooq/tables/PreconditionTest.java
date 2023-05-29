@@ -10,6 +10,7 @@ import java.util.List;
 import org.gradle.devprod.collector.persistence.generated.jooq.Keys;
 import org.gradle.devprod.collector.persistence.generated.jooq.Public;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.PreconditionTestRecord;
+import org.jooq.Check;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
@@ -21,6 +22,7 @@ import org.jooq.TableField;
 import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
+import org.jooq.impl.Internal;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
@@ -59,7 +61,7 @@ public class PreconditionTest extends TableImpl<PreconditionTestRecord> {
     /**
      * The column <code>public.precondition_test.preconditions</code>.
      */
-    public final TableField<PreconditionTestRecord, String> PRECONDITIONS = createField(DSL.name("preconditions"), SQLDataType.CLOB.nullable(false), this, "");
+    public final TableField<PreconditionTestRecord, String[]> PRECONDITIONS = createField(DSL.name("preconditions"), SQLDataType.CLOB.getArrayDataType(), this, "");
 
     /**
      * The column <code>public.precondition_test.skipped</code>.
@@ -134,6 +136,13 @@ public class PreconditionTest extends TableImpl<PreconditionTestRecord> {
     }
 
     @Override
+    public List<Check<PreconditionTestRecord>> getChecks() {
+        return Arrays.<Check<PreconditionTestRecord>>asList(
+              Internal.createCheck(this, DSL.name("non_empty_array_constraint"), "((cardinality(preconditions) > 0))", true)
+        );
+    }
+
+    @Override
     public PreconditionTest as(String alias) {
         return new PreconditionTest(DSL.name(alias), this);
     }
@@ -164,7 +173,7 @@ public class PreconditionTest extends TableImpl<PreconditionTestRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<String, String, String, Boolean, Boolean> fieldsRow() {
+    public Row5<String, String, String[], Boolean, Boolean> fieldsRow() {
         return (Row5) super.fieldsRow();
     }
 }

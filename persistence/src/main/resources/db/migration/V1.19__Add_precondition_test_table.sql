@@ -5,11 +5,13 @@ create table precondition_test
     -- The class name where the precondition test comes from (e.g. LocalPreconditionTest, RemotePreconditionTest)
     class_name varchar(1024) not null,
     -- Comma separated list of preconditions (e.g. "precondition1,precondition2")
-    preconditions text not null,
+    preconditions text[],
     -- True if the test was skipped, false otherwise
     skipped boolean not null,
     -- True if the test failed, false otherwise
     failed boolean not null,
     primary key (build_id, class_name, preconditions),
-    foreign key (build_id) references build
+    foreign key (build_id) references build,
+    -- We expect that we always have at least one precondition
+    constraint non_empty_array_constraint check (cardinality(preconditions) > 0)
 )
