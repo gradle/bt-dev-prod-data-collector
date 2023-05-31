@@ -7,9 +7,9 @@ javaPlatform {
 }
 
 dependencies {
-    api(platform("org.springframework.boot:spring-boot-dependencies:2.7.12"))
+    api(platform("org.springframework.boot:spring-boot-dependencies:3.1.0"))
 
     constraints {
-        api("org.jetbrains.teamcity:teamcity-rest-client:1.19.0")
+        api("org.jetbrains.teamcity:teamcity-rest-client:1.18.0")
     }
 }

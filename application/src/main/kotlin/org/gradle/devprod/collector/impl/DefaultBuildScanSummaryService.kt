@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service
  * By convention, token for ge.gradle.org is stored in env variable "GE_GRADLE_ORG_EXPORT_API_TOKEN"
  */
 private fun getExportApiTokenFor(geHost: String): String {
-    val envName = geHost.replace(".", "_").toUpperCase() + "_EXPORT_API_TOKEN"
+    val envName = geHost.replace(".", "_").uppercase() + "_EXPORT_API_TOKEN"
     return System.getenv(envName) ?: throw IllegalArgumentException("You must set env variable $envName to access $geHost")
 }
 
