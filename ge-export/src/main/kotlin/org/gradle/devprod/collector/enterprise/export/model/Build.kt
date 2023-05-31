@@ -5,5 +5,5 @@ data class Build(
     val toolType: String,
     val agentVersion: String,
     val toolVersion: String,
-    val timestamp: Long
+    val timestamp: Long,
 )

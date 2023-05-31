@@ -19,7 +19,7 @@ class DefaultLinkSharedHandler
 @Autowired constructor(
     private val buildScanSummaryService: BuildScanSummaryService,
     private val buildScanRenderer: BuildScanRenderer,
-    private val buildScanRenderPublisher: BuildScanRenderPublisher
+    private val buildScanRenderPublisher: BuildScanRenderPublisher,
 ) : LinkSharedHandler {
     override fun handleBuildScanLinksShared(linkSharedEvent: LinkSharedEvent, baseUri: URI) {
         val unfurledLinks: MutableMap<String, ChatUnfurlRequest.UnfurlDetail> = mutableMapOf()

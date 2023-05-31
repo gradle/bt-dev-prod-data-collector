@@ -10,17 +10,17 @@ import java.time.temporal.ChronoUnit
 @Component
 class TeamcityExport(
     private val repo: Repository,
-    private val teamcityClientService: TeamcityClientService
+    private val teamcityClientService: TeamcityClientService,
 ) {
     private val gbtPipelines = listOf("Master", "Release")
     private val gbtBuildConfigurations: (String) -> List<String> = {
-        pipeline: String ->
+            pipeline: String ->
         listOf(
             "Gradle_${pipeline}_Check_Stage_QuickFeedbackLinuxOnly_Trigger",
             "Gradle_${pipeline}_Check_Stage_QuickFeedback_Trigger",
             "Gradle_${pipeline}_Check_Stage_PullRequestFeedback_Trigger",
             "Gradle_${pipeline}_Check_Stage_ReadyforNightly_Trigger",
-            "Gradle_${pipeline}_Check_Stage_ReadyforRelease_Trigger"
+            "Gradle_${pipeline}_Check_Stage_ReadyforRelease_Trigger",
         )
     }
     private val gbtRootProjectAffectedBuild: (String) -> String = { "Gradle_${it}_Check" }

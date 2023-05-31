@@ -85,7 +85,7 @@ object TaskSummaryExtractor : SingleEventExtractor<TaskSummary>("TaskFinished") 
                 .filter { it.data?.stringProperty("outcome") != null }
                 .groupBy { it.data?.stringProperty("outcome") }
                 .mapKeys { TaskOutcome.valueOf(it.key!!.uppercase()) }
-                .mapValues { it.value.size }
+                .mapValues { it.value.size },
         )
     }
 }
@@ -237,7 +237,7 @@ object BuildAgent : SingleEventExtractor<Agent>("BuildAgent") {
         events.first().data!!.let {
             Agent(
                 it.stringProperty("localHostname") ?: it.stringProperty("publicHostname"),
-                it.stringProperty("username")
+                it.stringProperty("username"),
             )
         }
 }

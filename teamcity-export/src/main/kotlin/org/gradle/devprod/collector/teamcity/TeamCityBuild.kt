@@ -21,7 +21,7 @@ data class TeamCityBuild(
     val composite: Boolean,
     val buildScanUrls: List<String> = emptyList(),
     val buildHostName: String?,
-    val buildHostType: String?
+    val buildHostType: String?,
 )
 
 fun Build.toTeamCityBuild(): TeamCityBuild? {
@@ -50,7 +50,7 @@ fun Build.toTeamCityBuild(): TeamCityBuild? {
             statusText,
             composite == true,
             buildHostName = agent?.name,
-            buildHostType = typeOfAgents(agent?.name)
+            buildHostType = typeOfAgents(agent?.name),
         )
     }
 }
@@ -82,7 +82,7 @@ fun TeamCityResponse.BuildBean.toTeamCityBuild(buildScans: List<String>) =
         isComposite,
         buildScanUrls = buildScans,
         buildHostName = agent.name,
-        buildHostType = typeOfAgents(agent?.name)
+        buildHostType = typeOfAgents(agent?.name),
     )
 
 private val rfc822: DateTimeFormatter =

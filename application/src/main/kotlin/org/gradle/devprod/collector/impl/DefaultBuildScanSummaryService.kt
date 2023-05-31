@@ -36,8 +36,8 @@ class DefaultBuildScanSummaryService(private val geClients: Map<String, ExportAp
             "ge.gradle.org",
             "e.grdev.net",
             "ge-helm-standalone-unstable.grdev.net",
-            "ge.solutions-team.gradle.com"
-        ).associateWith { ExportApiClient(GradleEnterpriseServer(it, getExportApiTokenFor(it))) }
+            "ge.solutions-team.gradle.com",
+        ).associateWith { ExportApiClient(GradleEnterpriseServer(it, getExportApiTokenFor(it))) },
     )
 
     override fun getSummary(geServerHost: String, buildScanId: String): BuildScanSummary = runBlocking {
@@ -53,7 +53,7 @@ class DefaultBuildScanSummaryService(private val geClients: Map<String, ExportAp
                 BuildRequestedTasks,
                 ExecutedTestTasks,
                 TestSummaryExtractor,
-                TaskSummaryExtractor
+                TaskSummaryExtractor,
             )
         val eventTypes = extractors.flatMap { it.eventTypes }.distinct()
         val events: List<BuildEvent> = client.getEvents(buildScanId, eventTypes)
@@ -72,7 +72,7 @@ class DefaultBuildScanSummaryService(private val geClients: Map<String, ExportAp
             Tags.extractFrom(typeToEvents).toList(),
             BuildRequestedTasks.extractFrom(typeToEvents),
             TaskSummaryExtractor.extractFrom(typeToEvents),
-            TestSummaryExtractor.extractFrom(typeToEvents)
+            TestSummaryExtractor.extractFrom(typeToEvents),
         )
     }
 }
