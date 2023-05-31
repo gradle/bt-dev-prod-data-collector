@@ -35,14 +35,14 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
                     listOf(
                         buildOutcomeImage(buildScanSummary.outcome, baseUri),
                         BlockCompositions.plainText(escapeText(buildScanSummary.projectName)),
-                        BlockCompositions.markdownText(renderTags(buildScanSummary.tags))
-                    )
+                        BlockCompositions.markdownText(renderTags(buildScanSummary.tags)),
+                    ),
                 ).build(),
                 ContextBlock.builder().elements(
                     listOf(
                         BlockCompositions.plainText("Start: $formattedStart"),
                         BlockCompositions.plainText("Duration: $duration"),
-                    )
+                    ),
                 ).build(),
                 SectionBlock.builder()
                     .text(BlockCompositions.markdownText("Tasks `${escapeText(buildScanSummary.tasks)}`"))
@@ -52,8 +52,8 @@ class DefaultBuildScanRenderer : BuildScanRenderer {
                     .build(),
                 SectionBlock.builder()
                     .text(BlockCompositions.markdownText(testSummaryMessage))
-                    .build()
-            )
+                    .build(),
+            ),
         ).build()
     }
 

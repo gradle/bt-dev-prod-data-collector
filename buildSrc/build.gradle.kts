@@ -8,10 +8,10 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.32")
-    implementation("org.jetbrains.kotlin:kotlin-allopen:1.4.32")
-    implementation("org.springframework.boot:spring-boot-gradle-plugin:2.5.12")
-    implementation("nu.studer:gradle-jooq-plugin:5.2.1")
-    implementation("com.diffplug.spotless:spotless-plugin-gradle:5.17.1")
-    implementation("gradle.plugin.org.flywaydb:gradle-plugin-publishing:9.4.0")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.21")
+    implementation("org.jetbrains.kotlin:kotlin-allopen:1.8.21")
+    implementation("org.springframework.boot:spring-boot-gradle-plugin:3.1.0")
+    implementation("nu.studer:gradle-jooq-plugin:8.2.1")
+    implementation("com.diffplug.spotless:spotless-plugin-gradle:6.19.0")
+    implementation("gradle.plugin.org.flywaydb:gradle-plugin-publishing:9.19.1")
 }

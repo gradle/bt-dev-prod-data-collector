@@ -7,16 +7,9 @@ javaPlatform {
 }
 
 dependencies {
-    api(platform("org.springframework.boot:spring-boot-dependencies:2.5.12"))
+    api(platform("org.springframework.boot:spring-boot-dependencies:2.7.12"))
 
     constraints {
-        api("org.apache.logging.log4j:log4j-api:2.16.0")
-        api("org.apache.logging.log4j:log4j-to-slf4j:2.16.0")
-        api("org.flywaydb:flyway-core:7.7.1")
-        api("org.jetbrains.teamcity:teamcity-rest-client:1.18.1")
-        api("org.junit.jupiter:junit-jupiter-params:5.9.1")
-        api("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2") {
-            because("used by ge-export:test")
-        }
+        api("org.jetbrains.teamcity:teamcity-rest-client:1.19.0")
     }
 }

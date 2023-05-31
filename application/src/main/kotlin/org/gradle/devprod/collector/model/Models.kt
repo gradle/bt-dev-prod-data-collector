@@ -20,7 +20,7 @@ data class BuildScanSummary(
     val tags: List<String>,
     val tasks: String,
     val taskSummary: TaskSummary,
-    val testSummary: TestSummary
+    val testSummary: TestSummary,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -29,14 +29,14 @@ data class LinkSharedEventCallback(
     val eventId: String,
     @JsonProperty("event_time")
     val eventTime: Long,
-    val event: LinkSharedEvent
+    val event: LinkSharedEvent,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class UrlVerificationEvent(
     val token: String,
     val challenge: String,
-    val type: String
+    val type: String,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -52,11 +52,11 @@ data class LinkSharedEvent(
     val botUserMember: Boolean,
     @JsonProperty("unfurl_id")
     val unfurlId: String,
-    val source: String?
+    val source: String?,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Link(
     val domain: String,
-    val url: URI
+    val url: URI,
 )

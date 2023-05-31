@@ -14,7 +14,7 @@ class JooqRepository(private val dslContext: DSLContext) : Repository {
         val existing = dslContext.fetchAny(TEAMCITY_BUILD, TEAMCITY_BUILD.BUILD_ID.eq(build.id))
         if (existing == null) {
             println(
-                "Found build ${build.id} for branch ${build.branch} with status ${build.status}, queued at ${build.queuedDateTime}, buildscan: ${build.buildScanUrls}"
+                "Found build ${build.id} for branch ${build.branch} with status ${build.status}, queued at ${build.queuedDateTime}, buildscan: ${build.buildScanUrls}",
             )
             dslContext.transaction { configuration ->
                 val ctx = DSL.using(configuration)

@@ -3,7 +3,7 @@ plugins {
 }
 
 configure<com.diffplug.gradle.spotless.SpotlessExtension> {
-    val ktlintVersion = "0.43.0"
+    val ktlintVersion = "0.49.1"
     kotlin {
         target("src/main/kotlin/**/*.kt")
         ktlint(ktlintVersion)

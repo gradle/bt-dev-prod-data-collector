@@ -43,7 +43,8 @@ class ExportApiClient(private val server: GradleEnterpriseServer) {
                 logger.error("Failure with /builds/since export API", throwable)
                 if (reconnectCount.getAndIncrement() >= MAX_RECONNECT_COUNT) {
                     throw IllegalStateException(
-                        "Failed to connect after $MAX_RECONNECT_COUNT retries", throwable
+                        "Failed to connect after $MAX_RECONNECT_COUNT retries",
+                        throwable,
                     )
                 } else {
                     createEventStreamFlux().apply { reconnectCount.set(0) }
@@ -53,7 +54,7 @@ class ExportApiClient(private val server: GradleEnterpriseServer) {
     private fun WebClient.RequestHeadersSpec<*>.bearerAuth() =
         header(
             "Authorization",
-            "Bearer ${Base64.getEncoder().encodeToString(server.apiToken.toByteArray())}"
+            "Bearer ${Base64.getEncoder().encodeToString(server.apiToken.toByteArray())}",
         )
 
     // https://docs.gradle.com/enterprise/export-api/#reconnect_resume

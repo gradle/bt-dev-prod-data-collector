@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 @Service
 class TeamcityClientService(
     @Value("${'$'}{teamcity.api.token}") private val teamCityApiToken: String,
-    private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
 ) {
     private val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory
         .guestAuth("https://builds.gradle.org")
@@ -71,7 +71,7 @@ class TeamcityClientService(
     private fun loadingFailedBuildsUrl(
         affectedProject: String,
         start: Instant,
-        pageSize: Int = 100
+        pageSize: Int = 100,
     ): String {
         val locators =
             mapOf(
@@ -79,7 +79,7 @@ class TeamcityClientService(
                 "status" to "FAILURE",
                 "branch" to "default:any",
                 "composite" to "false",
-                "sinceDate" to formatRFC822(start)
+                "sinceDate" to formatRFC822(start),
             ).entries
                 .joinToString(",") { "${it.key}:${it.value}" }
 

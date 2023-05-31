@@ -43,7 +43,7 @@ import java.time.ZonedDateTime
 class ExportApiExtractorService(
     private val exportApiClient: ExportApiClient,
     private val create: DSLContext,
-    private val shutdownService: ShutdownService
+    private val shutdownService: ShutdownService,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
@@ -79,7 +79,7 @@ class ExportApiExtractorService(
                     DaemonState,
                     DaemonUnhealthy,
                     ExecutedTestTasks,
-                    UnexpectedCachingDisableReasonsExtractor
+                    UnexpectedCachingDisableReasonsExtractor,
                 )
             val events: Map<String?, List<BuildEvent>> = getEventsByBuild(build, extractors.flatMap { it.eventTypes }.distinct())
 
@@ -131,7 +131,7 @@ class ExportApiExtractorService(
         val daemonUnhealthyReason = DaemonUnhealthy.extractFrom(events)
         val unexpectedCachingDisableReasons = UnexpectedCachingDisableReasonsExtractor.extractFrom(events)
         println(
-            "Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}"
+            "Duration of build ${build.buildId} for $rootProjectName is ${buildTime.format()}, first test task started after ${timeToFirstTestTask?.format()}",
         )
         val buildCacheLoadFailure = BuildCacheLoadFailure.extractFrom(events)
         val buildCacheStoreFailure = BuildCacheStoreFailure.extractFrom(events)
@@ -168,10 +168,10 @@ class ExportApiExtractorService(
                             LONG_TEST,
                             LONG_TEST.BUILD_ID,
                             LONG_TEST.CLASS_NAME,
-                            LONG_TEST.DURATION_MS
+                            LONG_TEST.DURATION_MS,
                         ).values(build.buildId, it.key, it.value.toMillis())
                     }
-                    .toTypedArray()
+                    .toTypedArray(),
             ).execute()
         }
     }
@@ -185,10 +185,10 @@ class ExportApiExtractorService(
                         insertInto(
                             FLAKY_TEST_CLASS,
                             FLAKY_TEST_CLASS.BUILD_ID,
-                            FLAKY_TEST_CLASS.FLAKY_TEST_FQCN
+                            FLAKY_TEST_CLASS.FLAKY_TEST_FQCN,
                         ).values(build.buildId, it)
                     }
-                    .toTypedArray()
+                    .toTypedArray(),
             ).execute()
         }
     }
