@@ -16,7 +16,7 @@ dependencyResolutionManagement {
         maven {
             url =
                 uri(
-                    "https://packages.jetbrains.team/maven/p/teamcity-rest-client/teamcity-rest-client"
+                    "https://packages.jetbrains.team/maven/p/teamcity-rest-client/teamcity-rest-client",
                 )
             content { includeModule("org.jetbrains.teamcity", "teamcity-rest-client") }
         }
