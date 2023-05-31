@@ -84,7 +84,7 @@ object TaskSummaryExtractor : SingleEventExtractor<TaskSummary>("TaskFinished") 
             events
                 .filter { it.data?.stringProperty("outcome") != null }
                 .groupBy { it.data?.stringProperty("outcome") }
-                .mapKeys { TaskOutcome.valueOf(it.key!!.toUpperCase()) }
+                .mapKeys { TaskOutcome.valueOf(it.key!!.uppercase()) }
                 .mapValues { it.value.size }
         )
     }
@@ -117,7 +117,7 @@ object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFi
         return events
             .getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList())
             .filter {
-                it.data?.stringProperty("outcome")?.toUpperCase() in listOf("SUCCESS", "FAILED") &&
+                it.data?.stringProperty("outcome")?.uppercase() in listOf("SUCCESS", "FAILED") &&
                     idToClassName[it.data?.longProperty("id")]?.endsWith("Test") == true
             }
             .mapNotNull { it.data?.stringProperty("path") }
