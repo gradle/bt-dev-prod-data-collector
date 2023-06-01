@@ -43,7 +43,7 @@ object LongTestClassExtractor :
                 val id = it.data?.longProperty("id")!!
                 val endTime = Instant.ofEpochMilli(it.timestamp)
                 testIdToClassName.getValue(id) to
-                    Duration.between(testIdToStartTime.getValue(id), endTime)
+                        Duration.between(testIdToStartTime.getValue(id), endTime)
             }
             .groupBy({ it.first }) { it.second }
             .mapValues { it.value.maxOrNull()!! }
@@ -118,7 +118,7 @@ object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFi
             .getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList())
             .filter {
                 it.data?.stringProperty("outcome")?.uppercase() in listOf("SUCCESS", "FAILED") &&
-                    idToClassName[it.data?.longProperty("id")]?.endsWith("Test") == true
+                        idToClassName[it.data?.longProperty("id")]?.endsWith("Test") == true
             }
             .mapNotNull { it.data?.stringProperty("path") }
             .filter { it.endsWith("Test") }
@@ -154,6 +154,14 @@ object TestSummaryExtractor : Extractor<TestSummary>(listOf("TestStarted", "Test
     }
 }
 
+/**
+ * Builds a reusable map from separate build events.
+ *
+ * As TestFinished and TestStarted events are not connected together, this utility method creates a handy map, which
+ * can be used to look up a TestStarted event by its id.
+ *
+ * This is very handy if a TestStarted and TestFinished event needs to be combined.
+ */
 private fun getTestIdToTestCaseMap(typeToEvents: Map<String?, List<BuildEvent>>): Map<Long, TestCase> {
     val idToTaskPath: Map<Long, String> = getIdToTaskPathMap(typeToEvents.getOrDefault("TaskStarted", emptyList()))
     val testIdToTestCase: MutableMap<Long, TestCase> = mutableMapOf()
@@ -265,6 +273,39 @@ object UnexpectedCachingDisableReasonsExtractor : SingleEventExtractor<List<Stri
             .distinct()
     }
 }
+
+/**
+ * Extracts all tests, which are part of
+ * `org.gradle.test.predicate.RemotePreconditionProbingTests`
+ * or
+ * `org.gradle.test.predicate.LocalPreconditionProbingTests` classes
+ */
+object PreconditionTestsExtractor : Extractor<List<PreconditionTest>>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
+    override fun extractFrom(events: Map<String?, List<BuildEvent>>): List<PreconditionTest> {
+        // Build the lookup map to lookup TestStarted events
+        val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
+
+        return events.getOrDefault("TestFinished", emptyList()).map {
+            val id = it.data?.longProperty("id")
+            val failed = it.data?.booleanProperty("failed")
+            val skipped = it.data?.booleanProperty("skipped")
+
+            val testCase = testIdToTestCase.get(id)
+            if (testCase != null && failed != null && skipped != null) {
+                PreconditionTest(testCase.className, testCase.name, failed, skipped)
+            } else {
+                null
+            }
+        }.filterNotNull()
+    }
+}
+
+data class PreconditionTest(
+    val className: String,
+    val name: String,
+    val failed: Boolean,
+    val skipped: Boolean
+)
 
 data class Agent(val host: String?, val user: String?)
 
