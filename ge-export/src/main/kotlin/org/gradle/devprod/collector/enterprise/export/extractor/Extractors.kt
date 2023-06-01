@@ -318,9 +318,10 @@ object PreconditionTestsExtractor :
     /**
      * Extracts from the test name the list of preconditions used.
      *
-     * It assumes that the test name is in the format:
-     *  - Has an opening '[' and a closing ']' bracket.
-     *  - The preconditions are separated by a comma.
+     * Test names should contain the preconditions in a brace enclosed, comma separated format like:
+     * `[precondition1, precondition2, ...]`
+     *
+     * See `PreconditionProbingTests.groovy` in the gradle/gradle project to see how the test names are generated.
      *
      * @throws IllegalArgumentException if the test name does not start with '['.
      * @throws IllegalArgumentException if the test name does not end with ']'.
