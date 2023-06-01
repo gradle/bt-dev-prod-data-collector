@@ -1,6 +1,5 @@
 package org.gradle.devprod.collector.enterprise.export.extractor
 
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -12,7 +11,7 @@ class PreconditionsTestsExtractorTest {
 
     @Test
     fun `extractor smoke test`() {
-        val events = parse("/zr2sh7kje3fd4.json")
+        val events = parse("/zr2sh7kje3fd4.txt")
         val preconditionTests = PreconditionTestsExtractor.extractFrom(events.groupBy { it.eventType })
 
         assertTrue(preconditionTests.isNotEmpty())
