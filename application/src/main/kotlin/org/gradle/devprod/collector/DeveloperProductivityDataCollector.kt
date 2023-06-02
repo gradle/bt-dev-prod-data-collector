@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import jakarta.servlet.http.HttpServletRequest
 import org.gradle.devprod.collector.api.LinkSharedHandler
 import org.gradle.devprod.collector.enterprise.export.GradleEnterpriseServer
 import org.gradle.devprod.collector.model.LinkSharedEventCallback
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder
-import jakarta.servlet.http.HttpServletRequest
 
 @SpringBootApplication
 @EnableScheduling
