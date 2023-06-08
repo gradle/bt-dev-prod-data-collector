@@ -14,7 +14,7 @@ const val BULK_SIZE = 10000
 
 @Component
 class DatabaseCleanupService(private val create: DSLContext) {
-    final var healthy: Boolean = true
+    final var broken: Boolean = false
         private set
 
     private fun deleteInTeamCityBuildTable(date: OffsetDateTime) {
@@ -52,9 +52,9 @@ class DatabaseCleanupService(private val create: DSLContext) {
             deleteInBuildTable(limitDate)
             deleteInTeamCityBuildTable(limitDate)
 
-            healthy = true
+            broken = false
         } catch (e: Exception) {
-            healthy = false
+            broken = true
             throw e
         }
     }

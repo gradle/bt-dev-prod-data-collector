@@ -11,10 +11,10 @@ class DatabaseCleanupHealthIndicator(
     private val databaseCleanupServiceMessageKey = "Database cleanup service"
 
     override fun health(): Health {
-        return if (databaseCleanupService.healthy) {
-            Health.up().withDetail(databaseCleanupServiceMessageKey, "Healthy").build()
-        } else {
+        return if (databaseCleanupService.broken) {
             Health.down().withDetail(databaseCleanupServiceMessageKey, "Unhealthy").build()
+        } else {
+            Health.up().withDetail(databaseCleanupServiceMessageKey, "Healthy").build()
         }
     }
 }
