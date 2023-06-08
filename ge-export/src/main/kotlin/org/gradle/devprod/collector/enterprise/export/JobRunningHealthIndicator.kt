@@ -6,19 +6,13 @@ import org.springframework.boot.actuate.health.HealthIndicator
 import org.springframework.stereotype.Component
 
 @Component
-class JobRunningHealthIndicator(
-    private val job: Job,
-    private val databaseCleanupService: DatabaseCleanupService,
-) : HealthIndicator {
-    private val streamToDatabaseJobMessageKey = "Stream to database job"
-    private val databaseCleanupServiceMessageKey = "Database cleanup service"
+class JobRunningHealthIndicator(private val job: Job) : HealthIndicator {
+    private val messageKey = "Stream to database job"
 
-    override fun health(): Health {
-        val builder = if (job.isActive && databaseCleanupService.healthy) Health.up() else Health.down()
-
-        val details = mutableMapOf<String, String>()
-        details[streamToDatabaseJobMessageKey] = if (job.isActive) "Running" else "Not Running"
-        details[databaseCleanupServiceMessageKey] = if (databaseCleanupService.healthy) "Healthy" else "Unhealthy"
-        return builder.withDetails(details).build()
-    }
+    override fun health(): Health =
+        if (job.isActive) {
+            Health.up().withDetail(messageKey, "Running").build()
+        } else {
+            Health.down().withDetail(messageKey, "Not Running").build()
+        }
 }
