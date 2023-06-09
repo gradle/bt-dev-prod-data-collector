@@ -10,7 +10,7 @@ import java.util.List;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
-import org.gradle.devprod.collector.persistence.generated.jooq.tables.PreconditionTest;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.PreconditionProbing;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue;
 import org.jooq.Catalog;
@@ -48,9 +48,9 @@ public class Public extends SchemaImpl {
     public final LongTest LONG_TEST = LongTest.LONG_TEST;
 
     /**
-     * The table <code>public.precondition_test</code>.
+     * The table <code>public.precondition_probing</code>.
      */
-    public final PreconditionTest PRECONDITION_TEST = PreconditionTest.PRECONDITION_TEST;
+    public final PreconditionProbing PRECONDITION_PROBING = PreconditionProbing.PRECONDITION_PROBING;
 
     /**
      * The table <code>public.teamcity_build</code>.
@@ -72,17 +72,19 @@ public class Public extends SchemaImpl {
 
     @Override
     public final List<Table<?>> getTables() {
-        return Arrays.<Table<?>>asList(
+        return Arrays.asList(
             Build.BUILD,
             FlakyTestClass.FLAKY_TEST_CLASS,
             LongTest.LONG_TEST,
-            PreconditionTest.PRECONDITION_TEST,
-            TeamcityBuild.TEAMCITY_BUILD);
+            PreconditionProbing.PRECONDITION_PROBING,
+            TeamcityBuild.TEAMCITY_BUILD
+        );
     }
 
     @Override
     public final List<UDT<?>> getUDTs() {
-        return Arrays.<UDT<?>>asList(
-            KeyValue.KEY_VALUE);
+        return Arrays.asList(
+            KeyValue.KEY_VALUE
+        );
     }
 }

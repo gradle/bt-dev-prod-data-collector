@@ -11,8 +11,8 @@ class PreconditionsTestsExtractorTest {
 
     @Test
     fun `extractor smoke test`() {
-        val events = parse("/zr2sh7kje3fd4.txt")
-        val preconditionTests = PreconditionTestsExtractor.extractFrom(events.groupBy { it.eventType })
+        val events = parse("/expqbzdefwknc.txt")
+        val preconditionTests = PreconditionExtractor.extractFrom(events.groupBy { it.eventType })
 
         assertTrue(preconditionTests.isNotEmpty())
         preconditionTests.forEach(::println)
@@ -20,8 +20,8 @@ class PreconditionsTestsExtractorTest {
 
     @Test
     fun `can extract single precondition names`() {
-        val name = "[A]"
-        val preconditions = PreconditionTestsExtractor.extractPreconditionNames(name)
+        val name = "Preconditions [A]"
+        val preconditions = PreconditionExtractor.extractPreconditionNames(name)
 
         assertEquals(1, preconditions.size)
         assertEquals("A", preconditions[0])
@@ -29,8 +29,8 @@ class PreconditionsTestsExtractorTest {
 
     @Test
     fun `can extract multiple precondition names`() {
-        val name = "[A, B, C]"
-        val preconditions = PreconditionTestsExtractor.extractPreconditionNames(name)
+        val name = "Preconditions [A, B, C]"
+        val preconditions = PreconditionExtractor.extractPreconditionNames(name)
 
         assertEquals(3, preconditions.size)
         assertEquals("A", preconditions[0])
@@ -41,15 +41,15 @@ class PreconditionsTestsExtractorTest {
     @ParameterizedTest
     @ValueSource(
         strings = [
-            "[",
-            "]",
-            "[]",
-            "[,]",
+            "Preconditions [",
+            "Preconditions ]",
+            "Preconditions []",
+            "Preconditions [,]",
         ]
     )
     fun `does not accept misformatted preconditions`(name: String) {
-        assertThrows<IllegalArgumentException> {
-            PreconditionTestsExtractor.extractPreconditionNames(name)
+        assertThrows<PreconditionNameFormatException> {
+            PreconditionExtractor.extractPreconditionNames(name)
         }
     }
 }
