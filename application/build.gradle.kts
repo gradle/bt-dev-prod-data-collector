@@ -41,6 +41,6 @@ tasks.named<Jar>("jar") {
 }
 
 tasks.named<JavaExec>("bootRun") {
-    maxHeapSize = "150M"
+    maxHeapSize = "256M"
     jvmArgs("-XX:MaxMetaspaceSize=128M")
 }

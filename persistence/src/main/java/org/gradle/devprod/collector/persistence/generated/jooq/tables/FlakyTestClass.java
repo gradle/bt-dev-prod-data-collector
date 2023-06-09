@@ -6,16 +6,20 @@ package org.gradle.devprod.collector.persistence.generated.jooq.tables;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import org.gradle.devprod.collector.persistence.generated.jooq.Keys;
 import org.gradle.devprod.collector.persistence.generated.jooq.Public;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.FlakyTestClassRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Function2;
 import org.jooq.Name;
 import org.jooq.Record;
+import org.jooq.Records;
 import org.jooq.Row2;
 import org.jooq.Schema;
+import org.jooq.SelectField;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
@@ -91,7 +95,7 @@ public class FlakyTestClass extends TableImpl<FlakyTestClassRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return aliased() ? null : Public.PUBLIC;
     }
 
     @Override
@@ -100,17 +104,15 @@ public class FlakyTestClass extends TableImpl<FlakyTestClassRecord> {
     }
 
     @Override
-    public List<UniqueKey<FlakyTestClassRecord>> getKeys() {
-        return Arrays.<UniqueKey<FlakyTestClassRecord>>asList(Keys.FLAKY_TEST_CLASS_PKEY);
-    }
-
-    @Override
     public List<ForeignKey<FlakyTestClassRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<FlakyTestClassRecord, ?>>asList(Keys.FLAKY_TEST_CLASS__FLAKY_TEST_CLASS_BUILD_ID_FKEY);
+        return Arrays.asList(Keys.FLAKY_TEST_CLASS__FLAKY_TEST_CLASS_BUILD_ID_FKEY);
     }
 
     private transient Build _build;
 
+    /**
+     * Get the implicit join path to the <code>public.build</code> table.
+     */
     public Build build() {
         if (_build == null)
             _build = new Build(this, Keys.FLAKY_TEST_CLASS__FLAKY_TEST_CLASS_BUILD_ID_FKEY);
@@ -126,6 +128,11 @@ public class FlakyTestClass extends TableImpl<FlakyTestClassRecord> {
     @Override
     public FlakyTestClass as(Name alias) {
         return new FlakyTestClass(alias, this);
+    }
+
+    @Override
+    public FlakyTestClass as(Table<?> alias) {
+        return new FlakyTestClass(alias.getQualifiedName(), this);
     }
 
     /**
@@ -144,6 +151,14 @@ public class FlakyTestClass extends TableImpl<FlakyTestClassRecord> {
         return new FlakyTestClass(name, null);
     }
 
+    /**
+     * Rename this table
+     */
+    @Override
+    public FlakyTestClass rename(Table<?> name) {
+        return new FlakyTestClass(name.getQualifiedName(), null);
+    }
+
     // -------------------------------------------------------------------------
     // Row2 type methods
     // -------------------------------------------------------------------------
@@ -151,5 +166,20 @@ public class FlakyTestClass extends TableImpl<FlakyTestClassRecord> {
     @Override
     public Row2<String, String> fieldsRow() {
         return (Row2) super.fieldsRow();
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
+     */
+    public <U> SelectField<U> mapping(Function2<? super String, ? super String, ? extends U> from) {
+        return convertFrom(Records.mapping(from));
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Class,
+     * Function)}.
+     */
+    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super String, ? super String, ? extends U> from) {
+        return convertFrom(toType, Records.mapping(from));
     }
 }

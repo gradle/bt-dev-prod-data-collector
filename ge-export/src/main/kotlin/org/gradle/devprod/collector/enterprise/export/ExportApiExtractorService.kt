@@ -20,7 +20,8 @@ import org.gradle.devprod.collector.enterprise.export.extractor.ExecutedTestTask
 import org.gradle.devprod.collector.enterprise.export.extractor.FirstTestTaskStart
 import org.gradle.devprod.collector.enterprise.export.extractor.FlakyTestClassExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.LongTestClassExtractor
-import org.gradle.devprod.collector.enterprise.export.extractor.PreconditionTestsExtractor
+import org.gradle.devprod.collector.enterprise.export.extractor.PreconditionExtractor
+import org.gradle.devprod.collector.enterprise.export.extractor.PreconditionStatus
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
 import org.gradle.devprod.collector.enterprise.export.extractor.Tags
 import org.gradle.devprod.collector.enterprise.export.extractor.UnexpectedCachingDisableReasonsExtractor
@@ -29,7 +30,7 @@ import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.FLAKY_TEST_CLASS
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.LONG_TEST
-import org.gradle.devprod.collector.persistence.generated.jooq.Tables.PRECONDITION_TEST
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.PRECONDITION_PROBING
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.records.KeyValueRecord
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
@@ -82,7 +83,7 @@ class ExportApiExtractorService(
                     DaemonUnhealthy,
                     ExecutedTestTasks,
                     UnexpectedCachingDisableReasonsExtractor,
-                    PreconditionTestsExtractor,
+                    PreconditionExtractor,
                 )
             val events: Map<String?, List<BuildEvent>> =
                 getEventsByBuild(build, extractors.flatMap { it.eventTypes }.distinct())
@@ -93,7 +94,7 @@ class ExportApiExtractorService(
                     ctx.insertIntoBuildTable(build, events)
                     ctx.insertIntoLongRunningTestTable(build, events)
                     ctx.insertIntoFlakyTestClassTable(build, events)
-                    ctx.insertIntoPreconditionTestsTable(build, events)
+                    ctx.insertIntoPreconditionProbingTable(build, events)
                 }
             } catch (e: Exception) {
                 throw IllegalStateException("Error processing $build, events: $events", e)
@@ -202,31 +203,51 @@ class ExportApiExtractorService(
         }
     }
 
-    private fun DSLContext.insertIntoPreconditionTestsTable(build: Build, events: Map<String?, List<BuildEvent>>) {
-        val preconditionTests = PreconditionTestsExtractor.extractFrom(events)
+    private fun DSLContext.insertIntoPreconditionProbingTable(build: Build, events: Map<String?, List<BuildEvent>>) {
+        val agent = BuildAgent.extractFrom(events)
+        val buildFinished = BuildFinished.extractFrom(events)
+        val preconditionTests = PreconditionExtractor.extractFrom(events)
         if (preconditionTests.isNotEmpty()) {
             batch(
-                *preconditionTests
-                        .map {
-                            insertInto(
-                                PRECONDITION_TEST,
-                                PRECONDITION_TEST.BUILD_ID,
-                                PRECONDITION_TEST.CLASS_NAME,
-                                PRECONDITION_TEST.PRECONDITIONS,
-                                PRECONDITION_TEST.SKIPPED,
-                                PRECONDITION_TEST.FAILED
-                            ).values(
-                                build.buildId,
-                                it.className,
-                                it.preconditions.toTypedArray(),
-                                it.skipped,
-                                it.failed
-                            )
-                        }
-                        .toTypedArray()
+                *preconditionTests.map {
+                    insertInto(
+                        PRECONDITION_PROBING,
+                        PRECONDITION_PROBING.PRECONDITIONS,
+                        PRECONDITION_PROBING.HOST,
+                        PRECONDITION_PROBING.TEST_CLASS,
+                        PRECONDITION_PROBING.TEST_TASK,
+                        PRECONDITION_PROBING.LAST_EXECUTED,
+                    ).values(
+                        it.preconditions.toTypedArray(),
+                        agent.host,
+                        it.testCase.className,
+                        it.testCase.taskPath,
+                        OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
+                    ).onDuplicateKeyIgnore()
+                }.toTypedArray(),
+                *preconditionTests.map {
+                    // Determine which column we need to set the timestamp
+                    val targetColumn = when (it.status) {
+                        PreconditionStatus.SUCCESS -> PRECONDITION_PROBING.LAST_SUCCEEDED
+                        PreconditionStatus.SKIPPED -> PRECONDITION_PROBING.LAST_SKIPPED
+                        PreconditionStatus.FAILED -> PRECONDITION_PROBING.LAST_FAILED
+                    }
+                    // Create the update query
+                    update(
+                        PRECONDITION_PROBING
+                    ).set(
+                        targetColumn,
+                        OffsetDateTime.ofInstant(buildFinished, ZoneId.systemDefault())
+                    ).where(PRECONDITION_PROBING.PRECONDITIONS.eq(it.preconditions.toTypedArray()))
+                        .and(PRECONDITION_PROBING.HOST.eq(agent.host))
+                        .and(PRECONDITION_PROBING.TEST_CLASS.eq(it.testCase.className))
+                        .and(PRECONDITION_PROBING.TEST_TASK.eq(it.testCase.taskPath))
+                }.toTypedArray()
             ).execute()
         }
     }
+
 }
+
 
 private fun Duration.format() = "${toMinutes()}:${String.format("%02d", toSecondsPart())} min"

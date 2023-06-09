@@ -7,6 +7,7 @@ package org.gradle.devprod.collector.persistence.generated.jooq.tables;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import org.gradle.devprod.collector.persistence.generated.jooq.Indexes;
 import org.gradle.devprod.collector.persistence.generated.jooq.Keys;
@@ -15,11 +16,14 @@ import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.Bu
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.records.KeyValueRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Function18;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
+import org.jooq.Records;
 import org.jooq.Row18;
 import org.jooq.Schema;
+import org.jooq.SelectField;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
@@ -108,12 +112,12 @@ public class Build extends TableImpl<BuildRecord> {
     /**
      * The column <code>public.build.tags</code>.
      */
-    public final TableField<BuildRecord, String[]> TAGS = createField(DSL.name("tags"), SQLDataType.VARCHAR(255).getArrayDataType(), this, "");
+    public final TableField<BuildRecord, String[]> TAGS = createField(DSL.name("tags"), SQLDataType.VARCHAR(255).array(), this, "");
 
     /**
      * The column <code>public.build.custom_values</code>.
      */
-    public final TableField<BuildRecord, KeyValueRecord[]> CUSTOM_VALUES = createField(DSL.name("custom_values"), org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue.KEY_VALUE.getDataType().getArrayDataType(), this, "");
+    public final TableField<BuildRecord, KeyValueRecord[]> CUSTOM_VALUES = createField(DSL.name("custom_values"), org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue.KEY_VALUE.getDataType().array(), this, "");
 
     /**
      * The column <code>public.build.successful</code>.
@@ -133,12 +137,12 @@ public class Build extends TableImpl<BuildRecord> {
     /**
      * The column <code>public.build.executed_test_tasks</code>.
      */
-    public final TableField<BuildRecord, String[]> EXECUTED_TEST_TASKS = createField(DSL.name("executed_test_tasks"), SQLDataType.VARCHAR(255).getArrayDataType(), this, "");
+    public final TableField<BuildRecord, String[]> EXECUTED_TEST_TASKS = createField(DSL.name("executed_test_tasks"), SQLDataType.VARCHAR(255).nullable(false).defaultValue(DSL.field(DSL.raw("'{}'::character varying[]"), SQLDataType.VARCHAR)).array(), this, "");
 
     /**
      * The column <code>public.build.unexpected_caching_disabled_reasons</code>.
      */
-    public final TableField<BuildRecord, String[]> UNEXPECTED_CACHING_DISABLED_REASONS = createField(DSL.name("unexpected_caching_disabled_reasons"), SQLDataType.VARCHAR(255).getArrayDataType(), this, "");
+    public final TableField<BuildRecord, String[]> UNEXPECTED_CACHING_DISABLED_REASONS = createField(DSL.name("unexpected_caching_disabled_reasons"), SQLDataType.VARCHAR(255).array(), this, "");
 
     private Build(Name alias, Table<BuildRecord> aliased) {
         this(alias, aliased, null);
@@ -175,22 +179,17 @@ public class Build extends TableImpl<BuildRecord> {
 
     @Override
     public Schema getSchema() {
-        return Public.PUBLIC;
+        return aliased() ? null : Public.PUBLIC;
     }
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.BUILD_FINISH_IDX, Indexes.BUILD_START_IDX);
+        return Arrays.asList(Indexes.BUILD_FINISH_IDX, Indexes.BUILD_START_IDX);
     }
 
     @Override
     public UniqueKey<BuildRecord> getPrimaryKey() {
         return Keys.BUILD_PK;
-    }
-
-    @Override
-    public List<UniqueKey<BuildRecord>> getKeys() {
-        return Arrays.<UniqueKey<BuildRecord>>asList(Keys.BUILD_PK);
     }
 
     @Override
@@ -201,6 +200,11 @@ public class Build extends TableImpl<BuildRecord> {
     @Override
     public Build as(Name alias) {
         return new Build(alias, this);
+    }
+
+    @Override
+    public Build as(Table<?> alias) {
+        return new Build(alias.getQualifiedName(), this);
     }
 
     /**
@@ -219,6 +223,14 @@ public class Build extends TableImpl<BuildRecord> {
         return new Build(name, null);
     }
 
+    /**
+     * Rename this table
+     */
+    @Override
+    public Build rename(Table<?> name) {
+        return new Build(name.getQualifiedName(), null);
+    }
+
     // -------------------------------------------------------------------------
     // Row18 type methods
     // -------------------------------------------------------------------------
@@ -226,5 +238,20 @@ public class Build extends TableImpl<BuildRecord> {
     @Override
     public Row18<String, String, String, Long, OffsetDateTime, OffsetDateTime, String, String, Integer, String, String, String[], KeyValueRecord[], Boolean, Boolean, Boolean, String[], String[]> fieldsRow() {
         return (Row18) super.fieldsRow();
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
+     */
+    public <U> SelectField<U> mapping(Function18<? super String, ? super String, ? super String, ? super Long, ? super OffsetDateTime, ? super OffsetDateTime, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? super String[], ? super KeyValueRecord[], ? super Boolean, ? super Boolean, ? super Boolean, ? super String[], ? super String[], ? extends U> from) {
+        return convertFrom(Records.mapping(from));
+    }
+
+    /**
+     * Convenience mapping calling {@link SelectField#convertFrom(Class,
+     * Function)}.
+     */
+    public <U> SelectField<U> mapping(Class<U> toType, Function18<? super String, ? super String, ? super String, ? super Long, ? super OffsetDateTime, ? super OffsetDateTime, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? super String[], ? super KeyValueRecord[], ? super Boolean, ? super Boolean, ? super Boolean, ? super String[], ? super String[], ? extends U> from) {
+        return convertFrom(toType, Records.mapping(from));
     }
 }

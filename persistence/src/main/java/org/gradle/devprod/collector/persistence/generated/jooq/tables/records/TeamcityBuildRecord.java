@@ -585,5 +585,6 @@ public class TeamcityBuildRecord extends UpdatableRecordImpl<TeamcityBuildRecord
         setComposite(composite);
         setBuildHostName(buildHostName);
         setBuildHostType(buildHostType);
+        resetChangedOnNotNull();
     }
 }
