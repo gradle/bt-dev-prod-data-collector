@@ -13,21 +13,24 @@ class TeamcityExportTest {
     fun `can download GE builds`() {
 
         val loggingRepo = object: Repository {
+            override fun getBuildById(id: String): TeamCityBuild? {
+                TODO("Not yet implemented")
+            }
 
             override fun storeBuild(build: TeamCityBuild) {
                 System.err.println(build)
             }
 
-            override fun latestFailedBuildTimestamp(buildNamePrefix: String): Instant? {
+            override fun latestFinishedBuildTimestamp(projectIdPrefix: String): Instant? {
                 return Instant.now().minus(1, ChronoUnit.HOURS)
             }
 
         }
         val objectMapper = ObjectMapper()
-        val tcService = TeamcityClientService(teamCityApiToken = System.getenv("TC_TOKEN"), objectMapper)
+        val tcService = TeamcityClientService(teamCityApiToken = System.getenv("TC_TOKEN"), objectMapper, loggingRepo)
         val exporter = TeamcityExport(loggingRepo, tcService)
 
-        exporter.loadGbtTriggerBuilds()
+        exporter.loadGeFailedBuilds()
     }
 
 }

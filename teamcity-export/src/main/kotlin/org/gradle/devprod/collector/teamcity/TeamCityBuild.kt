@@ -1,6 +1,8 @@
 package org.gradle.devprod.collector.teamcity
 
 import org.jetbrains.teamcity.rest.Build
+import java.net.URLEncoder
+import java.nio.charset.Charset
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -13,6 +15,7 @@ data class TeamCityBuild(
     val status: String?,
     val gitCommitId: String,
     val queuedDateTime: OffsetDateTime,
+    val dependencyFinishedDateTime: OffsetDateTime?,
     val startDateTime: OffsetDateTime?,
     val finishDateTime: OffsetDateTime?,
     val state: String,
@@ -24,7 +27,7 @@ data class TeamCityBuild(
     val buildHostType: String?,
 )
 
-fun Build.toTeamCityBuild(): TeamCityBuild? {
+fun Build.toTeamCityBuild(): TeamCityBuild {
     val revision = revisions
         .firstOrNull {
             val vcsRootId = it.vcsRootInstance.vcsRootId.stringId
@@ -33,26 +36,29 @@ fun Build.toTeamCityBuild(): TeamCityBuild? {
                 vcsRootId == "GradleMaster"
         }
     // For builds which have been cancelled early, there won't be any VCS root. We'll ignore those.
-    if (revision == null) {
-        println("No revision found for ${buildConfigurationId.stringId}, ${id.stringId}: VCS roots: ${revisions.joinToString(", ") { it.vcsRootInstance.vcsRootId.stringId }}")
+    require(revision != null) {
+        "No revision found for ${buildConfigurationId.stringId}, ${id.stringId}: VCS roots: ${
+            revisions.joinToString(
+                ", "
+            ) { it.vcsRootInstance.vcsRootId.stringId }
+        }"
     }
-    return revision?.let {
-        TeamCityBuild(
-            id.stringId,
-            branch.name,
-            status?.name,
-            it.version,
-            queuedDateTime.toOffsetDateTime(),
-            startDateTime?.toOffsetDateTime(),
-            finishDateTime?.toOffsetDateTime(),
-            state.name,
-            buildConfigurationId.stringId,
-            statusText,
-            composite == true,
-            buildHostName = agent?.name,
-            buildHostType = typeOfAgents(agent?.name),
-        )
-    }
+    return TeamCityBuild(
+        id.stringId,
+        branch.name,
+        status?.name,
+        revision.version,
+        queuedDateTime.toOffsetDateTime(),
+        null,
+        startDateTime?.toOffsetDateTime(),
+        finishDateTime?.toOffsetDateTime(),
+        state.name,
+        buildConfigurationId.stringId,
+        statusText,
+        composite == true,
+        buildHostName = agent?.name,
+        buildHostType = typeOfAgents(agent?.name),
+    )
 }
 
 private fun typeOfAgents(agentName: String?): String {
@@ -67,29 +73,32 @@ private fun typeOfAgents(agentName: String?): String {
     } ?: return "EMPTY"
 }
 
-fun TeamCityResponse.BuildBean.toTeamCityBuild(buildScans: List<String>) =
-    TeamCityBuild(
-        id.toString(),
-        branchName,
-        status,
-        revisions.revision.first().version,
-        parseRFC822(queuedDate),
-        parseRFC822(startDate),
-        parseRFC822(finishDate),
-        state,
-        buildType.id,
-        statusText,
-        isComposite,
-        buildScanUrls = buildScans,
-        buildHostName = agent.name,
-        buildHostType = typeOfAgents(agent?.name),
-    )
+fun TeamCityResponse.BuildBean.toTeamCityBuild(
+    buildScans: List<String>,
+    dependenciesFinishedTime: OffsetDateTime? = null
+) = TeamCityBuild(
+    id.toString(),
+    branchName,
+    status,
+    revisions.revision.first().version,
+    parseRFC822(queuedDate),
+    dependenciesFinishedTime ?: parseRFC822(startDate),
+    parseRFC822(startDate),
+    parseRFC822(finishDate),
+    state,
+    buildType.id,
+    statusText,
+    isComposite,
+    buildScanUrls = buildScans,
+    buildHostName = agent?.name,
+    buildHostType = typeOfAgents(agent?.name),
+)
 
 private val rfc822: DateTimeFormatter =
-    DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss").withZone(ZoneId.systemDefault())
+    DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmssZ").withZone(ZoneId.systemDefault())
 
 fun formatRFC822(instant: Instant): String {
-    return rfc822.format(instant) + "%2B0000"
+    return URLEncoder.encode(rfc822.format(instant), Charsets.UTF_8)
 }
 
 fun parseRFC822(datelike: String): OffsetDateTime {
