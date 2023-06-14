@@ -12,7 +12,7 @@ class JooqRepository(private val dslContext: DSLContext) : Repository {
         val record = dslContext.fetchAny(TEAMCITY_BUILD, TEAMCITY_BUILD.BUILD_ID.eq(id))
         if (record == null) {
             return null
-        }else {
+        } else {
             return TeamCityBuild(
                 record.buildId,
                 record.branch,

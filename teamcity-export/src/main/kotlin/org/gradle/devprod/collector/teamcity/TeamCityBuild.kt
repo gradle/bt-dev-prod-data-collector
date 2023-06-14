@@ -2,7 +2,6 @@ package org.gradle.devprod.collector.teamcity
 
 import org.jetbrains.teamcity.rest.Build
 import java.net.URLEncoder
-import java.nio.charset.Charset
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
@@ -39,7 +38,7 @@ fun Build.toTeamCityBuild(): TeamCityBuild {
     require(revision != null) {
         "No revision found for ${buildConfigurationId.stringId}, ${id.stringId}: VCS roots: ${
             revisions.joinToString(
-                ", "
+                ", ",
             ) { it.vcsRootInstance.vcsRootId.stringId }
         }"
     }
@@ -75,7 +74,7 @@ private fun typeOfAgents(agentName: String?): String {
 
 fun TeamCityResponse.BuildBean.toTeamCityBuild(
     buildScans: List<String>,
-    dependenciesFinishedTime: OffsetDateTime? = null
+    dependenciesFinishedTime: OffsetDateTime? = null,
 ) = TeamCityBuild(
     id.toString(),
     branchName,

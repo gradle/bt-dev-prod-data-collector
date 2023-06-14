@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 class TeamcityClientService(
     @Value("${'$'}{teamcity.api.token}") private val teamCityApiToken: String,
     private val objectMapper: ObjectMapper,
-    private val repository: Repository
+    private val repository: Repository,
 ) {
     private val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory
         .guestAuth("https://builds.gradle.org")
@@ -43,7 +43,7 @@ class TeamcityClientService(
             .firstOrNull() ?: build.startDateTime!!
         val copy = build.copy(
             dependencyFinishedDateTime = dependenciesFinishTime,
-            buildScanUrls = loadBuildScans(build.id)
+            buildScanUrls = loadBuildScans(build.id),
         )
         repository.storeBuild(copy)
         return copy
@@ -78,7 +78,7 @@ class TeamcityClientService(
                 pipelineProjectId,
                 since,
                 buildStatus = BuildStatus.FAILURE,
-                composite = true
+                composite = true,
             )
             var buildIterator: Iterator<TeamCityResponse.BuildBean> =
                 emptyList<TeamCityResponse.BuildBean>().iterator()
