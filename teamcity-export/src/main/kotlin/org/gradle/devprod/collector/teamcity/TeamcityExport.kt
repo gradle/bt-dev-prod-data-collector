@@ -16,7 +16,7 @@ class TeamcityExport(
     private val gePipelines = listOf("Enterprise_Main", "Enterprise_Release")
 
     private fun getSinceFor(projectIdPrefix: String): Instant {
-        val latestFinishedBuildTimestamp = repo.latestFinishedBuildTimestamp("Gradle")
+        val latestFinishedBuildTimestamp = repo.latestFinishedBuildTimestamp(projectIdPrefix)
 
         return latestFinishedBuildTimestamp?.minus(1, ChronoUnit.DAYS)
             ?: Instant.now().minus(5, ChronoUnit.DAYS)
