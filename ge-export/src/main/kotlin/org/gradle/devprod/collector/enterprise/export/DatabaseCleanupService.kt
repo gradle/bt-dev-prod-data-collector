@@ -18,7 +18,7 @@ class DatabaseCleanupService(private val create: DSLContext) {
         private set
 
     private fun deleteInTeamCityBuildTable(date: OffsetDateTime) {
-        create.delete(TEAMCITY_BUILD).where(TEAMCITY_BUILD.FINISHED.lessOrEqual(date))
+        create.delete(TEAMCITY_BUILD).where(TEAMCITY_BUILD.FINISHED.lessOrEqual(date)).execute()
     }
 
     private fun deleteInBuildTable(date: OffsetDateTime) {
