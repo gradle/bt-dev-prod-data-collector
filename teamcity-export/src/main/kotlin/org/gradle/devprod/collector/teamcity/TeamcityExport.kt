@@ -36,7 +36,7 @@ class TeamcityExport(
         println("Loading failed GE builds from Teamcity")
 
         teamcityClientService
-            .loadFailedBuilds(getSinceFor("Enterprise"), gePipelines)
+            .loadBuilds(getSinceFor("Enterprise"), gePipelines)
             .forEach { build -> repo.storeBuild(build) }
     }
 }
