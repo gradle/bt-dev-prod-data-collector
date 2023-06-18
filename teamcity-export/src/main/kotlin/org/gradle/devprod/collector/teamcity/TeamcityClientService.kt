@@ -59,7 +59,7 @@ class TeamcityClientService(
         pipelineProjectIds.forEach { affectedProject ->
             var nextPageUrl: String? = loadingBuildsUrl(affectedProject, since, buildState = BuildState.FINISHED)
             while (nextPageUrl != null) {
-                val currentPage = loadBuilds(nextPageUrl)
+                val currentPage = loadFailedBuilds(nextPageUrl)
                 nextPageUrl = currentPage.nextHref
 
                 val buildIterator: Iterator<TeamCityResponse.BuildBean> = currentPage.build.iterator()
@@ -72,7 +72,7 @@ class TeamcityClientService(
     }
 
     // The rest client has no "affectProject(id:Gradle_Master_Check)" buildLocator
-    fun loadBuilds(since: Instant, pipelines: List<String>): Sequence<TeamCityBuild> =
+    fun loadFailedBuilds(since: Instant, pipelines: List<String>): Sequence<TeamCityBuild> =
         pipelines.asSequence().flatMap { pipelineProjectId ->
             var nextPageUrl: String? = loadingBuildsUrl(
                 pipelineProjectId,
@@ -89,7 +89,7 @@ class TeamcityClientService(
                 } else if (nextPageUrl == null) {
                     null
                 } else {
-                    val nextPage = loadBuilds(nextPageUrl!!)
+                    val nextPage = loadFailedBuilds(nextPageUrl!!)
                     nextPageUrl = nextPage.nextHref
                     buildIterator = nextPage.build.iterator()
                     if (buildIterator.hasNext()) {
@@ -147,7 +147,7 @@ class TeamcityClientService(
         return response.blockOptional().orElse("").lines().map { it.trim() }.filter { it.isNotBlank() }
     }
 
-    private fun loadBuilds(nextPageUrl: String): TeamCityResponse =
+    private fun loadFailedBuilds(nextPageUrl: String): TeamCityResponse =
         client
             .get()
             .uri(createTeamcityUri(nextPageUrl))

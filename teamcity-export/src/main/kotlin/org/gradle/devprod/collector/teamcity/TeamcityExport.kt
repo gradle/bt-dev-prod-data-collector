@@ -15,7 +15,7 @@ class TeamcityExport(
 
     private val gePipelines = listOf("Enterprise_Main", "Enterprise_Release")
 
-    private fun getSince(projectIdPrefix: String): Instant {
+    private fun getSinceFor(projectIdPrefix: String): Instant {
         val latestFinishedBuildTimestamp = repo.latestFinishedBuildTimestamp("Gradle")
 
         return latestFinishedBuildTimestamp?.minus(1, ChronoUnit.DAYS)
@@ -27,7 +27,7 @@ class TeamcityExport(
     fun loadAllGbtBuilds() {
         println("Loading all GBT builds from Teamcity")
 
-        teamcityClientService.loadAndStoreAllBuilds(getSince("Gradle"), gbtPipelines)
+        teamcityClientService.loadAndStoreAllBuilds(getSinceFor("Gradle"), gbtPipelines)
     }
 
     @Async
@@ -36,7 +36,7 @@ class TeamcityExport(
         println("Loading failed GE builds from Teamcity")
 
         teamcityClientService
-            .loadBuilds(getSince("Enterprise"), gePipelines)
+            .loadFailedBuilds(getSinceFor("Enterprise"), gePipelines)
             .forEach { build -> repo.storeBuild(build) }
     }
 }

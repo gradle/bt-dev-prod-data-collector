@@ -14,21 +14,21 @@ class JooqRepository(private val dslContext: DSLContext) : Repository {
             return null
         } else {
             return TeamCityBuild(
-                record.buildId,
-                record.branch,
-                record.status,
-                record.gitCommitId,
-                record.queued,
-                record.dependencyFinished,
-                record.started,
-                record.finished,
-                record.state,
-                record.configuration,
-                record.statusText,
-                record.composite,
-                record.buildscanUrls.toList(),
-                record.buildHostName,
-                record.buildHostType,
+                id = record.buildId,
+                branch = record.branch,
+                status = record.status,
+                gitCommitId = record.gitCommitId,
+                queuedDateTime = record.queued,
+                dependencyFinishedDateTime = record.dependencyFinished,
+                startDateTime = record.started,
+                finishDateTime = record.finished,
+                state = record.state,
+                buildConfigurationId = record.configuration,
+                statusText = record.statusText,
+                composite = record.composite,
+                buildScanUrls = record.buildscanUrls.toList(),
+                buildHostName = record.buildHostName,
+                buildHostType = record.buildHostType,
             )
         }
     }
