@@ -129,5 +129,6 @@ public class KeyValueRecord extends UDTRecordImpl<KeyValueRecord> implements Rec
 
         setKey(key);
         setValue(value);
+        resetChangedOnNotNull();
     }
 }

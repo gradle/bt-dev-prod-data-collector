@@ -138,5 +138,6 @@ public class FlakyTestClassRecord extends UpdatableRecordImpl<FlakyTestClassReco
 
         setBuildId(buildId);
         setFlakyTestFqcn(flakyTestFqcn);
+        resetChangedOnNotNull();
     }
 }
