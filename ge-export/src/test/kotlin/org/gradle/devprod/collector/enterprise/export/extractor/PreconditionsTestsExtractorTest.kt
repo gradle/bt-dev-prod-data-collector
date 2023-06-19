@@ -11,7 +11,7 @@ class PreconditionsTestsExtractorTest {
 
     @Test
     fun `extractor smoke test`() {
-        val events = parse("/zr2sh7kje3fd4.txt")
+        val events = parse("/czgaz3426aszo.txt")
         val preconditionTests = PreconditionTestsExtractor.extractFrom(events.groupBy { it.eventType })
 
         assertTrue(preconditionTests.isNotEmpty())
@@ -20,7 +20,7 @@ class PreconditionsTestsExtractorTest {
 
     @Test
     fun `can extract single precondition names`() {
-        val name = "[A]"
+        val name = "Preconditions [A]"
         val preconditions = PreconditionTestsExtractor.extractPreconditionNames(name)
 
         assertEquals(1, preconditions.size)
@@ -29,7 +29,7 @@ class PreconditionsTestsExtractorTest {
 
     @Test
     fun `can extract multiple precondition names`() {
-        val name = "[A, B, C]"
+        val name = "Preconditions [A, B, C]"
         val preconditions = PreconditionTestsExtractor.extractPreconditionNames(name)
 
         assertEquals(3, preconditions.size)
@@ -41,10 +41,10 @@ class PreconditionsTestsExtractorTest {
     @ParameterizedTest
     @ValueSource(
         strings = [
-            "[",
-            "]",
-            "[]",
-            "[,]",
+            "Preconditions [",
+            "Preconditions ]",
+            "Preconditions []",
+            "Preconditions [,]",
         ]
     )
     fun `does not accept misformatted preconditions`(name: String) {
