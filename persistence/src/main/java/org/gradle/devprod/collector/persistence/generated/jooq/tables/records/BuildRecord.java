@@ -734,5 +734,6 @@ public class BuildRecord extends UpdatableRecordImpl<BuildRecord> implements Rec
         setBuildCacheStoreFailure(buildCacheStoreFailure);
         setExecutedTestTasks(executedTestTasks);
         setUnexpectedCachingDisabledReasons(unexpectedCachingDisabledReasons);
+        resetChangedOnNotNull();
     }
 }

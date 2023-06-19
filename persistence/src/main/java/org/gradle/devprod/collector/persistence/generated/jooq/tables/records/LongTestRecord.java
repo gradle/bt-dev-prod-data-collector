@@ -176,5 +176,6 @@ public class LongTestRecord extends UpdatableRecordImpl<LongTestRecord> implemen
         setBuildId(buildId);
         setClassName(className);
         setDurationMs(durationMs);
+        resetChangedOnNotNull();
     }
 }

@@ -72,17 +72,19 @@ public class Public extends SchemaImpl {
 
     @Override
     public final List<Table<?>> getTables() {
-        return Arrays.<Table<?>>asList(
+        return Arrays.asList(
             Build.BUILD,
             FlakyTestClass.FLAKY_TEST_CLASS,
             LongTest.LONG_TEST,
             PreconditionTest.PRECONDITION_TEST,
-            TeamcityBuild.TEAMCITY_BUILD);
+            TeamcityBuild.TEAMCITY_BUILD
+        );
     }
 
     @Override
     public final List<UDT<?>> getUDTs() {
-        return Arrays.<UDT<?>>asList(
-            KeyValue.KEY_VALUE);
+        return Arrays.asList(
+            KeyValue.KEY_VALUE
+        );
     }
 }
