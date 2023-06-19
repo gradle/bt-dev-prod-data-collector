@@ -1,6 +1,7 @@
 package org.gradle.devprod.collector.enterprise.export.extractor
 
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
+import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.time.Instant
 
@@ -282,6 +283,9 @@ object UnexpectedCachingDisableReasonsExtractor : SingleEventExtractor<List<Stri
  */
 object PreconditionTestsExtractor :
     Extractor<List<PreconditionTest>>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
+
+    private val logger = LoggerFactory.getLogger(PreconditionTestsExtractor::class.java)
+
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): List<PreconditionTest> {
         // Build the lookup map to lookup TestStarted events
         val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
@@ -297,12 +301,17 @@ object PreconditionTestsExtractor :
             val failed = it.data.booleanProperty("failed") ?: return@map null
             val skipped = it.data.booleanProperty("skipped") ?: return@map null
 
+            if (!isPreconditionName(testCase.name)) {
+                return@map null
+            }
+
             val preconditions: MutableList<String> = mutableListOf()
             try {
                 preconditions.addAll(
                     extractPreconditionNames(testCase.name).sorted()
                 )
             } catch (ex: IllegalArgumentException) {
+                logger.error("Exception meanwhile processing preconditions: {0}", ex)
                 return@map null
             }
 
@@ -314,6 +323,9 @@ object PreconditionTestsExtractor :
             )
         }.filterNotNull()
     }
+
+    private fun isPreconditionName(name: String): Boolean =
+        name.startsWith("Preconditions [") && name.endsWith("]")
 
     /**
      * Extracts from the test name the list of preconditions used.
@@ -328,15 +340,15 @@ object PreconditionTestsExtractor :
      * @throws IllegalArgumentException if the test name does not contain any preconditions.
      */
     fun extractPreconditionNames(name: String): List<String> {
-        if (!name.startsWith("[")) {
-            throw IllegalArgumentException("Test name '$name' does not start with '['")
+        if (!name.startsWith("Preconditions [")) {
+            throw IllegalArgumentException("Test name '$name' does not start with 'Precondition ['")
         }
         if (!name.endsWith("]")) {
             throw IllegalArgumentException("Test name '$name' does not end with ']'")
         }
 
         val preconditions = name
-            .substring(1, name.length - 1)
+            .removeSurrounding("Preconditions [", "]")
             .split(",")
             .map {
                 it.trim()
