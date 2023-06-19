@@ -7,7 +7,7 @@ package org.gradle.devprod.collector.persistence.generated.jooq;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
-import org.gradle.devprod.collector.persistence.generated.jooq.tables.PreconditionProbing;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.PreconditionTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
 
 
@@ -33,9 +33,9 @@ public class Tables {
     public static final LongTest LONG_TEST = LongTest.LONG_TEST;
 
     /**
-     * The table <code>public.precondition_probing</code>.
+     * The table <code>public.precondition_test</code>.
      */
-    public static final PreconditionProbing PRECONDITION_PROBING = PreconditionProbing.PRECONDITION_PROBING;
+    public static final PreconditionTest PRECONDITION_TEST = PreconditionTest.PRECONDITION_TEST;
 
     /**
      * The table <code>public.teamcity_build</code>.
