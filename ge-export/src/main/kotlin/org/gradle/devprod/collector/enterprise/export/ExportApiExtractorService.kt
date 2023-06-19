@@ -222,6 +222,7 @@ class ExportApiExtractorService(
                                 it.skipped,
                                 it.failed
                             )
+                            .onDuplicateKeyIgnore()
                         }
                         .toTypedArray()
             ).execute()
