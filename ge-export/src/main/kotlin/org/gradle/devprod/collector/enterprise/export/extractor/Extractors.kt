@@ -44,7 +44,7 @@ object LongTestClassExtractor :
                 val id = it.data?.longProperty("id")!!
                 val endTime = Instant.ofEpochMilli(it.timestamp)
                 testIdToClassName.getValue(id) to
-                        Duration.between(testIdToStartTime.getValue(id), endTime)
+                    Duration.between(testIdToStartTime.getValue(id), endTime)
             }
             .groupBy({ it.first }) { it.second }
             .mapValues { it.value.maxOrNull()!! }
@@ -119,7 +119,7 @@ object ExecutedTestTasks : Extractor<List<String>>(listOf("TestStarted", "TestFi
             .getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList())
             .filter {
                 it.data?.stringProperty("outcome")?.uppercase() in listOf("SUCCESS", "FAILED") &&
-                        idToClassName[it.data?.longProperty("id")]?.endsWith("Test") == true
+                    idToClassName[it.data?.longProperty("id")]?.endsWith("Test") == true
             }
             .mapNotNull { it.data?.stringProperty("path") }
             .filter { it.endsWith("Test") }
@@ -308,7 +308,7 @@ object PreconditionTestsExtractor :
             val preconditions: MutableList<String> = mutableListOf()
             try {
                 preconditions.addAll(
-                    extractPreconditionNames(testCase.name).sorted()
+                    extractPreconditionNames(testCase.name).sorted(),
                 )
             } catch (ex: IllegalArgumentException) {
                 logger.error("Exception meanwhile processing preconditions: {0}", ex)
@@ -319,7 +319,7 @@ object PreconditionTestsExtractor :
                 testCase.className,
                 preconditions,
                 failed,
-                skipped
+                skipped,
             )
         }.filterNotNull()
     }
@@ -369,7 +369,7 @@ data class PreconditionTest(
     val className: String,
     val preconditions: List<String>,
     val failed: Boolean,
-    val skipped: Boolean
+    val skipped: Boolean,
 )
 
 data class Agent(val host: String?, val user: String?)

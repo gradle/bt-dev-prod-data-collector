@@ -104,7 +104,7 @@ class ExportApiExtractorService(
     private suspend fun getEventsByBuild(
         buildId: Build,
         eventTypes: List<String>,
-        retries: Int = 3
+        retries: Int = 3,
     ): Map<String?, List<BuildEvent>> {
         var retryVar = retries
         var lastException: Exception? = null
@@ -207,24 +207,24 @@ class ExportApiExtractorService(
         if (preconditionTests.isNotEmpty()) {
             batch(
                 *preconditionTests
-                        .map {
-                            insertInto(
-                                PRECONDITION_TEST,
-                                PRECONDITION_TEST.BUILD_ID,
-                                PRECONDITION_TEST.CLASS_NAME,
-                                PRECONDITION_TEST.PRECONDITIONS,
-                                PRECONDITION_TEST.SKIPPED,
-                                PRECONDITION_TEST.FAILED
-                            ).values(
-                                build.buildId,
-                                it.className,
-                                it.preconditions.toTypedArray(),
-                                it.skipped,
-                                it.failed
-                            )
+                    .map {
+                        insertInto(
+                            PRECONDITION_TEST,
+                            PRECONDITION_TEST.BUILD_ID,
+                            PRECONDITION_TEST.CLASS_NAME,
+                            PRECONDITION_TEST.PRECONDITIONS,
+                            PRECONDITION_TEST.SKIPPED,
+                            PRECONDITION_TEST.FAILED,
+                        ).values(
+                            build.buildId,
+                            it.className,
+                            it.preconditions.toTypedArray(),
+                            it.skipped,
+                            it.failed,
+                        )
                             .onDuplicateKeyIgnore()
-                        }
-                        .toTypedArray()
+                    }
+                    .toTypedArray(),
             ).execute()
         }
     }

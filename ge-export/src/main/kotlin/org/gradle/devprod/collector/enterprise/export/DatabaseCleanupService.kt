@@ -61,7 +61,7 @@ class DatabaseCleanupService(private val create: DSLContext) {
 
         val deletedCount = create
             .deleteFrom(PRECONDITION_TEST)
-                .where(PRECONDITION_TEST.BUILD_ID.`in`(selectQuery))
+            .where(PRECONDITION_TEST.BUILD_ID.`in`(selectQuery))
             .execute()
 
         println("Deleted $deletedCount old precondition tests in `precondition_test` table")
