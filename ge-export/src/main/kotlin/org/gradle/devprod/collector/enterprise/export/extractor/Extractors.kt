@@ -275,6 +275,7 @@ object UnexpectedCachingDisableReasonsExtractor : SingleEventExtractor<List<Stri
     }
 }
 
+
 /**
  * Extracts all tests, which are part of
  * `org.gradle.test.predicate.RemotePreconditionProbingTests`
@@ -283,6 +284,9 @@ object UnexpectedCachingDisableReasonsExtractor : SingleEventExtractor<List<Stri
  */
 object PreconditionTestsExtractor :
     Extractor<List<PreconditionTest>>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
+
+    private const val PRECONDITION_PATTERN_START = "Preconditions ["
+    private const val PRECONDITION_PATTERN_END = "]"
 
     private val logger = LoggerFactory.getLogger(PreconditionTestsExtractor::class.java)
 
@@ -325,7 +329,7 @@ object PreconditionTestsExtractor :
     }
 
     private fun isPreconditionName(name: String): Boolean =
-        name.startsWith("Preconditions [") && name.endsWith("]")
+        name.startsWith(PRECONDITION_PATTERN_START) && name.endsWith(PRECONDITION_PATTERN_END)
 
     /**
      * Extracts from the test name the list of preconditions used.
@@ -340,15 +344,15 @@ object PreconditionTestsExtractor :
      * @throws IllegalArgumentException if the test name does not contain any preconditions.
      */
     fun extractPreconditionNames(name: String): List<String> {
-        if (!name.startsWith("Preconditions [")) {
-            throw IllegalArgumentException("Test name '$name' does not start with 'Precondition ['")
+        if (!name.startsWith(PRECONDITION_PATTERN_START)) {
+            throw IllegalArgumentException("Test name '$name' does not start with '$PRECONDITION_PATTERN_START'")
         }
-        if (!name.endsWith("]")) {
-            throw IllegalArgumentException("Test name '$name' does not end with ']'")
+        if (!name.endsWith(PRECONDITION_PATTERN_END)) {
+            throw IllegalArgumentException("Test name '$name' does not end with '$PRECONDITION_PATTERN_END'")
         }
 
         val preconditions = name
-            .removeSurrounding("Preconditions [", "]")
+            .removeSurrounding(PRECONDITION_PATTERN_START, PRECONDITION_PATTERN_END)
             .split(",")
             .map {
                 it.trim()
