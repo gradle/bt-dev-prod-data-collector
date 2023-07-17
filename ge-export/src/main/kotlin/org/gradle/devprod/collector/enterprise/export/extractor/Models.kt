@@ -13,3 +13,17 @@ enum class TaskOutcome {
 
 data class TaskSummary(val outcomes: Map<TaskOutcome, Int>)
 data class TestSummary(val totalCount: Int, val failedCount: Int, val successCount: Int, val skippedCount: Int)
+
+enum class TestOutcome {
+    PASSED,
+    FAILED,
+    SKIPPED,
+}
+
+data class PreconditionTest(
+    val className: String,
+    val preconditions: List<String>,
+    val outcome: TestOutcome,
+)
+
+data class Agent(val host: String?, val user: String?)

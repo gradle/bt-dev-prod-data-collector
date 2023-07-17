@@ -6,10 +6,8 @@ create table precondition_test
     class_name    varchar(1024) not null,
     -- Comma separated list of preconditions (e.g. "precondition1,precondition2")
     preconditions text[],
-    -- True if the test was skipped, false otherwise
-    skipped       boolean       not null,
-    -- True if the test failed, false otherwise
-    failed        boolean       not null,
+    -- PASSED/FAILED/SKIPPED
+    outcome      varchar(255)  not null,
 
     -- Primary key definition
     primary key (build_id, class_name, preconditions),

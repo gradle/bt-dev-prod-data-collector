@@ -275,7 +275,6 @@ object UnexpectedCachingDisableReasonsExtractor : SingleEventExtractor<List<Stri
     }
 }
 
-
 /**
  * Extracts all tests, which are part of
  * `org.gradle.test.predicate.RemotePreconditionProbingTests`
@@ -294,19 +293,19 @@ object PreconditionTestsExtractor :
         // Build the lookup map to lookup TestStarted events
         val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
 
-        return events.getOrDefault("TestFinished", emptyList()).map {
+        return events.getOrDefault("TestFinished", emptyList()).mapNotNull {
             if (it.data == null) {
-                return@map null
+                return@mapNotNull null
             }
 
             val id = it.data.longProperty("id")
             // Will be null, when the test is a top-level test.
-            val testCase = testIdToTestCase[id] ?: return@map null
-            val failed = it.data.booleanProperty("failed") ?: return@map null
-            val skipped = it.data.booleanProperty("skipped") ?: return@map null
+            val testCase = testIdToTestCase[id] ?: return@mapNotNull null
+            val failed = it.data.booleanProperty("failed") ?: return@mapNotNull null
+            val skipped = it.data.booleanProperty("skipped") ?: return@mapNotNull null
 
             if (!isPreconditionName(testCase.name)) {
-                return@map null
+                return@mapNotNull null
             }
 
             val preconditions: MutableList<String> = mutableListOf()
@@ -316,16 +315,15 @@ object PreconditionTestsExtractor :
                 )
             } catch (ex: IllegalArgumentException) {
                 logger.error("Exception meanwhile processing preconditions: {0}", ex)
-                return@map null
+                return@mapNotNull null
             }
 
             PreconditionTest(
                 testCase.className,
                 preconditions,
-                failed,
-                skipped,
+                if (failed) TestOutcome.FAILED else if (skipped) TestOutcome.SKIPPED else TestOutcome.PASSED,
             )
-        }.filterNotNull()
+        }
     }
 
     private fun isPreconditionName(name: String): Boolean =
@@ -368,15 +366,6 @@ object PreconditionTestsExtractor :
         return preconditions
     }
 }
-
-data class PreconditionTest(
-    val className: String,
-    val preconditions: List<String>,
-    val failed: Boolean,
-    val skipped: Boolean,
-)
-
-data class Agent(val host: String?, val user: String?)
 
 private fun Any.booleanProperty(name: String): Boolean? = (this as Map<*, *>)[name] as Boolean?
 

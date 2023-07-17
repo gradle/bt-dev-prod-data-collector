@@ -213,14 +213,12 @@ class ExportApiExtractorService(
                             PRECONDITION_TEST.BUILD_ID,
                             PRECONDITION_TEST.CLASS_NAME,
                             PRECONDITION_TEST.PRECONDITIONS,
-                            PRECONDITION_TEST.SKIPPED,
-                            PRECONDITION_TEST.FAILED,
+                            PRECONDITION_TEST.OUTCOME,
                         ).values(
                             build.buildId,
                             it.className,
                             it.preconditions.toTypedArray(),
-                            it.skipped,
-                            it.failed,
+                            it.outcome.toString(),
                         )
                             .onDuplicateKeyIgnore()
                     }

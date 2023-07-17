@@ -14,11 +14,11 @@ import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.Pr
 import org.jooq.Check;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function5;
+import org.jooq.Function4;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row5;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -68,14 +68,9 @@ public class PreconditionTest extends TableImpl<PreconditionTestRecord> {
     public final TableField<PreconditionTestRecord, String[]> PRECONDITIONS = createField(DSL.name("preconditions"), SQLDataType.CLOB.nullable(false).array(), this, "");
 
     /**
-     * The column <code>public.precondition_test.skipped</code>.
+     * The column <code>public.precondition_test.outcome</code>.
      */
-    public final TableField<PreconditionTestRecord, Boolean> SKIPPED = createField(DSL.name("skipped"), SQLDataType.BOOLEAN.nullable(false), this, "");
-
-    /**
-     * The column <code>public.precondition_test.failed</code>.
-     */
-    public final TableField<PreconditionTestRecord, Boolean> FAILED = createField(DSL.name("failed"), SQLDataType.BOOLEAN.nullable(false), this, "");
+    public final TableField<PreconditionTestRecord, String> OUTCOME = createField(DSL.name("outcome"), SQLDataType.VARCHAR(255).nullable(false), this, "");
 
     private PreconditionTest(Name alias, Table<PreconditionTestRecord> aliased) {
         this(alias, aliased, null);
@@ -184,18 +179,18 @@ public class PreconditionTest extends TableImpl<PreconditionTestRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<String, String, String[], Boolean, Boolean> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<String, String, String[], String> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function5<? super String, ? super String, ? super String[], ? super Boolean, ? super Boolean, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super String, ? super String, ? super String[], ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -203,7 +198,7 @@ public class PreconditionTest extends TableImpl<PreconditionTestRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super String, ? super String, ? super String[], ? super Boolean, ? super Boolean, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super String, ? super String, ? super String[], ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }
