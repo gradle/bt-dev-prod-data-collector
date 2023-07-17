@@ -78,7 +78,7 @@ class TeamcityClientService(
                 pipelineProjectId,
                 since,
                 buildStatus = BuildStatus.FAILURE,
-                composite = true,
+                composite = false,
             )
             var buildIterator: Iterator<TeamCityResponse.BuildBean> =
                 emptyList<TeamCityResponse.BuildBean>().iterator()
