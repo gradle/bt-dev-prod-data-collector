@@ -3,6 +3,7 @@ package org.gradle.devprod.collector.enterprise.export
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.BUILD
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.FLAKY_TEST_CLASS
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.LONG_TEST
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.PRECONDITION_TEST
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD
 import org.jooq.DSLContext
 import org.springframework.scheduling.annotation.Async
@@ -43,6 +44,29 @@ class DatabaseCleanupService(private val create: DSLContext) {
         } while (result.size == BULK_SIZE)
     }
 
+    /**
+     * Cleanes up precondition tests, such that only the last `retained_count` builds are kept.
+     * Preconditions will be ordered by their builds' start date.
+     *
+     * The deletion is approximate, as the preconditions are deleted for an entire build_id, and not a (build_id, preconditions) tuple.
+     * This means that remaining record counts can be lower than `retained_count`.
+     */
+    protected fun deleteInPreconditionsTable(retained_count: Int = 1_000_000) {
+        val selectQuery = create
+            .select(PRECONDITION_TEST.BUILD_ID)
+            .from(PRECONDITION_TEST)
+            .join(BUILD).on(PRECONDITION_TEST.BUILD_ID.eq(BUILD.BUILD_ID))
+            .orderBy(BUILD.BUILD_START.desc())
+            .offset(retained_count)
+
+        val deletedCount = create
+            .deleteFrom(PRECONDITION_TEST)
+            .where(PRECONDITION_TEST.BUILD_ID.`in`(selectQuery))
+            .execute()
+
+        println("Deleted $deletedCount old precondition tests in `precondition_test` table")
+    }
+
     @Async
     @Scheduled(fixedDelay = 6 * 60 * 60 * 1000)
     fun cleanupDb() {
@@ -51,6 +75,7 @@ class DatabaseCleanupService(private val create: DSLContext) {
 
             deleteInBuildTable(limitDate)
             deleteInTeamCityBuildTable(limitDate)
+            deleteInPreconditionsTable()
 
             broken = false
         } catch (e: Exception) {

@@ -20,6 +20,7 @@ import org.gradle.devprod.collector.enterprise.export.extractor.ExecutedTestTask
 import org.gradle.devprod.collector.enterprise.export.extractor.FirstTestTaskStart
 import org.gradle.devprod.collector.enterprise.export.extractor.FlakyTestClassExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.LongTestClassExtractor
+import org.gradle.devprod.collector.enterprise.export.extractor.PreconditionTestsExtractor
 import org.gradle.devprod.collector.enterprise.export.extractor.RootProjectNames
 import org.gradle.devprod.collector.enterprise.export.extractor.Tags
 import org.gradle.devprod.collector.enterprise.export.extractor.UnexpectedCachingDisableReasonsExtractor
@@ -28,6 +29,7 @@ import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.FLAKY_TEST_CLASS
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.LONG_TEST
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.PRECONDITION_TEST
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.records.KeyValueRecord
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
@@ -80,8 +82,10 @@ class ExportApiExtractorService(
                     DaemonUnhealthy,
                     ExecutedTestTasks,
                     UnexpectedCachingDisableReasonsExtractor,
+                    PreconditionTestsExtractor,
                 )
-            val events: Map<String?, List<BuildEvent>> = getEventsByBuild(build, extractors.flatMap { it.eventTypes }.distinct())
+            val events: Map<String?, List<BuildEvent>> =
+                getEventsByBuild(build, extractors.flatMap { it.eventTypes }.distinct())
 
             try {
                 create.transaction { configuration ->
@@ -89,6 +93,7 @@ class ExportApiExtractorService(
                     ctx.insertIntoBuildTable(build, events)
                     ctx.insertIntoLongRunningTestTable(build, events)
                     ctx.insertIntoFlakyTestClassTable(build, events)
+                    ctx.insertIntoPreconditionTestsTable(build, events)
                 }
             } catch (e: Exception) {
                 throw IllegalStateException("Error processing $build, events: $events", e)
@@ -96,7 +101,11 @@ class ExportApiExtractorService(
         }
     }
 
-    private suspend fun getEventsByBuild(buildId: Build, eventTypes: List<String>, retries: Int = 3): Map<String?, List<BuildEvent>> {
+    private suspend fun getEventsByBuild(
+        buildId: Build,
+        eventTypes: List<String>,
+        retries: Int = 3,
+    ): Map<String?, List<BuildEvent>> {
         var retryVar = retries
         var lastException: Exception? = null
         while (retryVar-- > 0) {
@@ -187,6 +196,31 @@ class ExportApiExtractorService(
                             FLAKY_TEST_CLASS.BUILD_ID,
                             FLAKY_TEST_CLASS.FLAKY_TEST_FQCN,
                         ).values(build.buildId, it)
+                    }
+                    .toTypedArray(),
+            ).execute()
+        }
+    }
+
+    private fun DSLContext.insertIntoPreconditionTestsTable(build: Build, events: Map<String?, List<BuildEvent>>) {
+        val preconditionTests = PreconditionTestsExtractor.extractFrom(events)
+        if (preconditionTests.isNotEmpty()) {
+            batch(
+                *preconditionTests
+                    .map {
+                        insertInto(
+                            PRECONDITION_TEST,
+                            PRECONDITION_TEST.BUILD_ID,
+                            PRECONDITION_TEST.CLASS_NAME,
+                            PRECONDITION_TEST.PRECONDITIONS,
+                            PRECONDITION_TEST.OUTCOME,
+                        ).values(
+                            build.buildId,
+                            it.className,
+                            it.preconditions.toTypedArray(),
+                            it.outcome.toString(),
+                        )
+                            .onDuplicateKeyIgnore()
                     }
                     .toTypedArray(),
             ).execute()

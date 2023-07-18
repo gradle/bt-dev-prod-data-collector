@@ -122,7 +122,7 @@ public class TeamcityBuild extends TableImpl<TeamcityBuildRecord> {
     /**
      * The column <code>public.teamcity_build.dependency_finished</code>.
      */
-    public final TableField<TeamcityBuildRecord, OffsetDateTime> DEPENDENCY_FINISHED = createField(DSL.name("dependency_finished"), SQLDataType.TIMESTAMPWITHTIMEZONE(6).nullable(false), this, "");
+    public final TableField<TeamcityBuildRecord, OffsetDateTime> DEPENDENCY_FINISHED = createField(DSL.name("dependency_finished"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
 
     private TeamcityBuild(Name alias, Table<TeamcityBuildRecord> aliased) {
         this(alias, aliased, null);

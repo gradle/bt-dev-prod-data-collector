@@ -1,6 +1,7 @@
 package org.gradle.devprod.collector.enterprise.export.extractor
 
 import org.gradle.devprod.collector.enterprise.export.model.BuildEvent
+import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.time.Instant
 
@@ -154,6 +155,14 @@ object TestSummaryExtractor : Extractor<TestSummary>(listOf("TestStarted", "Test
     }
 }
 
+/**
+ * Builds a reusable map from separate build events.
+ *
+ * As TestFinished and TestStarted events are not connected together, this utility method creates a handy map, which
+ * can be used to look up a TestStarted event by its id.
+ *
+ * This is very handy if a TestStarted and TestFinished event needs to be combined.
+ */
 private fun getTestIdToTestCaseMap(typeToEvents: Map<String?, List<BuildEvent>>): Map<Long, TestCase> {
     val idToTaskPath: Map<Long, String> = getIdToTaskPathMap(typeToEvents.getOrDefault("TaskStarted", emptyList()))
     val testIdToTestCase: MutableMap<Long, TestCase> = mutableMapOf()
@@ -266,7 +275,97 @@ object UnexpectedCachingDisableReasonsExtractor : SingleEventExtractor<List<Stri
     }
 }
 
-data class Agent(val host: String?, val user: String?)
+/**
+ * Extracts all tests, which are part of
+ * `org.gradle.test.predicate.RemotePreconditionProbingTests`
+ * or
+ * `org.gradle.test.predicate.LocalPreconditionProbingTests` classes
+ */
+object PreconditionTestsExtractor :
+    Extractor<List<PreconditionTest>>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
+
+    private const val PRECONDITION_PATTERN_START = "Preconditions ["
+    private const val PRECONDITION_PATTERN_END = "]"
+
+    private val logger = LoggerFactory.getLogger(PreconditionTestsExtractor::class.java)
+
+    override fun extractFrom(events: Map<String?, List<BuildEvent>>): List<PreconditionTest> {
+        // Build the lookup map to lookup TestStarted events
+        val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
+
+        return events.getOrDefault("TestFinished", emptyList()).mapNotNull {
+            if (it.data == null) {
+                return@mapNotNull null
+            }
+
+            val id = it.data.longProperty("id")
+            // Will be null, when the test is a top-level test.
+            val testCase = testIdToTestCase[id] ?: return@mapNotNull null
+            val failed = it.data.booleanProperty("failed") ?: return@mapNotNull null
+            val skipped = it.data.booleanProperty("skipped") ?: return@mapNotNull null
+
+            if (!isPreconditionName(testCase.name)) {
+                return@mapNotNull null
+            }
+
+            val preconditions: MutableList<String> = mutableListOf()
+            try {
+                preconditions.addAll(
+                    extractPreconditionNames(testCase.name).sorted(),
+                )
+            } catch (ex: IllegalArgumentException) {
+                logger.error("Exception meanwhile processing preconditions: {0}", ex)
+                return@mapNotNull null
+            }
+
+            PreconditionTest(
+                testCase.className,
+                preconditions,
+                if (failed) TestOutcome.FAILED else if (skipped) TestOutcome.SKIPPED else TestOutcome.PASSED,
+            )
+        }
+    }
+
+    private fun isPreconditionName(name: String): Boolean =
+        name.startsWith(PRECONDITION_PATTERN_START) && name.endsWith(PRECONDITION_PATTERN_END)
+
+    /**
+     * Extracts from the test name the list of preconditions used.
+     *
+     * Test names should contain the preconditions in a brace enclosed, comma separated format, e.g.:
+     * `Precondition [precondition1, precondition2, ...]`
+     *
+     * See `PreconditionProbingTests.groovy` in the gradle/gradle project to see how the test names are generated.
+     *
+     * @throws IllegalArgumentException if the test name does not start with 'Precondition ['.
+     * @throws IllegalArgumentException if the test name does not end with ']'.
+     * @throws IllegalArgumentException if the test name does not contain any preconditions.
+     */
+    fun extractPreconditionNames(name: String): List<String> {
+        if (!name.startsWith(PRECONDITION_PATTERN_START)) {
+            throw IllegalArgumentException("Test name '$name' does not start with '$PRECONDITION_PATTERN_START'")
+        }
+        if (!name.endsWith(PRECONDITION_PATTERN_END)) {
+            throw IllegalArgumentException("Test name '$name' does not end with '$PRECONDITION_PATTERN_END'")
+        }
+
+        val preconditions = name
+            .removeSurrounding(PRECONDITION_PATTERN_START, PRECONDITION_PATTERN_END)
+            .split(",")
+            .map {
+                it.trim()
+            }
+            .filter {
+                it.isNotEmpty()
+            }
+
+        if (preconditions.isEmpty()) {
+            throw IllegalArgumentException("Test name '$name' doesn't contain any preconditions")
+        }
+
+        return preconditions
+    }
+}
 
 private fun Any.booleanProperty(name: String): Boolean? = (this as Map<*, *>)[name] as Boolean?
 
