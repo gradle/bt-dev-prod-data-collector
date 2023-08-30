@@ -71,37 +71,6 @@ class TeamcityClientService(
         }
     }
 
-    // The rest client has no "affectProject(id:Gradle_Master_Check)" buildLocator
-    fun loadBuilds(since: Instant, pipelines: List<String>): Sequence<TeamCityBuild> =
-        pipelines.asSequence().flatMap { pipelineProjectId ->
-            var nextPageUrl: String? = loadingBuildsUrl(
-                pipelineProjectId,
-                since,
-                buildStatus = BuildStatus.FAILURE,
-                composite = false,
-            )
-            var buildIterator: Iterator<TeamCityResponse.BuildBean> =
-                emptyList<TeamCityResponse.BuildBean>().iterator()
-            generateSequence {
-                if (buildIterator.hasNext()) {
-                    val build = buildIterator.next()
-                    build.toTeamCityBuild(loadBuildScans(build.id))
-                } else if (nextPageUrl == null) {
-                    null
-                } else {
-                    val nextPage = loadBuilds(nextPageUrl!!)
-                    nextPageUrl = nextPage.nextHref
-                    buildIterator = nextPage.build.iterator()
-                    if (buildIterator.hasNext()) {
-                        val build = buildIterator.next()
-                        build.toTeamCityBuild(loadBuildScans(build.id))
-                    } else {
-                        null
-                    }
-                }
-            }
-        }
-
     private fun loadingBuildsUrl(
         affectedProject: String,
         start: Instant,

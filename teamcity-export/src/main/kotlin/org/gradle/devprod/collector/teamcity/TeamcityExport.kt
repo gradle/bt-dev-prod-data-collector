@@ -33,10 +33,8 @@ class TeamcityExport(
     @Async
     @Scheduled(initialDelay = 10 * 60 * 1000, fixedDelay = 60 * 60 * 1000)
     fun loadGeFailedBuilds() {
-        println("Loading failed GE builds from Teamcity")
+        println("Loading all GE builds from Teamcity")
 
-        teamcityClientService
-            .loadBuilds(getSinceFor("Enterprise"), gePipelines)
-            .forEach { build -> repo.storeBuild(build) }
+        teamcityClientService.loadAndStoreAllBuilds(getSinceFor("Enterprise"), gePipelines)
     }
 }
