@@ -24,7 +24,7 @@ class TeamcityClientService(
     private val repository: Repository,
 ) {
     private val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory
-        .guestAuth("https://builds.gradle.org")
+        .tokenAuth("https://builds.gradle.org", teamCityApiToken)
         .withTimeout(5, TimeUnit.MINUTES)
 
     private val client: WebClient = WebClient.create()

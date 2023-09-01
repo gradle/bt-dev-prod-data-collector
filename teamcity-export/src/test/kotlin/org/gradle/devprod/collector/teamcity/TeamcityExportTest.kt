@@ -30,7 +30,7 @@ class TeamcityExportTest {
         val tcService = TeamcityClientService(teamCityApiToken = System.getenv("TC_TOKEN"), objectMapper, loggingRepo)
         val exporter = TeamcityExport(loggingRepo, tcService)
 
-        exporter.loadGeFailedBuilds()
+        exporter.loadAllGeBuilds()
     }
 
 }
