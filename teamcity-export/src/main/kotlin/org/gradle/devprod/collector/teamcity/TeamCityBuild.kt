@@ -27,13 +27,7 @@ data class TeamCityBuild(
 )
 
 fun Build.toTeamCityBuild(): TeamCityBuild {
-    val revision = revisions
-        .firstOrNull {
-            val vcsRootId = it.vcsRootInstance.vcsRootId.stringId
-            vcsRootId.startsWith("GradleBuildToo") ||
-                vcsRootId == "GradleRelease" ||
-                vcsRootId == "GradleMaster"
-        }
+    val revision = revisions.firstOrNull()
     // For builds which have been cancelled early, there won't be any VCS root. We'll ignore those.
     require(revision != null) {
         "No revision found for ${buildConfigurationId.stringId}, ${id.stringId}: VCS roots: ${
