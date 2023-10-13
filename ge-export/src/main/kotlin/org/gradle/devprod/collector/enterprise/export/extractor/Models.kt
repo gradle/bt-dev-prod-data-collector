@@ -22,6 +22,7 @@ enum class TestOutcome {
 
 data class PreconditionTest(
     val className: String,
+    val taskPath: String,
     val preconditions: List<String>,
     val outcome: TestOutcome,
 )

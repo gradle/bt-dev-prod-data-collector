@@ -1,0 +1,27 @@
+id: lnxw7ymnzary4
+event: Build
+data: {"agentVersion":"3.15","toolType":"gradle","toolVersion":"8.5-20231003141056+0000","buildId":"lnxw7ymnzary4","timestamp":1697162286340}
+
+id: 2919
+event: BuildEvent
+data: {"timestamp":1697162215948,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":5213538821063990930,"buildPath":":","path":":precondition-tester:test","className":"org.gradle.api.tasks.testing.Test","thread":null,"noActions":false}}
+
+id: 3113
+event: BuildEvent
+data: {"timestamp":1697162237416,"type":{"majorVersion":1,"minorVersion":3,"eventType":"TestStarted"},"data":{"task":5213538821063990930,"id":-6389451248568740266,"parent":-6717121251556081138,"name":"Preconditions [org.gradle.test.preconditions.IntegTestPreconditions$IsEmbeddedExecutor, org.gradle.test.preconditions.UnitTestPreconditions$Windows]","className":"org.gradle.test.precondition.LocalPreconditionProbingTest","suite":false,"testSelectionReasonOrdinal":null,"displayName":null,"executorRestriction":null,"executorId":-856858720919376801,"executorAssignmentReason":null}}
+
+id: 3114
+event: BuildEvent
+data: {"timestamp":1697162237416,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":5213538821063990930,"id":-6389451248568740266,"failed":false,"skipped":true,"failureId":null,"failure":null}}
+
+id: 3214
+event: BuildEvent
+data: {"timestamp":1697162238505,"type":{"majorVersion":1,"minorVersion":5,"eventType":"TaskStarted"},"data":{"id":7788395991477465826,"buildPath":":","path":":precondition-tester:embeddedCrossVersionTest","className":"gradlebuild.integrationtests.tasks.IntegrationTest","thread":null,"noActions":false}}
+
+id: 3382
+event: BuildEvent
+data: {"timestamp":1697162244644,"type":{"majorVersion":1,"minorVersion":3,"eventType":"TestStarted"},"data":{"task":7788395991477465826,"id":-6389451248568740266,"parent":-6717121251556081137,"name":"Preconditions [org.gradle.test.preconditions.IntegTestPreconditions$IsEmbeddedExecutor, org.gradle.test.preconditions.UnitTestPreconditions$Windows]","className":"org.gradle.test.precondition.LocalPreconditionProbingTest","suite":false,"testSelectionReasonOrdinal":null,"displayName":null,"executorRestriction":null,"executorId":-6740015820239960862,"executorAssignmentReason":null}}
+
+id: 3383
+event: BuildEvent
+data: {"timestamp":1697162244645,"type":{"majorVersion":1,"minorVersion":1,"eventType":"TestFinished"},"data":{"task":7788395991477465826,"id":-6389451248568740266,"failed":false,"skipped":false,"failureId":null,"failure":null}}

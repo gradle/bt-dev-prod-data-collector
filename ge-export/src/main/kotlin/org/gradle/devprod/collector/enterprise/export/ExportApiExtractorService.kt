@@ -212,11 +212,13 @@ class ExportApiExtractorService(
                             PRECONDITION_TEST,
                             PRECONDITION_TEST.BUILD_ID,
                             PRECONDITION_TEST.CLASS_NAME,
+                            PRECONDITION_TEST.TASK_PATH,
                             PRECONDITION_TEST.PRECONDITIONS,
                             PRECONDITION_TEST.OUTCOME,
                         ).values(
                             build.buildId,
                             it.className,
+                            it.taskPath,
                             it.preconditions.toTypedArray(),
                             it.outcome.toString(),
                         )
