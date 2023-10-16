@@ -130,14 +130,13 @@ data class TestCase(val taskPath: String, val name: String, val className: Strin
 
 object TestSummaryExtractor : Extractor<TestSummary>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): TestSummary {
-        val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
+        val testCaseRegistry: TestCaseRegistry = getTestCaseRegistry(events)
         var totalCount = 0
         var successCount = 0
         var failedCount = 0
         var skippedCount = 0
         events.getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList()).forEach {
-            val id = it.data?.longProperty("id")
-            val testCase = testIdToTestCase[id] ?: return@forEach
+            val testCase = testCaseRegistry.getTestCase(it) ?: return@forEach
             if (testCase.name == testCase.className) {
                 return@forEach
             }
@@ -156,6 +155,22 @@ object TestSummaryExtractor : Extractor<TestSummary>(listOf("TestStarted", "Test
 }
 
 /**
+ * Test case's id is only guaranteed to be unique in the same task,
+ * thus we have to use combined key to uniquely identify a test case.
+ */
+data class TestCaseKey(val testCaseId: Long, val taskId: Long)
+
+class TestCaseRegistry(
+    private val testCaseKeyToTestCase: Map<TestCaseKey, TestCase>,
+) {
+    fun getTestCase(testFinishedEvent: BuildEvent): TestCase? {
+        val id = testFinishedEvent.data?.longProperty("id") ?: return null
+        val taskId = testFinishedEvent.data.longProperty("task") ?: return null
+        return testCaseKeyToTestCase[TestCaseKey(id, taskId)]
+    }
+}
+
+/**
  * Builds a reusable map from separate build events.
  *
  * As TestFinished and TestStarted events are not connected together, this utility method creates a handy map, which
@@ -163,22 +178,23 @@ object TestSummaryExtractor : Extractor<TestSummary>(listOf("TestStarted", "Test
  *
  * This is very handy if a TestStarted and TestFinished event needs to be combined.
  */
-private fun getTestIdToTestCaseMap(typeToEvents: Map<String?, List<BuildEvent>>): Map<Long, TestCase> {
+private fun getTestCaseRegistry(typeToEvents: Map<String?, List<BuildEvent>>): TestCaseRegistry {
     val idToTaskPath: Map<Long, String> = getIdToTaskPathMap(typeToEvents.getOrDefault("TaskStarted", emptyList()))
-    val testIdToTestCase: MutableMap<Long, TestCase> = mutableMapOf()
+    val testCaseKeyToTestCase: MutableMap<TestCaseKey, TestCase> = mutableMapOf()
     typeToEvents.getOrDefault("TestStarted", emptyList()).forEach {
         val id = it.data?.longProperty("id")
         val name = it.data?.stringProperty("name")
         val className = it.data?.stringProperty("className")
-        val taskPath = it.data?.longProperty("task")?.let { idToTaskPath[it] }
+        val taskId = it.data?.longProperty("task")
+        val taskPath = taskId?.let { idToTaskPath[it] }
         val suite = it.data?.booleanProperty("suite") ?: false
 
         if (!suite && id != null && name != null && className != null && taskPath != null && name != className) {
             val testCase = TestCase(taskPath, name, className)
-            testIdToTestCase[id] = testCase
+            testCaseKeyToTestCase[TestCaseKey(id, taskId)] = testCase
         }
     }
-    return testIdToTestCase
+    return TestCaseRegistry(testCaseKeyToTestCase)
 }
 
 private fun getIdToTaskPathMap(events: List<BuildEvent>): Map<Long, String> {
@@ -202,14 +218,13 @@ private fun getIdToTaskPathMap(events: List<BuildEvent>): Map<Long, String> {
  */
 object FlakyTestClassExtractor : Extractor<Set<String>>(listOf("TestStarted", "TestFinished", "TaskStarted")) {
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): Set<String> {
-        val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
+        val testCaseRegistry: TestCaseRegistry = getTestCaseRegistry(events)
         val flakyTestClasses = mutableSetOf<String>()
         val testCaseToFailedResult: MutableMap<TestCase, Boolean> = mutableMapOf()
         events.getOrDefault(LongTestClassExtractor.eventTypes[1], emptyList()).forEach {
-            val id = it.data?.longProperty("id")
             val failed = it.data?.booleanProperty("failed") ?: return@forEach
             val skipped = it.data.booleanProperty("skipped")
-            val testCase = testIdToTestCase[id] ?: return@forEach
+            val testCase = testCaseRegistry.getTestCase(it) ?: return@forEach
             val existingResult = testCaseToFailedResult[testCase]
             if (existingResult == null) {
                 testCaseToFailedResult[testCase] = failed
@@ -291,17 +306,11 @@ object PreconditionTestsExtractor :
 
     override fun extractFrom(events: Map<String?, List<BuildEvent>>): List<PreconditionTest> {
         // Build the lookup map to lookup TestStarted events
-        val testIdToTestCase: Map<Long, TestCase> = getTestIdToTestCaseMap(events)
+        val testCaseRegistry: TestCaseRegistry = getTestCaseRegistry(events)
 
         return events.getOrDefault("TestFinished", emptyList()).mapNotNull {
-            if (it.data == null) {
-                return@mapNotNull null
-            }
-
-            val id = it.data.longProperty("id")
-            // Will be null, when the test is a top-level test.
-            val testCase = testIdToTestCase[id] ?: return@mapNotNull null
-            val failed = it.data.booleanProperty("failed") ?: return@mapNotNull null
+            val testCase = testCaseRegistry.getTestCase(it) ?: return@mapNotNull null
+            val failed = it.data?.booleanProperty("failed") ?: return@mapNotNull null
             val skipped = it.data.booleanProperty("skipped") ?: return@mapNotNull null
 
             if (!isPreconditionName(testCase.name)) {
@@ -320,6 +329,7 @@ object PreconditionTestsExtractor :
 
             PreconditionTest(
                 testCase.className,
+                testCase.taskPath,
                 preconditions,
                 if (failed) TestOutcome.FAILED else if (skipped) TestOutcome.SKIPPED else TestOutcome.PASSED,
             )

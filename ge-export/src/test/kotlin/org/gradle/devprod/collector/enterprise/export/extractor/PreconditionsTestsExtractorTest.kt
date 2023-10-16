@@ -10,6 +10,35 @@ import org.junit.jupiter.params.provider.ValueSource
 class PreconditionsTestsExtractorTest {
 
     @Test
+    fun `allow same id under different tasks`() {
+        val events = parse("/lnxw7ymnzary4.txt")
+        val preconditionTests = PreconditionTestsExtractor.extractFrom(events.groupBy { it.eventType })
+
+        assertEquals(
+            listOf(
+                PreconditionTest(
+                    "org.gradle.test.precondition.LocalPreconditionProbingTest",
+                    ":precondition-tester:test",
+                    listOf(
+                        "org.gradle.test.preconditions.IntegTestPreconditions\$IsEmbeddedExecutor",
+                        "org.gradle.test.preconditions.UnitTestPreconditions\$Windows"
+                    ),
+                    TestOutcome.SKIPPED
+                ),
+                PreconditionTest(
+                    "org.gradle.test.precondition.LocalPreconditionProbingTest",
+                    ":precondition-tester:embeddedCrossVersionTest",
+                    listOf(
+                        "org.gradle.test.preconditions.IntegTestPreconditions\$IsEmbeddedExecutor",
+                        "org.gradle.test.preconditions.UnitTestPreconditions\$Windows"
+                    ),
+                    TestOutcome.PASSED
+                ),
+            ), preconditionTests
+        )
+    }
+
+    @Test
     fun `extractor smoke test`() {
         val events = parse("/czgaz3426aszo.txt")
         val preconditionTests = PreconditionTestsExtractor.extractFrom(events.groupBy { it.eventType })
