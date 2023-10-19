@@ -4,4 +4,4 @@ alter table precondition_test
 alter table precondition_test drop constraint precondition_test_pkey;
 
 alter table precondition_test
-    add constraint primary key (build_id, class_name, preconditions, task_path);
+    add primary key (build_id, class_name, preconditions, task_path);
