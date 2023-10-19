@@ -1,5 +1,5 @@
 alter table precondition_test
-    add task_path varchar(1024) default null;
+    add task_path varchar(1024) default '';
 
 alter table precondition_test drop constraint precondition_test_pkey;
 
