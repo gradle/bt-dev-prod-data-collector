@@ -8,6 +8,8 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
+const val RETRIED_BUILD_TAG = "RetriedBuild"
+
 data class TeamCityBuild(
     val id: String,
     val branch: String?,
@@ -24,6 +26,7 @@ data class TeamCityBuild(
     val buildScanUrls: List<String> = emptyList(),
     val buildHostName: String?,
     val buildHostType: String?,
+    val hasRetriedBuild: Boolean,
 )
 
 fun Build.toTeamCityBuild(): TeamCityBuild {
@@ -51,6 +54,7 @@ fun Build.toTeamCityBuild(): TeamCityBuild {
         composite = composite == true,
         buildHostName = agent?.name,
         buildHostType = typeOfAgents(agent?.name),
+        hasRetriedBuild = false,
     )
 }
 
@@ -68,6 +72,7 @@ private fun typeOfAgents(agentName: String?): String {
 
 fun TeamCityResponse.BuildBean.toTeamCityBuild(
     buildScans: List<String>,
+    hasRetriedBuild: Boolean,
     dependenciesFinishedTime: OffsetDateTime? = null,
 ) = TeamCityBuild(
     id = id.toString(),
@@ -85,6 +90,7 @@ fun TeamCityResponse.BuildBean.toTeamCityBuild(
     buildScanUrls = buildScans,
     buildHostName = agent?.name,
     buildHostType = typeOfAgents(agent?.name),
+    hasRetriedBuild = hasRetriedBuild,
 )
 
 private val rfc822: DateTimeFormatter =

@@ -12,11 +12,11 @@ import org.gradle.devprod.collector.persistence.generated.jooq.Public;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.records.TeamcityBuildRecord;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function15;
+import org.jooq.Function16;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row15;
+import org.jooq.Row16;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -124,6 +124,11 @@ public class TeamcityBuild extends TableImpl<TeamcityBuildRecord> {
      */
     public final TableField<TeamcityBuildRecord, OffsetDateTime> DEPENDENCY_FINISHED = createField(DSL.name("dependency_finished"), SQLDataType.TIMESTAMPWITHTIMEZONE(6), this, "");
 
+    /**
+     * The column <code>public.teamcity_build.has_retried_build</code>.
+     */
+    public final TableField<TeamcityBuildRecord, Boolean> HAS_RETRIED_BUILD = createField(DSL.name("has_retried_build"), SQLDataType.BOOLEAN.defaultValue(DSL.field(DSL.raw("false"), SQLDataType.BOOLEAN)), this, "");
+
     private TeamcityBuild(Name alias, Table<TeamcityBuildRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -207,18 +212,18 @@ public class TeamcityBuild extends TableImpl<TeamcityBuildRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row15 type methods
+    // Row16 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row15<String, String, OffsetDateTime, OffsetDateTime, OffsetDateTime, String, String, String, String, String, String[], Boolean, String, String, OffsetDateTime> fieldsRow() {
-        return (Row15) super.fieldsRow();
+    public Row16<String, String, OffsetDateTime, OffsetDateTime, OffsetDateTime, String, String, String, String, String, String[], Boolean, String, String, OffsetDateTime, Boolean> fieldsRow() {
+        return (Row16) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function15<? super String, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? super OffsetDateTime, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String[], ? super Boolean, ? super String, ? super String, ? super OffsetDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function16<? super String, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? super OffsetDateTime, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String[], ? super Boolean, ? super String, ? super String, ? super OffsetDateTime, ? super Boolean, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -226,7 +231,7 @@ public class TeamcityBuild extends TableImpl<TeamcityBuildRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function15<? super String, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? super OffsetDateTime, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String[], ? super Boolean, ? super String, ? super String, ? super OffsetDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function16<? super String, ? super String, ? super OffsetDateTime, ? super OffsetDateTime, ? super OffsetDateTime, ? super String, ? super String, ? super String, ? super String, ? super String, ? super String[], ? super Boolean, ? super String, ? super String, ? super OffsetDateTime, ? super Boolean, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

@@ -41,9 +41,13 @@ class TeamcityClientService(
             .map { it.finishDateTime }
             .sortedByDescending { it }
             .firstOrNull() ?: build.startDateTime!!
+        val buildScanUrls = loadBuildScans(build.id)
+        val hasRetriedBuild = checkBuildScansHaveRetriedBuild(buildScanUrls)
+
         val copy = build.copy(
             dependencyFinishedDateTime = dependenciesFinishTime,
             buildScanUrls = loadBuildScans(build.id),
+            hasRetriedBuild = hasRetriedBuild,
         )
         repository.storeBuild(copy)
         return copy
@@ -52,7 +56,9 @@ class TeamcityClientService(
     private fun storeBuild(build: TeamCityResponse.BuildBean) {
         val dependencies = getDependencyBuilds(build.id.toString())
         val dependenciesFinishTime = dependencies.map { it.finishDateTime }.sortedByDescending { it }.firstOrNull()
-        repository.storeBuild(build.toTeamCityBuild(loadBuildScans(build.id), dependenciesFinishTime))
+        val buildScanUrl = loadBuildScans(build.id)
+        val hasRetriedBuild = checkBuildScansHaveRetriedBuild(buildScanUrl)
+        repository.storeBuild(build.toTeamCityBuild(loadBuildScans(build.id), hasRetriedBuild, dependenciesFinishTime))
     }
 
     fun loadAndStoreAllBuilds(since: Instant, pipelineProjectIds: List<String>) {
@@ -99,6 +105,12 @@ class TeamcityClientService(
 
     private fun WebClient.RequestHeadersSpec<*>.bearerAuth(): WebClient.RequestHeadersSpec<*> =
         header("Authorization", "Bearer $teamCityApiToken")
+
+    private fun checkBuildScansHaveRetriedBuild(buildScanUrls: List<String>): Boolean {
+        return buildScanUrls.map { it.substringAfter("/s/") }
+            .map { repository.getBuildScanTagsById(it) }
+            .any { tags -> tags.contains(RETRIED_BUILD_TAG) }
+    }
 
     private fun loadBuildScans(id: Any): List<String> {
         val response: Mono<String> =

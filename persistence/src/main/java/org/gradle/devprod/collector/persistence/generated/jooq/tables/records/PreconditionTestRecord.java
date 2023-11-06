@@ -6,7 +6,7 @@ package org.gradle.devprod.collector.persistence.generated.jooq.tables.records;
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.PreconditionTest;
 import org.jooq.Field;
-import org.jooq.Record3;
+import org.jooq.Record4;
 import org.jooq.Record5;
 import org.jooq.Row5;
 import org.jooq.impl.UpdatableRecordImpl;
@@ -95,8 +95,8 @@ public class PreconditionTestRecord extends UpdatableRecordImpl<PreconditionTest
     // -------------------------------------------------------------------------
 
     @Override
-    public Record3<String, String, String[]> key() {
-        return (Record3) super.key();
+    public Record4<String, String, String[], String> key() {
+        return (Record4) super.key();
     }
 
     // -------------------------------------------------------------------------
