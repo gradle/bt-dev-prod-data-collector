@@ -75,7 +75,7 @@ public class PreconditionTest extends TableImpl<PreconditionTestRecord> {
     /**
      * The column <code>public.precondition_test.task_path</code>.
      */
-    public final TableField<PreconditionTestRecord, String> TASK_PATH = createField(DSL.name("task_path"), SQLDataType.VARCHAR(1024).nullable(false), this, "");
+    public final TableField<PreconditionTestRecord, String> TASK_PATH = createField(DSL.name("task_path"), SQLDataType.VARCHAR(1024).nullable(false).defaultValue(DSL.field(DSL.raw("''::character varying"), SQLDataType.VARCHAR)), this, "");
 
     private PreconditionTest(Name alias, Table<PreconditionTestRecord> aliased) {
         this(alias, aliased, null);

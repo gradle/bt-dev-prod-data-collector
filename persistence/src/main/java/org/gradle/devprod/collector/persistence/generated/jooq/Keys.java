@@ -35,7 +35,7 @@ public class Keys {
     public static final UniqueKey<BuildRecord> BUILD_PK = Internal.createUniqueKey(Build.BUILD, DSL.name("build_pk"), new TableField[] { Build.BUILD.BUILD_ID }, true);
     public static final UniqueKey<FlakyTestClassRecord> FLAKY_TEST_CLASS_PKEY = Internal.createUniqueKey(FlakyTestClass.FLAKY_TEST_CLASS, DSL.name("flaky_test_class_pkey"), new TableField[] { FlakyTestClass.FLAKY_TEST_CLASS.BUILD_ID, FlakyTestClass.FLAKY_TEST_CLASS.FLAKY_TEST_FQCN }, true);
     public static final UniqueKey<LongTestRecord> LONG_TEST_PK = Internal.createUniqueKey(LongTest.LONG_TEST, DSL.name("long_test_pk"), new TableField[] { LongTest.LONG_TEST.BUILD_ID, LongTest.LONG_TEST.CLASS_NAME }, true);
-    public static final UniqueKey<PreconditionTestRecord> PRECONDITION_TEST_PKEY = Internal.createUniqueKey(PreconditionTest.PRECONDITION_TEST, DSL.name("precondition_test_pkey"), new TableField[] { PreconditionTest.PRECONDITION_TEST.BUILD_ID, PreconditionTest.PRECONDITION_TEST.CLASS_NAME, PreconditionTest.PRECONDITION_TEST.PRECONDITIONS }, true);
+    public static final UniqueKey<PreconditionTestRecord> PRECONDITION_TEST_PKEY = Internal.createUniqueKey(PreconditionTest.PRECONDITION_TEST, DSL.name("precondition_test_pkey"), new TableField[] { PreconditionTest.PRECONDITION_TEST.BUILD_ID, PreconditionTest.PRECONDITION_TEST.CLASS_NAME, PreconditionTest.PRECONDITION_TEST.PRECONDITIONS, PreconditionTest.PRECONDITION_TEST.TASK_PATH }, true);
     public static final UniqueKey<TeamcityBuildRecord> TEAMCITY_BUILD_PK = Internal.createUniqueKey(TeamcityBuild.TEAMCITY_BUILD, DSL.name("teamcity_build_pk"), new TableField[] { TeamcityBuild.TEAMCITY_BUILD.BUILD_ID }, true);
 
     // -------------------------------------------------------------------------

@@ -13,6 +13,10 @@ class TeamcityExportTest {
     fun `can download GE builds`() {
 
         val loggingRepo = object: Repository {
+            override fun getBuildScanTagsById(buildScanId: String): List<String> {
+                TODO("Not yet implemented")
+            }
+
             override fun getBuildById(id: String): TeamCityBuild? {
                 TODO("Not yet implemented")
             }

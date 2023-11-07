@@ -1,5 +1,6 @@
 package org.gradle.devprod.collector.teamcity
 
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.BUILD
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
@@ -8,6 +9,10 @@ import java.time.Instant
 
 @Component
 class JooqRepository(private val dslContext: DSLContext) : Repository {
+    override fun getBuildScanTagsById(buildScanId: String): List<String> {
+        return dslContext.fetchAny(BUILD, BUILD.BUILD_ID.eq(buildScanId))?.tags?.toList() ?: emptyList()
+    }
+
     override fun getBuildById(id: String): TeamCityBuild? {
         val record = dslContext.fetchAny(TEAMCITY_BUILD, TEAMCITY_BUILD.BUILD_ID.eq(id))
         if (record == null) {
@@ -29,6 +34,7 @@ class JooqRepository(private val dslContext: DSLContext) : Repository {
                 buildScanUrls = record.buildscanUrls.toList(),
                 buildHostName = record.buildHostName,
                 buildHostType = record.buildHostType,
+                hasRetriedBuild = record.hasRetriedBuild,
             )
         }
     }
@@ -57,6 +63,7 @@ class JooqRepository(private val dslContext: DSLContext) : Repository {
                 record.buildscanUrls = build.buildScanUrls.toTypedArray()
                 record.buildHostName = build.buildHostName
                 record.buildHostType = build.buildHostType
+                record.hasRetriedBuild = build.hasRetriedBuild
 
                 record.store()
             }
