@@ -16,6 +16,22 @@ This application serves as backend for a Slack App installed within the Gradle S
 
 Find the source code for the events API handling and build scan data expansion and rendering under the [application module](./application/src/main/kotlin/org/gradle/devprod/collector/).
 
+## Run the application
+
+Start up a postgres database on port 5432. Example using a container:
+
+```bash
+docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=btdevprod -e POSTGRES_USER=btdevprod -e POSTGRES_DB=btdevprod postgres
+```
+
+Make sure you have the required environment variables set and execute the `bootRun` gradle task:
+
+```bash
+TEAMCITY_API_TOKEN=a-token E_GRDEV_NET_EXPORT_API_TOKEN=my-token (...etc...) ./gradlew bootRun
+```
+
+Access the application through `http://localhost:8080`.
+
 ## Deploying changes
 
 After merging changes to the repository, follow the Heroku guide to [deploy them via its git integration](devcenter.heroku.com/articles/git) (note: you will need an account in heroku.com to generate a personal access token).
