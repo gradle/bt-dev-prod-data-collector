@@ -1,6 +1,8 @@
 package org.gradle.devprod.collector.teamcity
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.micrometer.core.instrument.Counter
+import io.micrometer.core.instrument.MeterRegistry
 import org.jetbrains.teamcity.rest.BuildId
 import org.jetbrains.teamcity.rest.BuildState
 import org.jetbrains.teamcity.rest.BuildStatus
@@ -9,6 +11,8 @@ import org.jetbrains.teamcity.rest.TeamCityInstanceFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
+import org.springframework.web.reactive.function.client.ClientRequest
+import org.springframework.web.reactive.function.client.ClientResponse
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import org.springframework.web.reactive.function.client.bodyToMono
@@ -22,12 +26,28 @@ class TeamcityClientService(
     @Value("${'$'}{teamcity.api.token}") private val teamCityApiToken: String,
     private val objectMapper: ObjectMapper,
     private val repository: Repository,
+    private val meterRegistry: MeterRegistry,
 ) {
     private val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory
         .tokenAuth("https://builds.gradle.org", teamCityApiToken)
         .withTimeout(5, TimeUnit.MINUTES)
 
-    private val client: WebClient = WebClient.create()
+    private val requestCounter = Counter.builder("network_request_outgoing_total")
+        .description("Outgoing network request counters")
+
+    private val requestCountingExchangeFilterFunction = object : LoggingExchangeFilterFunction() {
+        override fun logResponse(request: ClientRequest, response: ClientResponse) {
+            requestCounter
+                .tag("client", this@TeamcityClientService.javaClass.simpleName)
+                .tag("host", request.url().toURL().host)
+                .tag("method", request.method().toString())
+                .tag("status_code", response.statusCode().value().toString())
+                .register(meterRegistry)
+                .increment()
+        }
+    }
+
+    private val client: WebClient = WebClient.builder().filter(requestCountingExchangeFilterFunction).build()
 
     private fun getDependencyBuilds(buildId: String): List<TeamCityBuild> {
         return teamCityInstance.build(BuildId(buildId)).snapshotDependencies.map { build ->

@@ -1,12 +1,15 @@
 package org.gradle.devprod.collector.teamcity
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 class TeamcityExportTest {
+
+    private val meterRegistry = SimpleMeterRegistry()
 
     @Test
     @Disabled("This is a manual test that requires a live tc token")
@@ -31,8 +34,8 @@ class TeamcityExportTest {
 
         }
         val objectMapper = ObjectMapper()
-        val tcService = TeamcityClientService(teamCityApiToken = System.getenv("TC_TOKEN"), objectMapper, loggingRepo)
-        val exporter = TeamcityExport(loggingRepo, tcService)
+        val tcService = TeamcityClientService(teamCityApiToken = System.getenv("TC_TOKEN"), objectMapper, loggingRepo, meterRegistry)
+        val exporter = TeamcityExport(loggingRepo, tcService, meterRegistry)
 
         exporter.loadAllGeBuilds()
     }
