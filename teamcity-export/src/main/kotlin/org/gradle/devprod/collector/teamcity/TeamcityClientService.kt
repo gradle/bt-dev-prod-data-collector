@@ -41,7 +41,7 @@ class TeamcityClientService(
                 .tag("client", this@TeamcityClientService.javaClass.simpleName)
                 .tag("host", request.url().toURL().host)
                 .tag("method", request.method().toString())
-                .tag("status_code", response.statusCode().value().toString())
+                .tag("status", response.statusCode().value().toString())
                 .register(meterRegistry)
                 .increment()
         }
