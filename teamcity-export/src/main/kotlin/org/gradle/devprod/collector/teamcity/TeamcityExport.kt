@@ -2,6 +2,7 @@ package org.gradle.devprod.collector.teamcity
 
 import io.micrometer.core.instrument.Gauge
 import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Tags
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -14,8 +15,8 @@ class TeamcityExport(
     private val teamcityClientService: TeamcityClientService,
     private val meterRegistry: MeterRegistry,
 ) {
+    private val lastScheduledTriggerSeconds = mutableMapOf<String, Double>()
     private val gbtPipelines = listOf("Gradle_Master_Check", "Gradle_Release_Check")
-
     private val gePipelines = listOf("Enterprise_Main", "Enterprise_Release")
 
     private fun getSinceFor(projectIdPrefix: String): Instant {
@@ -47,10 +48,15 @@ class TeamcityExport(
 
     private fun updateTeamCityExportTriggerMetric(projectIdPrefix: String) {
         val instant = Instant.now().epochSecond.toDouble()
-        Gauge.builder("teamcity_export_last_scheduled_trigger_seconds", instant) { _ -> instant }
-            .description("Last instant since the TeamCity export was triggered")
-            .strongReference(true)
-            .tag("project", projectIdPrefix)
-            .register(meterRegistry)
+        if (!lastScheduledTriggerSeconds.containsKey(projectIdPrefix)) {
+            val tags: Tags = Tags.of("project", projectIdPrefix)
+            Gauge.builder(
+                "teamcity_export_last_scheduled_trigger_seconds",
+                lastScheduledTriggerSeconds,
+            ) { m -> m[projectIdPrefix]!! }
+                .tags(tags)
+                .register(meterRegistry)
+        }
+        lastScheduledTriggerSeconds[projectIdPrefix] = instant
     }
 }
