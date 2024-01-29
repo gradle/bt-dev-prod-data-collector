@@ -2,7 +2,9 @@ package org.gradle.devprod.collector.teamcity
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micrometer.core.instrument.Counter
+import io.micrometer.core.instrument.Gauge
 import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Tags
 import org.jetbrains.teamcity.rest.BuildId
 import org.jetbrains.teamcity.rest.BuildState
 import org.jetbrains.teamcity.rest.BuildStatus
@@ -11,13 +13,10 @@ import org.jetbrains.teamcity.rest.TeamCityInstanceFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.ClientRequest
-import org.springframework.web.reactive.function.client.ClientResponse
-import org.springframework.web.reactive.function.client.WebClient
-import org.springframework.web.reactive.function.client.WebClientResponseException
-import org.springframework.web.reactive.function.client.bodyToMono
+import org.springframework.web.reactive.function.client.*
 import reactor.core.publisher.Mono
 import java.net.URI
+import java.time.Duration
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
@@ -81,41 +80,65 @@ class TeamcityClientService(
         repository.storeBuild(build.toTeamCityBuild(loadBuildScans(build.id), hasRetriedBuild, dependenciesFinishTime))
     }
 
-    fun loadAndStoreAllBuilds(since: Instant, pipelineProjectIds: List<String>) {
-        pipelineProjectIds.forEach { affectedProject ->
-            var nextPageUrl: String? = loadingBuildsUrl(affectedProject, since, buildState = BuildState.FINISHED)
-            while (nextPageUrl != null) {
-                val currentPage = loadBuilds(nextPageUrl)
-                nextPageUrl = currentPage.nextHref
+    private fun updateTeamCityExportTriggerMetric(projectIdPrefix: String, timestamp: Instant) {
+        val tags: Tags = Tags.of("project", projectIdPrefix)
+        Gauge.builder("teamcity_export_last_scheduled_trigger_seconds") { timestamp.epochSecond }
+            .tags(tags)
+            .register(meterRegistry)
+    }
 
-                val buildIterator: Iterator<TeamCityResponse.BuildBean> = currentPage.build.iterator()
-                while (buildIterator.hasNext()) {
-                    val build = buildIterator.next()
-                    storeBuild(build)
-                }
+    private fun loadAndStoreBuildsBetween(projectId: String, start: Instant, end: Instant) {
+        var nextPageUrl: String? = loadingBuildsUrl(projectId, start, end, buildState = BuildState.FINISHED)
+        while (nextPageUrl != null) {
+            val currentPage = loadBuilds(nextPageUrl)
+            nextPageUrl = currentPage.nextHref
+
+            val buildIterator: Iterator<TeamCityResponse.BuildBean> = currentPage.build.iterator()
+            while (buildIterator.hasNext()) {
+                val build = buildIterator.next()
+                storeBuild(build)
             }
+        }
+        repository.updateLatestFinishedBuildTimestamp(projectId, end)
+        updateTeamCityExportTriggerMetric(projectId, end)
+    }
+
+    fun loadAndStoreBuildsSinceLastCheckpoint(projectId: String) {
+        val defaultWindowsSize = Duration.ofHours(1)
+        var start = repository.latestFinishedBuildTimestamp(projectId)
+        var end = start.plus(defaultWindowsSize)
+        while (end < Instant.now()) {
+            loadAndStoreBuildsBetween(projectId, start, end)
+            start = end
+            end = end.plus(defaultWindowsSize)
         }
     }
 
+    /**
+     * Get the builds whose finishedTime is between start and end
+     * See https://www.jetbrains.com/help/teamcity/rest/get-build-details.html#Get+Specific+Builds
+     */
     private fun loadingBuildsUrl(
         affectedProject: String,
         start: Instant,
+        end: Instant,
         buildStatus: BuildStatus? = null,
         buildState: BuildState? = null,
         composite: Boolean? = null,
         pageSize: Int = 100,
     ): String {
-        val locators = mutableMapOf(
+        val locators = mutableListOf(
             "affectedProject" to "(id:$affectedProject)",
             "branch" to "default:any",
-            "sinceDate" to formatRFC822(start),
+            "finishDate" to "(date:${formatRFC822(start)},condition:after)",
+            "finishDate" to "(date:${formatRFC822(end)},condition:before)",
         )
 
-        buildStatus?.let { locators["status"] = it.toString().lowercase() }
-        buildState?.let { locators["state"] = it.toString().lowercase() }
-        composite?.let { locators["composite"] = it.toString() }
+        buildStatus?.let { locators.add("status" to it.toString().lowercase()) }
+        buildState?.let { locators.add("state" to it.toString().lowercase()) }
+        composite?.let { locators.add("composite" to it.toString()) }
 
-        val locatorString = locators.entries.joinToString(",") { "${it.key}:${it.value}" }
+        val locatorString = locators.joinToString(",") { "${it.first}:${it.second}" }
 
         val fields =
             "nextHref,count,build(id,agent(name),buildType(id,name,projectName),failedToStart,revisions(revision(version)),branchName,status,statusText,state,queuedDate,startDate,finishDate,composite)"
@@ -160,11 +183,10 @@ class TeamcityClientService(
             .let { objectMapper.readValue(it, TeamCityResponse::class.java) }
 
     private fun createTeamcityUri(url: String): URI {
-        val newUrl = url.replace("lookupLimit:10000", "lookupLimit:1000")
-        return if (newUrl.startsWith("http")) {
-            URI.create(newUrl)
+        return if (url.startsWith("http")) {
+            URI.create(url)
         } else {
-            val relativePath = if (newUrl.startsWith("/")) newUrl else "/$newUrl"
+            val relativePath = if (url.startsWith("/")) url else "/$url"
             URI.create("https://builds.gradle.org$relativePath")
         }
     }

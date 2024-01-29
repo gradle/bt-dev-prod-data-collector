@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.Config;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.PreconditionTest;
@@ -36,6 +37,11 @@ public class Public extends SchemaImpl {
      * The table <code>public.build</code>.
      */
     public final Build BUILD = Build.BUILD;
+
+    /**
+     * The table <code>public.config</code>.
+     */
+    public final Config CONFIG = Config.CONFIG;
 
     /**
      * The table <code>public.flaky_test_class</code>.
@@ -74,6 +80,7 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             Build.BUILD,
+            Config.CONFIG,
             FlakyTestClass.FLAKY_TEST_CLASS,
             LongTest.LONG_TEST,
             PreconditionTest.PRECONDITION_TEST,

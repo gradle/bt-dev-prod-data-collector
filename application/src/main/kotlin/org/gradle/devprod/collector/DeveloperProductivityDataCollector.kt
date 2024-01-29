@@ -14,8 +14,10 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.scheduling.TaskScheduler
 import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -33,6 +35,15 @@ class DeveloperProductivityDataCollector(private val handler: LinkSharedHandler)
         Jackson2ObjectMapperBuilderCustomizer { builder ->
             builder.modulesToInstall(KotlinModule())
         }
+
+    @Bean
+    fun taskScheduler(): TaskScheduler {
+        val scheduler = ThreadPoolTaskScheduler()
+        scheduler.setPoolSize(4) // for 4 tasks in `TeamcityExport`
+        scheduler.setThreadNamePrefix("scheduled-task-")
+        scheduler.initialize()
+        return scheduler
+    }
 
     private val objectMapper = ObjectMapper()
         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)

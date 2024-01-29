@@ -28,7 +28,7 @@ class TeamcityExportTest {
                 System.err.println(build)
             }
 
-            override fun latestFinishedBuildTimestamp(projectIdPrefix: String): Instant? {
+            override fun latestFinishedBuildTimestamp(projectId: String): Instant? {
                 return Instant.now().minus(1, ChronoUnit.HOURS)
             }
 

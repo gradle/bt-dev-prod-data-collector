@@ -1,6 +1,7 @@
 package org.gradle.devprod.collector.teamcity
 
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.BUILD
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.CONFIG
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
@@ -70,13 +71,21 @@ class JooqRepository(private val dslContext: DSLContext) : Repository {
         }
     }
 
-    override fun latestFinishedBuildTimestamp(projectIdPrefix: String): Instant? {
-        val latestFailedBuild = dslContext.select(TEAMCITY_BUILD.FINISHED)
-            .from(TEAMCITY_BUILD)
-            .where(TEAMCITY_BUILD.CONFIGURATION.startsWith(projectIdPrefix))
-            .orderBy(TEAMCITY_BUILD.FINISHED.desc())
-            .fetchAny() ?: return null
+    private fun latestFinishedBuildTimestampKey(projectId: String): String {
+        return "${projectId}.latestFinishedBuildTimestamp"
+    }
 
-        return TEAMCITY_BUILD.FINISHED.get(latestFailedBuild)!!.toInstant()
+    override fun latestFinishedBuildTimestamp(projectId: String): Instant {
+        val record = dslContext.select(CONFIG.VALUE)
+            .from(CONFIG)
+            .where(CONFIG.NAME.eq(latestFinishedBuildTimestampKey(projectId)))
+            .fetchAny()
+
+        return Instant.parse(CONFIG.VALUE.get(record)!!)
+    }
+
+    override fun updateLatestFinishedBuildTimestamp(projectId: String, timestamp: Instant) {
+        dslContext.insertInto(CONFIG)
+            .values(latestFinishedBuildTimestampKey(projectId), timestamp.toString())
     }
 }
