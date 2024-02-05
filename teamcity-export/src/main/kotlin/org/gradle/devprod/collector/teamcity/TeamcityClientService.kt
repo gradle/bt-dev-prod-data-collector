@@ -114,7 +114,6 @@ class TeamcityClientService(
             loadAndStoreBuildsForLocator("buildType:${it.id.stringId}", start, end)
         }
 
-        repository.updateLatestFinishedBuildTimestamp(projectId, end)
         updateTeamCityExportTriggerMetric(projectId, end)
     }
 
@@ -124,6 +123,7 @@ class TeamcityClientService(
         var end = start.plus(defaultWindowsSize)
         while (end < Instant.now()) {
             loadAndStoreBuildsBetween(projectId, start, end)
+            repository.updateLatestFinishedBuildTimestamp(projectId, end)
             start = end
             end = end.plus(defaultWindowsSize)
         }

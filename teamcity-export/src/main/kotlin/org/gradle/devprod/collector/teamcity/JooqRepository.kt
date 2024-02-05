@@ -76,13 +76,18 @@ class JooqRepository(private val dslContext: DSLContext) : Repository {
         val record = dslContext.select(TEAMCITY_EXPORT_CONFIG.LATEST_FINISHED_BUILD_TIMESTAMP)
             .from(TEAMCITY_EXPORT_CONFIG)
             .where(TEAMCITY_EXPORT_CONFIG.PROJECT_ID.eq(projectId))
-            .fetchAny() ?: return Instant.parse("2024-01-01T00:00:00Z")
+            .fetchAny() ?: return Instant.parse("2024-02-01T00:00:00Z")
 
         return TEAMCITY_EXPORT_CONFIG.LATEST_FINISHED_BUILD_TIMESTAMP.get(record)!!.toInstant()
     }
 
     override fun updateLatestFinishedBuildTimestamp(projectId: String, timestamp: Instant) {
-        dslContext.insertInto(TEAMCITY_EXPORT_CONFIG)
+        dslContext
+            .insertInto(TEAMCITY_EXPORT_CONFIG)
+            .columns(TEAMCITY_EXPORT_CONFIG.PROJECT_ID, TEAMCITY_EXPORT_CONFIG.LATEST_FINISHED_BUILD_TIMESTAMP)
             .values(projectId, timestamp.atOffset(ZoneOffset.UTC))
+            .onDuplicateKeyUpdate()
+            .set(TEAMCITY_EXPORT_CONFIG.LATEST_FINISHED_BUILD_TIMESTAMP, timestamp.atOffset(ZoneOffset.UTC))
+            .execute()
     }
 }
