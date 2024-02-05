@@ -1,12 +1,13 @@
 package org.gradle.devprod.collector.teamcity
 
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.BUILD
-import org.gradle.devprod.collector.persistence.generated.jooq.Tables.CONFIG
 import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_BUILD
+import org.gradle.devprod.collector.persistence.generated.jooq.Tables.TEAMCITY_EXPORT_CONFIG
 import org.jooq.DSLContext
 import org.jooq.impl.DSL
 import org.springframework.stereotype.Component
 import java.time.Instant
+import java.time.ZoneOffset
 
 @Component
 class JooqRepository(private val dslContext: DSLContext) : Repository {
@@ -71,21 +72,17 @@ class JooqRepository(private val dslContext: DSLContext) : Repository {
         }
     }
 
-    private fun latestFinishedBuildTimestampKey(projectId: String): String {
-        return "${projectId}.latestFinishedBuildTimestamp"
-    }
-
     override fun latestFinishedBuildTimestamp(projectId: String): Instant {
-        val record = dslContext.select(CONFIG.VALUE)
-            .from(CONFIG)
-            .where(CONFIG.NAME.eq(latestFinishedBuildTimestampKey(projectId)))
-            .fetchAny()
+        val record = dslContext.select(TEAMCITY_EXPORT_CONFIG.LATEST_FINISHED_BUILD_TIMESTAMP)
+            .from(TEAMCITY_EXPORT_CONFIG)
+            .where(TEAMCITY_EXPORT_CONFIG.PROJECT_ID.eq(projectId))
+            .fetchAny() ?: return Instant.parse("2024-01-01T00:00:00Z")
 
-        return Instant.parse(CONFIG.VALUE.get(record)!!)
+        return TEAMCITY_EXPORT_CONFIG.LATEST_FINISHED_BUILD_TIMESTAMP.get(record)!!.toInstant()
     }
 
     override fun updateLatestFinishedBuildTimestamp(projectId: String, timestamp: Instant) {
-        dslContext.insertInto(CONFIG)
-            .values(latestFinishedBuildTimestampKey(projectId), timestamp.toString())
+        dslContext.insertInto(TEAMCITY_EXPORT_CONFIG)
+            .values(projectId, timestamp.atOffset(ZoneOffset.UTC))
     }
 }

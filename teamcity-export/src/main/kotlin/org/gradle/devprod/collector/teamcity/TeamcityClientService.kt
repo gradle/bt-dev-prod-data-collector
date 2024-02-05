@@ -2,18 +2,20 @@ package org.gradle.devprod.collector.teamcity
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micrometer.core.instrument.Counter
-import io.micrometer.core.instrument.Gauge
-import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.Tags
 import org.jetbrains.teamcity.rest.BuildId
 import org.jetbrains.teamcity.rest.BuildState
 import org.jetbrains.teamcity.rest.BuildStatus
+import org.jetbrains.teamcity.rest.ProjectId
 import org.jetbrains.teamcity.rest.TeamCityInstance
 import org.jetbrains.teamcity.rest.TeamCityInstanceFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
-import org.springframework.web.reactive.function.client.*
+import org.springframework.web.reactive.function.client.ClientRequest
+import org.springframework.web.reactive.function.client.ClientResponse
+import org.springframework.web.reactive.function.client.WebClient
+import org.springframework.web.reactive.function.client.WebClientResponseException
+import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
 import java.net.URI
 import java.time.Duration
@@ -25,7 +27,7 @@ class TeamcityClientService(
     @Value("${'$'}{teamcity.api.token}") private val teamCityApiToken: String,
     private val objectMapper: ObjectMapper,
     private val repository: Repository,
-    private val meterRegistry: MeterRegistry,
+//    private val meterRegistry: MeterRegistry,
 ) {
     private val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory
         .tokenAuth("https://builds.gradle.org", teamCityApiToken)
@@ -36,13 +38,13 @@ class TeamcityClientService(
 
     private val requestCountingExchangeFilterFunction = object : LoggingExchangeFilterFunction() {
         override fun logResponse(request: ClientRequest, response: ClientResponse) {
-            requestCounter
-                .tag("client", this@TeamcityClientService.javaClass.simpleName)
-                .tag("host", request.url().toURL().host)
-                .tag("method", request.method().toString())
-                .tag("status", response.statusCode().value().toString())
-                .register(meterRegistry)
-                .increment()
+//            requestCounter
+//                .tag("client", this@TeamcityClientService.javaClass.simpleName)
+//                .tag("host", request.url().toURL().host)
+//                .tag("method", request.method().toString())
+//                .tag("status", response.statusCode().value().toString())
+//                .register(meterRegistry)
+//                .increment()
         }
     }
 
@@ -81,15 +83,17 @@ class TeamcityClientService(
     }
 
     private fun updateTeamCityExportTriggerMetric(projectIdPrefix: String, timestamp: Instant) {
-        val tags: Tags = Tags.of("project", projectIdPrefix)
-        Gauge.builder("teamcity_export_last_scheduled_trigger_seconds") { timestamp.epochSecond }
-            .tags(tags)
-            .register(meterRegistry)
+//        val tags: Tags = Tags.of("project", projectIdPrefix)
+//        Gauge.builder("teamcity_export_last_scheduled_trigger_seconds") { timestamp.epochSecond }
+//            .tags(tags)
+//            .register(meterRegistry)
     }
 
-    private fun loadAndStoreBuildsBetween(projectId: String, start: Instant, end: Instant) {
-        var nextPageUrl: String? = loadingBuildsUrl(projectId, start, end, buildState = BuildState.FINISHED)
+    private fun loadAndStoreBuildsForLocator(locator: String, start: Instant, end: Instant) {
+        var nextPageUrl: String? =
+            loadingBuildsUrl(locator, start, end, buildState = BuildState.FINISHED)
         while (nextPageUrl != null) {
+            println("Loading builds from $nextPageUrl")
             val currentPage = loadBuilds(nextPageUrl)
             nextPageUrl = currentPage.nextHref
 
@@ -99,6 +103,17 @@ class TeamcityClientService(
                 storeBuild(build)
             }
         }
+    }
+
+    private fun loadAndStoreBuildsBetween(projectId: String, start: Instant, end: Instant) {
+        val project = teamCityInstance.project(ProjectId(projectId))
+        project.childProjects.forEach {
+            loadAndStoreBuildsForLocator("affectedProject:(id:${it.id})", start, end)
+        }
+        project.buildConfigurations.forEach {
+            loadAndStoreBuildsForLocator("buildType:${it.id.stringId}", start, end)
+        }
+
         repository.updateLatestFinishedBuildTimestamp(projectId, end)
         updateTeamCityExportTriggerMetric(projectId, end)
     }
@@ -119,7 +134,7 @@ class TeamcityClientService(
      * See https://www.jetbrains.com/help/teamcity/rest/get-build-details.html#Get+Specific+Builds
      */
     private fun loadingBuildsUrl(
-        affectedProject: String,
+        projectOrBuildTypeLocator: String,
         start: Instant,
         end: Instant,
         buildStatus: BuildStatus? = null,
@@ -128,7 +143,6 @@ class TeamcityClientService(
         pageSize: Int = 100,
     ): String {
         val locators = mutableListOf(
-            "affectedProject" to "(id:$affectedProject)",
             "branch" to "default:any",
             "finishDate" to "(date:${formatRFC822(start)},condition:after)",
             "finishDate" to "(date:${formatRFC822(end)},condition:before)",
@@ -143,7 +157,7 @@ class TeamcityClientService(
         val fields =
             "nextHref,count,build(id,agent(name),buildType(id,name,projectName),failedToStart,revisions(revision(version)),branchName,status,statusText,state,queuedDate,startDate,finishDate,composite)"
 
-        return "/app/rest/builds/?locator=$locatorString&fields=$fields&count=$pageSize"
+        return "/app/rest/builds/?locator=$projectOrBuildTypeLocator,$locatorString&fields=$fields&count=$pageSize"
     }
 
     private fun WebClient.RequestHeadersSpec<*>.bearerAuth(): WebClient.RequestHeadersSpec<*> =

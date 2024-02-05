@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest
 import org.gradle.devprod.collector.api.LinkSharedHandler
 import org.gradle.devprod.collector.enterprise.export.GradleEnterpriseServer
 import org.gradle.devprod.collector.model.LinkSharedEventCallback
+import org.gradle.devprod.collector.teamcity.TeamcityClientService
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.context.properties.EnableConfigurationProperties
@@ -29,7 +30,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 @EnableAsync
 @EnableConfigurationProperties(GradleEnterpriseServer::class)
 @Controller
-class DeveloperProductivityDataCollector(private val handler: LinkSharedHandler) {
+class DeveloperProductivityDataCollector(
+    private val handler: LinkSharedHandler,
+    private val teamcityClientService: TeamcityClientService
+) {
     @Bean
     fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer =
         Jackson2ObjectMapperBuilderCustomizer { builder ->
@@ -57,12 +61,20 @@ class DeveloperProductivityDataCollector(private val handler: LinkSharedHandler)
             return objectMapper.readTree(body).get("challenge").asText()
         } else if (body?.contains("event_callback") == true) {
             val eventCallback = objectMapper.readValue<LinkSharedEventCallback>(body.toString())
-            handler.handleBuildScanLinksShared(eventCallback.event, ServletUriComponentsBuilder.fromCurrentContextPath().build().toUri())
+            handler.handleBuildScanLinksShared(
+                eventCallback.event,
+                ServletUriComponentsBuilder.fromCurrentContextPath().build().toUri()
+            )
             return "OK"
         } else {
             // TODO: parse data?
             return "Method: ${request.method}, body: $body"
         }
+    }
+
+    @RequestMapping("/trigger-export")
+    fun triggerExport() {
+        teamcityClientService.loadAndStoreBuildsSinceLastCheckpoint("Enterprise_Main")
     }
 }
 

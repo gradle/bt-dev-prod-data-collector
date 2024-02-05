@@ -8,11 +8,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
-import org.gradle.devprod.collector.persistence.generated.jooq.tables.Config;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.PreconditionTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityExportConfig;
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue;
 import org.jooq.Catalog;
 import org.jooq.Table;
@@ -39,11 +39,6 @@ public class Public extends SchemaImpl {
     public final Build BUILD = Build.BUILD;
 
     /**
-     * The table <code>public.config</code>.
-     */
-    public final Config CONFIG = Config.CONFIG;
-
-    /**
      * The table <code>public.flaky_test_class</code>.
      */
     public final FlakyTestClass FLAKY_TEST_CLASS = FlakyTestClass.FLAKY_TEST_CLASS;
@@ -64,6 +59,11 @@ public class Public extends SchemaImpl {
     public final TeamcityBuild TEAMCITY_BUILD = TeamcityBuild.TEAMCITY_BUILD;
 
     /**
+     * The table <code>public.teamcity_export_config</code>.
+     */
+    public final TeamcityExportConfig TEAMCITY_EXPORT_CONFIG = TeamcityExportConfig.TEAMCITY_EXPORT_CONFIG;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -80,11 +80,11 @@ public class Public extends SchemaImpl {
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             Build.BUILD,
-            Config.CONFIG,
             FlakyTestClass.FLAKY_TEST_CLASS,
             LongTest.LONG_TEST,
             PreconditionTest.PRECONDITION_TEST,
-            TeamcityBuild.TEAMCITY_BUILD
+            TeamcityBuild.TEAMCITY_BUILD,
+            TeamcityExportConfig.TEAMCITY_EXPORT_CONFIG
         );
     }
 

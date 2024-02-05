@@ -5,11 +5,11 @@ package org.gradle.devprod.collector.persistence.generated.jooq;
 
 
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.Build;
-import org.gradle.devprod.collector.persistence.generated.jooq.tables.Config;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestClass;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.PreconditionTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityExportConfig;
 
 
 /**
@@ -22,11 +22,6 @@ public class Tables {
      * The table <code>public.build</code>.
      */
     public static final Build BUILD = Build.BUILD;
-
-    /**
-     * The table <code>public.config</code>.
-     */
-    public static final Config CONFIG = Config.CONFIG;
 
     /**
      * The table <code>public.flaky_test_class</code>.
@@ -47,4 +42,9 @@ public class Tables {
      * The table <code>public.teamcity_build</code>.
      */
     public static final TeamcityBuild TEAMCITY_BUILD = TeamcityBuild.TEAMCITY_BUILD;
+
+    /**
+     * The table <code>public.teamcity_export_config</code>.
+     */
+    public static final TeamcityExportConfig TEAMCITY_EXPORT_CONFIG = TeamcityExportConfig.TEAMCITY_EXPORT_CONFIG;
 }

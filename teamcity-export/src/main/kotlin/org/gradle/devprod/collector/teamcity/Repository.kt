@@ -1,6 +1,7 @@
 package org.gradle.devprod.collector.teamcity
 
 import java.time.Instant
+import java.time.OffsetDateTime
 
 interface Repository {
     fun getBuildScanTagsById(buildScanId: String): List<String>
