@@ -72,12 +72,7 @@ class DeveloperProductivityDataCollector(
         }
     }
 
-    @RequestMapping("/trigger-export")
-    fun triggerExport() {
-        Thread {
-            teamcityClientService.loadAndStoreBuildsSinceLastCheckpoint("Enterprise_Main")
-        }.start()
-    }
+
 }
 
 fun main(args: Array<String>) {
