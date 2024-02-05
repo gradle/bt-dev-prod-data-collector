@@ -144,18 +144,18 @@ class TeamcityClientService(
         composite: Boolean? = null,
         pageSize: Int = 100,
     ): String {
-        val locators = mutableMapOf(
+        val locators = mutableListOf(
             "buildType" to buildTypeId,
             "branch" to "default:any",
             "finishDate" to "(date:${formatRFC822(start)},condition:after)",
             "finishDate" to "(date:${formatRFC822(end)},condition:before)",
         )
 
-        buildStatus?.let { locators["status"] = it.toString().lowercase() }
-        buildState?.let { locators["state"] = it.toString().lowercase() }
-        composite?.let { locators["composite"] = it.toString() }
+        buildStatus?.let { locators.add("status" to it.toString().lowercase()) }
+        buildState?.let { locators.add("state" to it.toString().lowercase()) }
+        composite?.let { locators.add("composite" to it.toString()) }
 
-        val locatorString = locators.entries.joinToString(",") { "${it.key}:${it.value}" }
+        val locatorString = locators.joinToString(",") { "${it.first}:${it.second}" }
 
         val fields =
             "nextHref,count,build(id,agent(name),buildType(id,name,projectName),failedToStart,revisions(revision(version)),branchName,status,statusText,state,queuedDate,startDate,finishDate,composite)"
