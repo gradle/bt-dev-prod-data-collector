@@ -145,7 +145,8 @@ class TeamcityClientService(
         val locators = mutableMapOf(
             "buildType" to buildTypeId,
             "branch" to "default:any",
-            "sinceDate" to formatRFC822(start),
+            "finishDate" to "(date:${formatRFC822(start)},condition:after)",
+            "finishDate" to "(date:${formatRFC822(end)},condition:before)",
         )
 
         buildStatus?.let { locators["status"] = it.toString().lowercase() }

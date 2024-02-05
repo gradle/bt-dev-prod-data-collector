@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class TeamcityExport(
-    private val teamcityClientService: TeamcityClientService
+    private val teamcityClientService: TeamcityClientService,
 ) {
     @Async
     @Scheduled(initialDelay = 1 * 60 * 1000, fixedDelay = 5 * 60 * 1000)
