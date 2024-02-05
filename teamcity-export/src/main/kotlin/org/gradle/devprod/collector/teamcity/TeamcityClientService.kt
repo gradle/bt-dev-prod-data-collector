@@ -123,7 +123,7 @@ class TeamcityClientService(
         var start = repository.latestFinishedBuildTimestamp(projectId)
         var end = start.plus(defaultWindowsSize)
         updateTeamCityExportTriggerMetric(projectId)
-        while (end < Instant.now()) {
+        while (end < Instant.parse("2024-02-01T02:00:00Z")) {
             loadAndStoreBuildsBetween(projectId, start, end)
             repository.updateLatestFinishedBuildTimestamp(projectId, end)
             start = end
