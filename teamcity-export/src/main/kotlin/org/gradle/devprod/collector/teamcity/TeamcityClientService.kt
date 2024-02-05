@@ -113,7 +113,7 @@ class TeamcityClientService(
         project.childProjects.forEach {
             loadAndStoreBuildsBetween(it.id.stringId, start, end)
         }
-        project.buildConfigurations.forEach {
+        project.buildConfigurations.parallelStream().forEach {
             loadAndStoreBuildsForBuildType(it.id.stringId, start, end)
         }
     }
