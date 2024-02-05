@@ -31,8 +31,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder
 @EnableConfigurationProperties(GradleEnterpriseServer::class)
 @Controller
 class DeveloperProductivityDataCollector(
-    private val handler: LinkSharedHandler,
-    private val teamcityClientService: TeamcityClientService
+    private val handler: LinkSharedHandler
 ) {
     @Bean
     fun jsonCustomizer(): Jackson2ObjectMapperBuilderCustomizer =
