@@ -9,5 +9,7 @@ interface Repository {
 
     fun storeBuild(build: TeamCityBuild)
 
-    fun latestFinishedBuildTimestamp(projectIdPrefix: String): Instant?
+    fun latestFinishedBuildTimestamp(projectId: String): Instant
+
+    fun updateLatestFinishedBuildTimestamp(projectId: String, timestamp: Instant)
 }
