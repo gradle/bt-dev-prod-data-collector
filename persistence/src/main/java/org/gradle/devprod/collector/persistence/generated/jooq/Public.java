@@ -12,6 +12,7 @@ import org.gradle.devprod.collector.persistence.generated.jooq.tables.FlakyTestC
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.LongTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.PreconditionTest;
 import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityBuild;
+import org.gradle.devprod.collector.persistence.generated.jooq.tables.TeamcityExportConfig;
 import org.gradle.devprod.collector.persistence.generated.jooq.udt.KeyValue;
 import org.jooq.Catalog;
 import org.jooq.Table;
@@ -58,6 +59,11 @@ public class Public extends SchemaImpl {
     public final TeamcityBuild TEAMCITY_BUILD = TeamcityBuild.TEAMCITY_BUILD;
 
     /**
+     * The table <code>public.teamcity_export_config</code>.
+     */
+    public final TeamcityExportConfig TEAMCITY_EXPORT_CONFIG = TeamcityExportConfig.TEAMCITY_EXPORT_CONFIG;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -77,7 +83,8 @@ public class Public extends SchemaImpl {
             FlakyTestClass.FLAKY_TEST_CLASS,
             LongTest.LONG_TEST,
             PreconditionTest.PRECONDITION_TEST,
-            TeamcityBuild.TEAMCITY_BUILD
+            TeamcityBuild.TEAMCITY_BUILD,
+            TeamcityExportConfig.TEAMCITY_EXPORT_CONFIG
         );
     }
 
