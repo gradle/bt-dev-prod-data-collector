@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class StreamToDatabase(private val exportApiExtractorService: ExportApiExtractorService) {
-    @Bean
-    fun streamToDatabaseJob(): Job =
-        exportApiExtractorService.streamToDatabase().launchIn(CoroutineScope(Dispatchers.IO))
+//    @Bean
+//    fun streamToDatabaseJob(): Job =
+//        exportApiExtractorService.streamToDatabase().launchIn(CoroutineScope(Dispatchers.IO))
 }
