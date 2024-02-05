@@ -108,7 +108,7 @@ class TeamcityClientService(
     private fun loadAndStoreBuildsBetween(projectId: String, start: Instant, end: Instant) {
         val project = teamCityInstance.project(ProjectId(projectId))
         project.childProjects.forEach {
-            loadAndStoreBuildsForLocator("affectedProject:(id:${it.id})", start, end)
+            loadAndStoreBuildsBetween(it.id.stringId, start, end)
         }
         project.buildConfigurations.forEach {
             loadAndStoreBuildsForLocator("buildType:${it.id.stringId}", start, end)
