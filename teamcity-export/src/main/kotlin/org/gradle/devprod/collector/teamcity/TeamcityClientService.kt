@@ -110,7 +110,7 @@ class TeamcityClientService(
 
     private fun loadAndStoreBuildsBetween(projectId: String, start: Instant, end: Instant) {
         val project = teamCityInstance.project(ProjectId(projectId))
-        project.childProjects.forEach {
+        project.childProjects.parallelStream().forEach {
             loadAndStoreBuildsBetween(it.id.stringId, start, end)
         }
         project.buildConfigurations.parallelStream().forEach {
