@@ -2,6 +2,9 @@ package org.gradle.devprod.collector.teamcity
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.micrometer.core.instrument.Counter
+import io.micrometer.core.instrument.Gauge
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Tags
 import org.jetbrains.teamcity.rest.BuildId
 import org.jetbrains.teamcity.rest.BuildState
 import org.jetbrains.teamcity.rest.BuildStatus
@@ -27,7 +30,7 @@ class TeamcityClientService(
     @Value("${'$'}{teamcity.api.token}") private val teamCityApiToken: String,
     private val objectMapper: ObjectMapper,
     private val repository: Repository,
-//    private val meterRegistry: MeterRegistry,
+    private val meterRegistry: MeterRegistry,
 ) {
     private val teamCityInstance: TeamCityInstance = TeamCityInstanceFactory
         .tokenAuth("https://builds.gradle.org", teamCityApiToken)
@@ -38,13 +41,13 @@ class TeamcityClientService(
 
     private val requestCountingExchangeFilterFunction = object : LoggingExchangeFilterFunction() {
         override fun logResponse(request: ClientRequest, response: ClientResponse) {
-//            requestCounter
-//                .tag("client", this@TeamcityClientService.javaClass.simpleName)
-//                .tag("host", request.url().toURL().host)
-//                .tag("method", request.method().toString())
-//                .tag("status", response.statusCode().value().toString())
-//                .register(meterRegistry)
-//                .increment()
+            requestCounter
+                .tag("client", this@TeamcityClientService.javaClass.simpleName)
+                .tag("host", request.url().toURL().host)
+                .tag("method", request.method().toString())
+                .tag("status", response.statusCode().value().toString())
+                .register(meterRegistry)
+                .increment()
         }
     }
 
@@ -82,11 +85,11 @@ class TeamcityClientService(
         repository.storeBuild(build.toTeamCityBuild(loadBuildScans(build.id), hasRetriedBuild, dependenciesFinishTime))
     }
 
-    private fun updateTeamCityExportTriggerMetric(projectIdPrefix: String, timestamp: Instant) {
-//        val tags: Tags = Tags.of("project", projectIdPrefix)
-//        Gauge.builder("teamcity_export_last_scheduled_trigger_seconds") { timestamp.epochSecond }
-//            .tags(tags)
-//            .register(meterRegistry)
+    private fun updateTeamCityExportTriggerMetric(projectIdPrefix: String) {
+        val tags: Tags = Tags.of("project", projectIdPrefix)
+        Gauge.builder("teamcity_export_last_scheduled_trigger_seconds") { Instant.now().epochSecond }
+            .tags(tags)
+            .register(meterRegistry)
     }
 
     private fun loadAndStoreBuildsForBuildType(buildTypeId: String, start: Instant, end: Instant) {
@@ -113,14 +116,13 @@ class TeamcityClientService(
         project.buildConfigurations.forEach {
             loadAndStoreBuildsForBuildType(it.id.stringId, start, end)
         }
-
-        updateTeamCityExportTriggerMetric(projectId, end)
     }
 
     fun loadAndStoreBuildsSinceLastCheckpoint(projectId: String) {
         val defaultWindowsSize = Duration.ofHours(1)
         var start = repository.latestFinishedBuildTimestamp(projectId)
         var end = start.plus(defaultWindowsSize)
+        updateTeamCityExportTriggerMetric(projectId)
         while (end < Instant.now()) {
             loadAndStoreBuildsBetween(projectId, start, end)
             repository.updateLatestFinishedBuildTimestamp(projectId, end)
