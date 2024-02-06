@@ -39,6 +39,8 @@ class TeamcityClientService(
     private val requestCounter = Counter.builder("network_request_outgoing_total")
         .description("Outgoing network request counters")
 
+    private val lastScheduledTriggerSeconds = mutableMapOf<String, Double>()
+
     private val requestCountingExchangeFilterFunction = object : LoggingExchangeFilterFunction() {
         override fun logResponse(request: ClientRequest, response: ClientResponse) {
             requestCounter
@@ -86,10 +88,17 @@ class TeamcityClientService(
     }
 
     private fun updateTeamCityExportTriggerMetric(projectIdPrefix: String) {
-        val tags: Tags = Tags.of("project", projectIdPrefix)
-        Gauge.builder("teamcity_export_last_scheduled_trigger_seconds") { Instant.now().epochSecond }
-            .tags(tags)
-            .register(meterRegistry)
+        val instant = Instant.now().epochSecond.toDouble()
+        if (!lastScheduledTriggerSeconds.containsKey(projectIdPrefix)) {
+            val tags: Tags = Tags.of("project", projectIdPrefix)
+            Gauge.builder(
+                "teamcity_export_last_scheduled_trigger_seconds",
+                lastScheduledTriggerSeconds,
+            ) { m -> m[projectIdPrefix]!! }
+                .tags(tags)
+                .register(meterRegistry)
+        }
+        lastScheduledTriggerSeconds[projectIdPrefix] = instant
     }
 
     private fun loadAndStoreBuildsForBuildType(buildTypeId: String, start: Instant, end: Instant) {
